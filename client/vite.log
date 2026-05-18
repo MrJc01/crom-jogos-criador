@@ -144,3 +144,5 @@
 00:58:02 [vite] page reload src/index.js
 01:00:15 [vite] page reload src/core/Engine.js
 01:00:39 [vite] page reload src/modules/economy/extraction.js
+01:02:46 [vite] page reload src/modules/biology/migration.js
+01:03:11 [vite] page reload src/modules/economy/bureaucracy.js

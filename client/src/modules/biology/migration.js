@@ -66,8 +66,20 @@ export default {
                     const target = engine.nodes.get(choice.id);
                     if (target) {
                         node.demographics.kill(migrators);
+                        
+                        // Tarefa 15: Atrito Logístico e de Transporte
+                        let attritionRate = 0.05; // 5% morre a pé (doença, fome)
+                        if (choice.type === 'sea') attritionRate = 0.10; // Naufrágios/escorbuto
+                        if (choice.type === 'rail') attritionRate = 0.02; // Trens
+                        if (choice.type === 'air') attritionRate = 0.005; // Aviões são seguros
+                        
+                        if (target.biome && target.biome.id === 'tundra') attritionRate += 0.10; // Frio mata na estrada
+                        if (target.biome && target.biome.id === 'desert') attritionRate += 0.15; // Sede
+                        
+                        const survivors = Math.floor(migrators * (1.0 - attritionRate));
+                        
                         target.infect(0); 
-                        target.demographics.addBirths(migrators); 
+                        target.demographics.addBirths(survivors); 
                         
                         // Emite evento visual para rotas modais (não terrestres simples)
                         if (choice.type !== 'land' && engine.onEvent) {
