@@ -54,9 +54,12 @@ export default {
         // ==========================================
         // CISMA (SEPARAÇÃO REBELDE)
         // ==========================================
+        // Na Idade da Pedra, tribos se fragmentam mais facilmente (menos cap max). Em impérios, exige mais povo.
+        const minPopForSchism = engine.currentEra.mult === 1 ? 50 : 5000;
+        
         // Se a pressão social for extrema ou houver fome crónica, e a facção for gigante (>80% do hex)
         if (engine.pressures.social > 5.0 || (node.food || 0) <= 0) {
-            if (majorityPct > 0.8 && node.demographics.total > 5000) {
+            if (majorityPct > 0.8 && node.demographics.total > minPopForSchism) {
                 // 1% de chance de cisma por ano nessas condições
                 if (Math.random() < 0.01) {
                     const data = FactionsData.getFaction(majorityFac);

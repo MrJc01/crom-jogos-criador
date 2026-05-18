@@ -25,7 +25,7 @@
   },
 
   "demographics": {
-    "baseGrowthRate": 0.02,
+    "baseGrowthRate": 0.08,
     "migrationThreshold": 0.95,
     "pregnancyDays": 270,
     "initialAgeDistribution": {
@@ -161,8 +161,8 @@
   },
 
   "dnaGeneration": {
-    "_comment": "REBALANCEADO: 2.5× mais lento que original. 1 DNA por 250k pop/tick.",
-    "popPerPoint": 250000,
+    "_comment": "REBALANCEADO: Acelerado no início. 1 DNA por 2k pop/tick.",
+    "popPerPoint": 2000,
     "computerBonusBase": 1
   },
 

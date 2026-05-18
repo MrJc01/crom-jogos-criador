@@ -220,9 +220,9 @@ export class GameEngine {
       // Inicializa sistemas de expansão v3
       const eraInfo = this.currentEra;
       const initialDilation = eraInfo?.timeDilation || 1;
-      region.food = 500 * initialDilation; // Comida inicial para sobreviver o primeiro mega-salto
+      region.food = 10000 * initialDilation; // Boost de sobrevivência inicial maciço
       region.morale = 50; // Estável
-      region.wildGame = 100; // Fauna disponível para caça
+      region.wildGame = 5000; // Fauna abundante disponível para caça
       region.famineDays = 0;
       region.crops = [];
       region.moraleFactors = {};
@@ -448,12 +448,16 @@ export class GameEngine {
         }
     }
     
-    // TAREFA 39: Inverno Genético — FIX P0: Penalidade reduzida (0.85 vs 0.5)
+    // TAREFA 39: Inverno Genético — FIX: Penalidade aliviada na Idade da Pedra
     const genWinter = Config.get('demographics.geneticWinter');
     if (this.globalPop < genWinter.popThreshold && this.globalPop > 0 && this.year > genWinter.yearThreshold) {
-        if (Math.random() < genWinter.dailyChance) {
-            this.globalKPenalty = Math.max(genWinter.kPenaltyMinimum, this.globalKPenalty * genWinter.kPenaltyMultiplier);
-            if (this.onEvent) this.onEvent({ message: `🧬 INVERNO GENÉTICO: A população global é tão baixa que a endogamia causou falhas genéticas em massa. Resiliência caiu!`, type: "nemesis", color: "#8800ff" }, "nemesis");
+        // Reduz a chance brutalmente se a humanidade mal começou
+        const eraDiscount = this.currentEra.mult === 1 ? 0.1 : 1.0; 
+        if (Math.random() < (genWinter.dailyChance * eraDiscount)) {
+            // A penalidade é muito menor na Era 1 (0.85 ao invés de 0.5)
+            const actualMultiplier = this.currentEra.mult === 1 ? 0.95 : genWinter.kPenaltyMultiplier;
+            this.globalKPenalty = Math.max(genWinter.kPenaltyMinimum, this.globalKPenalty * actualMultiplier);
+            if (this.onEvent) this.onEvent({ message: `🧬 INVERNO GENÉTICO: A endogamia causou falhas genéticas. Resiliência caiu!`, type: "nemesis", color: "#8800ff" }, "nemesis");
         }
     }
     
@@ -543,6 +547,12 @@ export class GameEngine {
     if (Math.random() < (this.globalPop % dnaGen.popPerPoint) / dnaGen.popPerPoint) {
         ptsGenerated += 1;
     }
+    
+    // FIX P0: "Renda Básica" de Sobrevivência na Idade da Pedra para evitar Soft-Lock.
+    if (this.currentEra.mult === 1 && ptsGenerated === 0 && Math.random() < 0.1) {
+        ptsGenerated = 1; // 10% de chance de ganhar 1 ponto a cada Tick mesmo com 10 habitantes
+    }
+    
     this.adaptationPoints += (ptsGenerated * computerBonus);
     
     // Sistema de Pressão Estocástica (Config: pressures)

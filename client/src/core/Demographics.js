@@ -62,7 +62,8 @@ export class Demographics {
     getDTMStage(eraMult) {
         const demoCfg = Config.demographics() || {};
         const stages = demoCfg.dtm?.stages || [
-            { name: "Pré-Industrial", minEra: 1, birthRate: 0.080, deathRate: 0.040, infantMortality: 0.30 }
+            // FIX: Boost massivo de nascimentos e redução de mortalidade para Idade da Pedra
+            { name: "Pré-Industrial", minEra: 1, birthRate: 0.150, deathRate: 0.015, infantMortality: 0.10 }
         ];
         let current = stages[0];
         for (const stage of stages) {
