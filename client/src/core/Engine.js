@@ -2,7 +2,8 @@ import { RegionNode } from './RegionNode.js';
 import { TechTree } from './TechTree.js';
 import { Economy } from './Economy.js';
 import { KnowledgeBase } from './KnowledgeBase.js';
-
+import { SpeciesGenerator } from '../modules/generation/SpeciesGenerator.js';
+import { FactionsData } from './FactionsData.js';
 export const Biomes = {
   DESERT: { id: 'desert', name: 'Deserto', difficulty: 1.0, capacityBase: 10000 },
   TUNDRA: { id: 'tundra', name: 'Tundra', difficulty: 0.9, capacityBase: 20000 },
@@ -91,7 +92,13 @@ export class GameEngine {
       }
   }
 
+
   initWorld(hexNodes) {
+    // 1. Gera 5 espécies mundiais base
+    const startingSpeciesMap = SpeciesGenerator.generateSpecies(5);
+    FactionsData.injectSpeciesMap(startingSpeciesMap);
+    this.startingSpeciesIds = Object.keys(startingSpeciesMap);
+
     const biomeKeys = Object.keys(Biomes);
     hexNodes.forEach(hex => {
       const id = hex.id;
@@ -134,9 +141,17 @@ export class GameEngine {
     }
   }
 
-  startInfection(regionId) {
+  startInfection(regionId, speciesId = null) {
     const region = this.nodes.get(regionId);
     if (region && !region.infected) {
+      if (speciesId) {
+          region.demographics.dist.factions = { [speciesId]: 1.0 };
+      } else if (this.startingSpeciesIds && this.startingSpeciesIds.length > 0) {
+          // Pega uma espécie aleatória baseada no bioma ou puramente aleatória
+          const randomSp = this.startingSpeciesIds[Math.floor(Math.random() * this.startingSpeciesIds.length)];
+          region.demographics.dist.factions = { [randomSp]: 1.0 };
+      }
+      
       region.infect(100);
       this.globalPop += 100;
       return true;
@@ -260,7 +275,10 @@ export class GameEngine {
             
             if (shouldTrigger) {
                 const result = plugin.applyEvent(this);
-                if (result && this.onEvent) this.onEvent({ message: result }, "disaster");
+                if (result && this.onEvent) {
+                    // result é agora um objeto { message, nodeId }
+                    this.onEvent(result, "disaster");
+                }
             }
         }
     });

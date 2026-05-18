@@ -61,6 +61,12 @@
             <div class="hud-item"><span class="icon" title="Data do Jogo">📅</span> <span id="game-date">Ano 1, Mês 1, Dia 1</span></div>
         </div>
 
+        <!-- Log de Eventos / Feed de Notícias -->
+        <div id="news-feed-panel" class="stone-panel hud-box" style="right: 20px; top: 380px; width: 300px; max-height: 200px; overflow-y: hidden; pointer-events: none; opacity: 0.85; background: rgba(5, 10, 20, 0.9);">
+            <div style="font-size: 14px; color: #00ddff; text-align: center; margin-bottom: 5px; border-bottom: 1px solid #333; padding-bottom: 2px;">NOTÍCIAS GLOBAIS</div>
+            <div id="news-feed-list" style="font-size: 14px; display: flex; flex-direction: column; gap: 5px; line-height: 1.2;"></div>
+        </div>
+
         <!-- Painel de Camadas de Visão (Filtros do Mapa) -->
         <div id="layers-panel" class="stone-panel hud-box" style="top: 250px;">
             <div style="font-size: 14px; color: #00ddff; text-align: center; margin-bottom: 10px; border-bottom: 1px solid #333; padding-bottom: 5px;">LENTES DO MAPA</div>
@@ -121,15 +127,15 @@
 
             <div class="grid-list" style="max-height: 150px; border-bottom: 2px solid #222;">
                 <div class="item-card" style="border-color: #2a2a2a; padding: 4px;">
-                    <small style="color: #6ab04c;">🌲 Madeira Nativa</small>
+                    <small id="label-wood" style="color: #6ab04c;">🌲 Madeira</small>
                     <div id="info-wood" style="font-size: 18px; text-align: right;">0</div>
                 </div>
                 <div class="item-card" style="border-color: #2a2a2a; padding: 4px;">
-                    <small style="color: #00ddff;">💧 Água Doce</small>
+                    <small id="label-water" style="color: #00ddff;">💧 Água</small>
                     <div id="info-water" style="font-size: 18px; text-align: right;">0</div>
                 </div>
                 <div class="item-card" style="border-color: #2a2a2a; padding: 4px;">
-                    <small style="color: #e3c16f;">🪨 Minérios (Subsolo)</small>
+                    <small id="label-minerals" style="color: #e3c16f;">🪨 Minérios</small>
                     <div id="info-minerals" style="font-size: 18px; text-align: right;">0</div>
                 </div>
             </div>

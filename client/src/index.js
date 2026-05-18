@@ -1,5 +1,7 @@
 import { GameEngine } from './core/Engine.js';
 import { MapRenderer } from './ui/MapRenderer.js';
+import { FactionsData } from './core/FactionsData.js';
+import { ResourceDictionary } from './core/ResourceDictionary.js';
 
 const engine = new GameEngine();
 const numFormat = new Intl.NumberFormat('pt-BR');
@@ -151,9 +153,10 @@ function renderFactionsList() {
     
     for (const [fac, count] of entries) {
         if (count < 1) continue;
+        const facData = FactionsData.getFaction(fac);
         const row = document.createElement('div');
         row.className = 'faction-row';
-        row.innerHTML = `<span style="font-size:24px; color:#e0d0a0;">🎭 ${fac}</span> <span style="font-size:24px;">👥 ${Math.floor(count).toLocaleString()}</span>`;
+        row.innerHTML = `<span style="font-size:24px; color:${facData.baseColor};">🎭 ${facData.name}</span> <span style="font-size:24px;">👥 ${Math.floor(count).toLocaleString()}</span>`;
         factionsContainer.appendChild(row);
     }
 }
@@ -207,11 +210,33 @@ renderer.init().then(() => {
     const loadingScreen = document.getElementById('loading-screen');
     if (loadingScreen) loadingScreen.style.display = 'none';
 
+    const newsFeed = document.getElementById('news-feed-list');
+    function addNews(msg, color) {
+        const item = document.createElement('div');
+        item.style.color = color;
+        item.style.paddingBottom = '3px';
+        item.style.borderBottom = '1px dashed #333';
+        item.textContent = msg;
+        newsFeed.prepend(item);
+        if (newsFeed.children.length > 8) newsFeed.lastChild.remove();
+    }
+
     engine.onEvent = (data, type) => {
         if (type === "disaster") {
+            addNews(data.message || data, '#ff4444');
             showFloatText(data.message || data, '#ff4444');
+        } else if (type === "war") {
+            addNews(data.message || data, '#ff7700');
+            showFloatText("⚔️ GUERRA", '#ff7700');
+        } else if (type === "trade") {
+            addNews(data.message || data, '#f1c40f'); // Dourado
+            showFloatText("🚢 COMÉRCIO", '#f1c40f');
+            if (data.sourceId) renderer.animateBlink(data.sourceId, '#f1c40f');
+            if (data.targetId) renderer.animateBlink(data.targetId, '#f1c40f');
+            // Animar o pacote voando
+            renderer.animateMigration(data);
         } else if (type === "tech_auto") {
-            showFloatText(`💡 Auto-Evolução: ${data}`, '#00ddff');
+            showFloatText(`💡 Evolução: ${data}`, '#00ddff');
             if (!document.getElementById('tech-modal').classList.contains('hidden')) renderTechList();
         } else if (type === "bubble_spawn") {
             renderer.spawnBubble(data);
@@ -234,10 +259,12 @@ renderer.init().then(() => {
       const fEntries = Object.entries(engine.globalDemographics.factions).sort((a, b) => b[1] - a[1]);
       let domFac = 'Tribal';
       let maxPop = 0;
-      for (const [fac, count] of Object.entries(engine.globalDemographics.factions)) {
+      for (const [fac, count] of fEntries) {
           if (count > maxPop) { maxPop = count; domFac = fac; }
       }
-      uiFaction.textContent = domFac;
+      const domData = FactionsData.getFaction(domFac);
+      uiFaction.textContent = domData.name;
+      uiFaction.style.color = domData.baseColor;
       
       if (engine.severity < 30) uiSeverity.style.color = '#fff';
       else if (engine.severity < 60) uiSeverity.style.color = '#ffaa00';
@@ -309,6 +336,11 @@ function updateSidebar(node) {
   bar.style.background = ratio > 90 ? '#ff4444' : (ratio > 50 ? '#ffaa00' : '#00ff88');
 
   // Recursos Naturais Locais
+  const biomeId = node.biome ? node.biome.id : 'generic';
+  document.getElementById('label-wood').textContent = `🌲 ${ResourceDictionary.getLocalizedName('wood', biomeId)}`;
+  document.getElementById('label-water').textContent = `💧 ${ResourceDictionary.getLocalizedName('water', biomeId)}`;
+  document.getElementById('label-minerals').textContent = `🪨 ${ResourceDictionary.getLocalizedName('minerals', biomeId)}`;
+
   if (node.resources) {
       document.getElementById('info-wood').textContent = numFormat.format(Math.floor(node.resources.wood || 0));
       document.getElementById('info-water').textContent = numFormat.format(Math.floor(node.resources.water || 0));
@@ -327,12 +359,13 @@ function updateSidebar(node) {
       for (const [fac, percentage] of entries) {
           if (percentage < 0.01) continue; // Ignora se for menos de 1%
           const count = Math.floor(percentage * node.demographics.total);
+          const facData = FactionsData.getFaction(fac);
           const row = document.createElement('div');
           row.style.display = 'flex';
           row.style.justifyContent = 'space-between';
           row.style.padding = '4px 0';
           row.style.borderBottom = '1px solid #333';
-          row.innerHTML = `<span style="color:#e0d0a0">🎭 ${fac}</span> <span>👥 ${numFormat.format(count)}</span>`;
+          row.innerHTML = `<span style="color:${facData.baseColor}; font-weight:bold;">🎭 ${facData.name}</span> <span>👥 ${numFormat.format(count)}</span>`;
           fList.appendChild(row);
       }
   } else {

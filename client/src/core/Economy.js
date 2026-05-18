@@ -27,6 +27,19 @@ export class Economy {
         }
         return false;
     }
+
+    stealTrust(victimId, agressorId, percentage) {
+        const victimBalance = this.getTrust(victimId);
+        if (victimBalance <= 0) return 0;
+        
+        const stolenAmount = Math.floor(victimBalance * percentage);
+        this.trustWallet[victimId] -= stolenAmount;
+        
+        if (!this.trustWallet[agressorId]) this.trustWallet[agressorId] = 0;
+        this.trustWallet[agressorId] += stolenAmount;
+        
+        return stolenAmount;
+    }
     
     startCraft(recipeId, engine) {
         const recipe = this.recipes.get(recipeId);
@@ -114,5 +127,78 @@ export class Economy {
                 }
             }
         }
+
+        // --- Mercado Global Autônomo ---
+        // Roda exportação/importação 2 vezes ao ano
+        if (engine.day === 100 || engine.day === 250) {
+            this.processTradeRoutes(engine);
+        }
+    }
+
+    processTradeRoutes(engine) {
+        if (!engine.tradeRoutes) return;
+        
+        engine.tradeRoutes.forEach(route => {
+            const sourceNode = engine.nodes.get(route.sourceId);
+            const targetNode = engine.nodes.get(route.targetId);
+            
+            if (!sourceNode || !targetNode || !sourceNode.infected || !targetNode.infected) return;
+            if (sourceNode.demographics.total < 1000 || targetNode.demographics.total < 1000) return;
+            
+            const sourceFac = this.getDominantFaction(sourceNode);
+            const targetFac = this.getDominantFaction(targetNode);
+            if (!sourceFac || !targetFac) return;
+
+            let traded = false;
+            
+            // Exporta Madeira em troca de Minério
+            if ((sourceNode.resources.wood || 0) > 5000 && (targetNode.resources.wood || 0) < 2000 && (targetNode.resources.minerals || 0) > 2000) {
+                sourceNode.resources.wood -= 1000;
+                targetNode.resources.wood += 1000;
+                targetNode.resources.minerals -= 500;
+                sourceNode.resources.minerals += 500;
+                traded = true;
+            }
+            // Exporta Minério em troca de Madeira
+            else if ((sourceNode.resources.minerals || 0) > 5000 && (targetNode.resources.minerals || 0) < 2000 && (targetNode.resources.wood || 0) > 2000) {
+                sourceNode.resources.minerals -= 1000;
+                targetNode.resources.minerals += 1000;
+                targetNode.resources.wood -= 500;
+                sourceNode.resources.wood += 500;
+                traded = true;
+            }
+
+            if (traded) {
+                this.addTrust(sourceFac, 100);
+                this.addTrust(targetFac, 100);
+                
+                const relKey1 = `${sourceFac}-${targetFac}`;
+                const relKey2 = `${targetFac}-${sourceFac}`;
+                if (!this.relations) this.relations = {};
+                this.relations[relKey1] = (this.relations[relKey1] || 0) + 50;
+                this.relations[relKey2] = (this.relations[relKey2] || 0) + 50;
+
+                const sourceData = FactionsData.getFaction(sourceFac);
+                const targetData = FactionsData.getFaction(targetFac);
+
+                if (Math.random() < 0.2 && engine.onEvent) {
+                    engine.onEvent({ 
+                        message: `🚢 EXPORTAÇÃO: ${sourceData.name} e ${targetData.name} estabeleceram troca de recursos e confiança mútua.`,
+                        sourceId: sourceNode.id,
+                        targetId: targetNode.id,
+                        type: route.type
+                    }, "trade");
+                }
+            }
+        });
+    }
+
+    getDominantFaction(node) {
+        let max = 0;
+        let dom = null;
+        for (const [fac, pct] of Object.entries(node.demographics.dist.factions)) {
+            if (pct > max) { max = pct; dom = fac; }
+        }
+        return dom;
     }
 }

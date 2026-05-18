@@ -400,4 +400,39 @@ export class MapRenderer {
                 particle.transition().duration(200).attr('opacity', 0).remove();
             });
     }
+
+    animateBlink(nodeId, color) {
+        if (!this.hexNodes) return;
+        const hex = this.hexNodes.find(h => h.id === nodeId);
+        if (!hex) return;
+        
+        // Desenha um hexágono brilhante no topo de tudo
+        const group = this.bubblesLayer.append('g')
+            .attr('transform', `translate(${hex.x}, ${hex.y})`)
+            .style('pointer-events', 'none');
+            
+        // Hexagon Path
+        const radius = 2.5; // Um pouco maior que o hexágono normal (2)
+        const points = [];
+        for (let i = 0; i < 6; i++) {
+            const angle_rad = Math.PI / 180 * (60 * i);
+            points.push(`${radius * Math.cos(angle_rad)},${radius * Math.sin(angle_rad)}`);
+        }
+        
+        const shape = group.append('polygon')
+            .attr('points', points.join(' '))
+            .style('fill', 'none')
+            .style('stroke', color)
+            .style('stroke-width', 0.8)
+            .style('opacity', 0);
+            
+        // Pisca 3 vezes e morre
+        shape.transition().duration(300).style('opacity', 1).style('fill', color)
+             .transition().duration(300).style('opacity', 0).style('fill', 'none')
+             .transition().duration(300).style('opacity', 1).style('fill', color)
+             .transition().duration(300).style('opacity', 0).style('fill', 'none')
+             .transition().duration(300).style('opacity', 1).style('fill', color)
+             .transition().duration(500).style('opacity', 0)
+             .on('end', () => group.remove());
+    }
 }

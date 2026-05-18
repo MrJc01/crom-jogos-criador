@@ -12,7 +12,14 @@ export const FactionTaxonomy = {
 };
 
 export class FactionsData {
+    static dynamicFactions = {};
+
+    static injectSpeciesMap(speciesMap) {
+        this.dynamicFactions = { ...this.dynamicFactions, ...speciesMap };
+    }
+
     static getFaction(id) {
+        if (this.dynamicFactions[id]) return this.dynamicFactions[id];
         return FactionTaxonomy[id] || { name: id.replace('_', ' '), baseColor: this.generateHashColor(id), traits: ["mutant"] };
     }
     
