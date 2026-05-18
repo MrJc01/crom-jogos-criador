@@ -240,27 +240,67 @@ export class GameEngine {
 
   craftItem(recipeId) { return this.economy.startCraft(recipeId, this); }
 
-  play() { if (!this.isRunning) { this.isRunning = true; this.scheduleNextTick(); } }
-  pause() { this.isRunning = false; if (this.intervalId) { clearTimeout(this.intervalId); this.intervalId = null; } }
-  setSpeed(mult) { this.speedMultiplier = mult; if (this.isRunning) { this.pause(); this.play(); } }
+  play() { 
+      if (!this.isRunning) { 
+          this.isRunning = true; 
+          this.lastFrameTime = performance.now();
+          this.accumulator = 0;
+          this.scheduleNextTick(); 
+      } 
+  }
+  
+  pause() { 
+      this.isRunning = false; 
+      if (this.animationFrameId) { 
+          cancelAnimationFrame(this.animationFrameId); 
+          this.animationFrameId = null; 
+      } 
+  }
+  
+  setSpeed(mult) { 
+      this.speedMultiplier = mult; 
+  }
 
   scheduleNextTick() {
-    this.intervalId = setTimeout(() => {
-      this.processTick();
-      if (this.isRunning) this.scheduleNextTick();
-    }, this.tickRate / this.speedMultiplier);
+      if (!this.isRunning) return;
+      this.animationFrameId = requestAnimationFrame((time) => {
+          this.tickLoop(time);
+      });
+  }
+
+  tickLoop(time) {
+      if (!this.isRunning) return;
+      const deltaTime = time - (this.lastFrameTime || time);
+      this.lastFrameTime = time;
+      
+      this.accumulator = (this.accumulator || 0) + (deltaTime * this.speedMultiplier);
+      
+      const eraInfo = this.currentEra;
+      const targetDaysPerTick = eraInfo.timeDilation || 1;
+      const daysPerMs = targetDaysPerTick / this.tickRate;
+      
+      const daysToProcess = Math.floor(this.accumulator * daysPerMs);
+      
+      if (daysToProcess > 0) {
+          // Limite de segurança para evitar travamento se a aba ficar em background
+          const safeDays = Math.min(daysToProcess, targetDaysPerTick * 2);
+          this.accumulator -= (safeDays / daysPerMs);
+          
+          this.processTick(safeDays);
+      }
+      
+      this.scheduleNextTick();
   }
 
   get currentEra() {
       return Config.getCurrentEra(this.unlockedTechs.size);
   }
 
-  processTick() {
+  processTick(daysToProcess) {
     const eraInfo = this.currentEra;
-    const targetDays = eraInfo.timeDilation || 1;
-    this.deltaDays = 1; // FIX SRE: Força matemática estrita de 1 dia para evitar Wipe por Time-Skip
+    this.deltaDays = 1; // FIX SRE: Força matemática estrita de 1 dia
     
-    for (let step = 0; step < targetDays; step++) {
+    for (let step = 0; step < daysToProcess; step++) {
         this.day += this.deltaDays;
         
     while (this.day > 365) {
