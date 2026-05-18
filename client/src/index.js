@@ -258,6 +258,10 @@ renderer.init().then(() => {
             addNews(data.message || data, color);
             showFloatText(type === "cosmic" ? "☄️ EVENTO CÓSMICO" : "👁️ ASCENSÃO", color);
             if (data.nodeId) renderer.animateBlink(data.nodeId, color);
+        } else if (type === "nemesis") {
+            addNews(data.message || data, '#ff00ff');
+            showFloatText("🐺 RESISTÊNCIA", '#ff00ff');
+            if (data.nodeId) renderer.animateBlink(data.nodeId, '#ff00ff');
         } else if (type === "tech_auto") {
             showFloatText(`💡 Evolução: ${data}`, '#00ddff');
             if (!document.getElementById('tech-modal').classList.contains('hidden')) renderTechList();

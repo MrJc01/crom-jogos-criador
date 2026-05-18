@@ -1,72 +1,100 @@
 export default {
     id: 'events_targeted_disasters',
-    name: 'Desastres Inteligentes e Ciclos Infinitos',
+    name: 'A Fúria do Planeta (The Nemesis Tree)',
     type: 'event',
     
-    // Condição: Auditar se deve gerar um desastre
     triggerProbability(engine) {
-        // Se a severidade for absurda, aciona 100% (Reset Global)
         if (engine.severity >= engine.config.disasterThreshold) return 1.0;
-        
-        // Só começa a engatilhar desastres punitivos locais se severidade > 30%
-        if (engine.severity < 30) return 0;
-        return (engine.severity / 100) * 0.05; // Máximo de 5% de chance ao dia
+        if (engine.severity < 20) return 0;
+        return (engine.severity / 100) * 0.1; // Máximo de 10% chance ao dia de o planeta contra-atacar
     },
     
     applyEvent(engine) {
+        // Inicializa o estado do Nemesis se não existir
+        if (!engine.nemesis) {
+            engine.nemesis = { atmospheric: 0, biological: 0, geological: 0, sentientAwakened: false };
+        }
+
         // --- O CICLO INFINITO (GREAT FILTER) ---
         if (engine.severity >= engine.config.disasterThreshold) {
             engine.nodes.forEach(n => {
                 if (!n.infected) return;
-                // Extermina 99% da população
                 n.demographics.kill(Math.floor(n.demographics.total * 0.99));
-                // O bioma ganha "Ruínas Tecnológicas" (simulado injetando um boost massivo de minerais)
                 n.resources.minerals += 10000;
             });
             
-            // Zera a Árvore de Tecnologia (Recomeça da Idade da Pedra)
             engine.techTree.unlocked.clear();
             engine.severity = 0;
             engine.adaptationPoints = 0;
             engine.inventory.chips = 0;
             engine.inventory.computers = 0;
             
-            // Adiciona um evento cataclísmico
-            return { message: `☢️ COLAPSO DA CIVILIZAÇÃO! A severidade chegou ao ápice. O sistema mundial colapsou. Sobreviventes voltaram à Idade da Pedra em meio a ruínas.` };
+            // Reseta a Fúria do Planeta
+            engine.nemesis = { atmospheric: 0, biological: 0, geological: 0, sentientAwakened: false };
+            
+            return { message: `☢️ COLAPSO! A Fúria do Planeta chegou ao ápice. O sistema mundial colapsou. Sobreviventes voltaram à Idade da Pedra em meio a ruínas.`, type: "disaster" };
         }
 
-        // --- DESASTRES LOCAIS (METRÓPOLES) ---
         const infectedNodes = Array.from(engine.nodes.values()).filter(n => n.infected);
         if (infectedNodes.length === 0) return null;
+
+        // O Planeta escolhe como atacar baseado no "Level" de defesa
+        const roll = Math.random();
         
-        let totalPop = 0;
-        infectedNodes.forEach(n => totalPop += n.demographics.total);
-        const avgPop = totalPop / infectedNodes.length;
-        
-        const targets = infectedNodes.filter(n => n.demographics.total > (avgPop * 1.5) && (n.demographics.total / n.capacity) > 0.8);
-        
-        if (targets.length === 0) return null;
-        
-        const targetNode = targets[Math.floor(Math.random() * targets.length)];
-        const era = engine.currentEra.name;
-        
-        let killRate = 0.1; 
-        let disasterName = "Colapso Desconhecido";
-        
-        if (era === 'Idade da Pedra' || era === 'Idade do Cobre' || era === 'Idade do Bronze') {
-            disasterName = "Praga Local / Fome Extrema";
-            killRate = 0.3; 
-        } else if (era === 'Idade do Ferro' || era === 'Era Industrial') {
-            disasterName = "Nuvem Tóxica / Fogo Urbano";
-            killRate = 0.2; 
-        } else {
-            disasterName = "Vírus Cibernético / Falha Crítica de Reator";
-            killRate = 0.4; 
+        // 1. Raiz Geológica (Terremotos em Minas)
+        if (roll < 0.33) {
+            engine.nemesis.geological++;
+            // Foca nos nós onde estão minerando muito (Alto nível de minérios extraídos = População alta + Madeira Baixa)
+            const miningTargets = infectedNodes.filter(n => n.resources.minerals < 5000);
+            if (miningTargets.length > 0) {
+                const t = miningTargets[Math.floor(Math.random() * miningTargets.length)];
+                const killRate = Math.min(0.8, 0.1 * engine.nemesis.geological);
+                t.demographics.kill(Math.floor(t.demographics.total * killRate));
+                return { message: `🌋 RAÍZ GEOLÓGICA (Nv ${engine.nemesis.geological}): Terremoto massivo em ${t.name} (Zonas de Escavação). ${killRate*100}% de letalidade!`, nodeId: t.id, type: "disaster" };
+            }
         }
         
-        const victims = Math.floor(targetNode.demographics.total * killRate);
-        targetNode.demographics.kill(victims);
+        // 2. Raiz Atmosférica (Seca e Desertificação)
+        else if (roll < 0.66) {
+            engine.nemesis.atmospheric++;
+            // Aumenta o GlobalKPenalty, dificultando a vida de todos
+            engine.globalKPenalty = (engine.globalKPenalty || 1.0) * 0.95;
+            
+            // Desertificação de um bioma verde
+            const greenNodes = infectedNodes.filter(n => n.biome.id === 'plains' || n.biome.id === 'jungle');
+            if (greenNodes.length > 0) {
+                const target = greenNodes[Math.floor(Math.random() * greenNodes.length)];
+                target.biome = { id: 'desert', capacityBase: target.biome.capacityBase * 0.5 };
+                target.capacity = target.capacity * 0.5; // Corta pela metade permanentemente
+                return { message: `🌪️ RAÍZ ATMOSFÉRICA (Nv ${engine.nemesis.atmospheric}): Seca Global Intensificada. ${target.name} sofreu Desertificação irreversível! A capacidade de carga caiu.`, nodeId: target.id, type: "disaster" };
+            }
+        }
         
-        return { message: `⚠️ DESASTRE (${disasterName}) atinge ${targetNode.name}! Mortalidade de ${killRate*100}% devido à superlotação, dizimando ${victims.toLocaleString('pt-BR')} habitantes.`, nodeId: targetNode.id };
+        // 3. Raiz Biológica (Pandemias de Super Fungos e Sencientes)
+        else {
+            engine.nemesis.biological++;
+            
+            // Se passar do nível 10, desperta espécies sencientes nativas
+            if (engine.nemesis.biological > 10 && !engine.nemesis.sentientAwakened) {
+                engine.nemesis.sentientAwakened = true;
+                return { message: `👽 DESPERTAR NATIVO: A Biosfera reagiu. Espécies Sencientes das Profundezas começaram a coordenar a caça aos humanos em todos os oceanos!`, type: "disaster", color: "#ff00ff" };
+            }
+
+            // Pandemia foca nos nós superlotados
+            const crowdedNodes = infectedNodes.filter(n => (n.demographics.total / n.capacity) > 0.8);
+            if (crowdedNodes.length > 0) {
+                const target = crowdedNodes[Math.floor(Math.random() * crowdedNodes.length)];
+                const killRate = 0.5; // 50% wipe
+                target.demographics.kill(Math.floor(target.demographics.total * killRate));
+                return { message: `🦠 RAÍZ BIOLÓGICA (Nv ${engine.nemesis.biological}): Um Super Fungo sofreu mutação no planeta e exterminou 50% de ${target.name}!`, nodeId: target.id, type: "disaster" };
+            }
+        }
+
+        // 4. Fauna Resistência (Passivo)
+        // Se a severidade for média e nenhum grande ataque foi engatilhado
+        const targetNode = infectedNodes[Math.floor(Math.random() * infectedNodes.length)];
+        const victims = Math.floor(targetNode.demographics.total * 0.05);
+        targetNode.demographics.kill(victims);
+        return { message: `🐺 RESISTÊNCIA DA FAUNA: Predadores locais coordenaram ataques contra postos avançados em ${targetNode.name}. Perdas menores (${victims} mortos).`, nodeId: targetNode.id, type: "nemesis" };
     }
 };
