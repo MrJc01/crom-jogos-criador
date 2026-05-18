@@ -166,6 +166,21 @@ export class TechTree {
                 if (engine.severity > 50 && tech.root === 'biology') weight *= 3.0; // Urgência médica
                 if ((engine.inventory.wood > 50000 || engine.inventory.minerals > 50000) && tech.root === 'industry') weight *= 2.0; // Pressão industrial
                 
+                // Eureka System: Traumas Culturais direcionam pesquisa (Sobrevivência P0)
+                if (tech.traumaTrigger) {
+                    let hasTrauma = false;
+                    const factions = engine.plugins.filter(p => p.type === 'faction');
+                    // Simulação rápida para checar se alguma facção viva tem o trauma (TechTree não importa FactionsData para evitar ciclo)
+                    if (engine.globalDemographics?.factions) {
+                        // Verifica no cache global do motor se o trauma foi ativado recentemente
+                        // OU se as techs tiverem tags de sobrevivência e houver deficit
+                    }
+                    // Alternativamente, olhamos a temperatura global se o trauma for climático
+                    if (tech.traumaTrigger === 'ice_survivors' && engine.globalTemperature < -0.6) weight *= 50.0;
+                    if (tech.traumaTrigger === 'desert_survivors' && engine.globalTemperature > 0.6) weight *= 50.0;
+                    if (tech.traumaTrigger === 'famine_trauma' && (engine._foodDeficit || 0) > 0.1) weight *= 50.0;
+                }
+                
                 // Variável de Caos (0.1 a 2.0)
                 const chaos = 0.1 + (Math.random() * 1.9);
                 weight *= chaos;

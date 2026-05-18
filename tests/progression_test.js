@@ -33,7 +33,7 @@ async function loadPlugins(engine) {
 }
 
 const YEARS = [100, 500, 1000, 3000, 6000, 10000];
-const FACTIONS = ['tribal', 'tecnocratas', 'eco_rebeldes'];
+const FACTIONS = ['sino_tibetanos', 'indo_europeus', 'bantu'];
 
 console.log("╔═══════════════════════════════════════════════════════════════════╗");
 console.log("║      CROM PROGRESSION TEST — Análise de Longa Duração           ║");

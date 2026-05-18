@@ -1,14 +1,14 @@
 export const FactionTaxonomy = {
-    tribal: { name: "Tribal", baseColor: "#8b4513", traits: ["survivalist", "animist"] },
-    expansionistas_militares: { name: "Expansionistas Militares", baseColor: "#e74c3c", traits: ["militarist", "materialist"] },
-    tecnocratas: { name: "Tecnocratas", baseColor: "#3498db", traits: ["technological", "materialist"] },
-    espiritualistas: { name: "Espiritualistas", baseColor: "#9b59b6", traits: ["spiritual", "pacifist"] },
-    corporatist: { name: "Corporativistas", baseColor: "#f1c40f", traits: ["materialist", "expansionist"] },
-    eco_rebeldes: { name: "Eco Rebeldes", baseColor: "#2ecc71", traits: ["ecological", "survivalist"] },
-    isolacionistas: { name: "Isolacionistas", baseColor: "#7f8c8d", traits: ["survivalist", "pacifist"] },
-    simbioticos_mutantes: { name: "Simbióticos Mutantes", baseColor: "#00ffcc", traits: ["ecological", "mutant"] },
-    nexistas_digitais: { name: "Nexistas Digitais", baseColor: "#00ffff", traits: ["technological", "hive"] },
-    hive_mind: { name: "Mente de Colmeia", baseColor: "#ff00ff", traits: ["hive", "survivalist"] }
+    indo_europeus: { name: "Indo-Europeus", baseColor: "#3498db", traits: ["expansionist", "militarist"] },
+    sino_tibetanos: { name: "Sino-Tibetanos", baseColor: "#e74c3c", traits: ["technological", "materialist"] },
+    bantu: { name: "Expansão Bantu", baseColor: "#2ecc71", traits: ["ecological", "survivalist"] },
+    semitas: { name: "Povos Semitas", baseColor: "#f1c40f", traits: ["spiritual", "survivalist"] },
+    mesoamericanos: { name: "Mesoamericanos", baseColor: "#8e44ad", traits: ["spiritual", "militarist"] },
+    dravidianos: { name: "Dravidianos", baseColor: "#e67e22", traits: ["technological", "ecological"] },
+    uralicos: { name: "Urálicos", baseColor: "#1abc9c", traits: ["survivalist", "pacifist"] },
+    austronesios: { name: "Austronésios", baseColor: "#00a8ff", traits: ["expansionist", "ecological"] },
+    isolacionistas_andinos: { name: "Andinos", baseColor: "#7f8c8d", traits: ["survivalist", "spiritual"] },
+    tribal_generico: { name: "Tribos Nativas", baseColor: "#8b4513", traits: ["survivalist", "animist"] }
 };
 
 export class FactionsData {

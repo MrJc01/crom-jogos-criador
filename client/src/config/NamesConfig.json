@@ -1,0 +1,34 @@
+{
+    "factions": {
+        "prefixes": [
+            "Povo", "Filhos", "Senhores", "Guardiões", "Nômades", "Caçadores",
+            "Sábios", "Guerreiros", "Xamãs", "Mutantes", "Refugiados", "Peregrinos",
+            "Mestres", "Vigilantes", "Espíritos", "Andarilhos", "Arautos"
+        ],
+        "suffixes": [
+            "do Rio", "da Tundra", "da Areia", "das Estrelas", "da Névoa",
+            "do Gelo", "do Deserto", "da Floresta", "da Planície", "de Cobre",
+            "do Aço", "Sombrios", "Luminosos", "Silenciosos", "Esquecidos"
+        ]
+    },
+    "species": {
+        "prefixes": [
+            "Homo", "Australo", "Paranthropus", "Neo", "Proto", "Crom",
+            "Sapiens", "Titanis", "Giganto", "Micro", "Silico"
+        ],
+        "suffixes": [
+            "Erectus", "Habilis", "Neanderthalensis", "Denisova", "Florensis",
+            "Robusto", "Superior", "Borg", "Mutatus", "Celestis"
+        ]
+    },
+    "rebels": {
+        "prefixes": [
+            "Frente", "Exército", "Legião", "Irmandade", "Clã", "Seita",
+            "Militância", "Vanguarda", "Sangue", "Despertos"
+        ],
+        "suffixes": [
+            "Vermelho", "Livre", "da Fome", "Verdadeiro", "Radical",
+            "dos Exilados", "da Vingança", "do Pôr do Sol", "da Tempestade"
+        ]
+    }
+}
