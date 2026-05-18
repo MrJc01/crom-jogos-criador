@@ -164,23 +164,18 @@
                     <span>👥 <span id="info-pop">0</span> / <span id="info-cap">0</span></span>
                 </div>
                 <!-- Barra de Superlotação -->
-                <div style="width: 100%; height: 8px; background: #222; border: 1px solid #111; margin-top: 5px;">
-                    <div id="info-pop-bar" style="height: 100%; width: 0%; background: #00ff88; transition: width 0.3s, background 0.3s;"></div>
+                <div style="width: 100%; height: 6px; background: #222; margin-top: 5px; border-radius:3px;">
+                    <div id="info-pop-bar" style="height: 100%; width: 0%; background: #00ff88; transition: width 0.3s; border-radius:3px;"></div>
                 </div>
             </div>
-
-            <div class="grid-list" style="max-height: 150px; border-bottom: 2px solid #222;">
-                <div class="item-card" style="border-color: #2a2a2a; padding: 4px;">
-                    <small id="label-wood" style="color: #6ab04c;">🌲 Madeira</small>
-                    <div id="info-wood" style="font-size: 18px; text-align: right;">0</div>
-                </div>
-                <div class="item-card" style="border-color: #2a2a2a; padding: 4px;">
-                    <small id="label-water" style="color: #00ddff;">💧 Água</small>
-                    <div id="info-water" style="font-size: 18px; text-align: right;">0</div>
-                </div>
-                <div class="item-card" style="border-color: #2a2a2a; padding: 4px;">
-                    <small id="label-minerals" style="color: #e3c16f;">🪨 Minérios</small>
-                    <div id="info-minerals" style="font-size: 18px; text-align: right;">0</div>
+            
+            <div style="padding: 10px;">
+                <h3 style="font-size: 16px; color: #888; margin-bottom: 5px;">Recursos Naturais</h3>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 18px;">
+                    <div><span id="label-wood">🌲 Madeira</span>: <span id="info-wood" style="color:#00ff88;">0</span></div>
+                    <div><span id="label-water">💧 Água</span>: <span id="info-water" style="color:#00ddff;">0</span></div>
+                    <div><span id="label-minerals">🪨 Minérios</span>: <span id="info-minerals" style="color:#ffaa00;">0</span></div>
+                    <div><span id="label-soil">🌱 Solo</span>: <span id="info-soil" style="color:#2ecc71;">100%</span></div>
                 </div>
             </div>
             

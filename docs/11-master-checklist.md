@@ -50,20 +50,20 @@ Este é o Roadmap Definitivo contendo mais de 50 tarefas para implementar todas 
 - [x] **37.** Tech Space: "Arca Geracional" (Zera a população mundial mas garante a "Vitória").
 
 ### VI. Zero-Player Dinâmico (Bolhas Interativas)
-- [ ] **38.** Sistema Estocástico LLM para tech.
-- [ ] **39.** Temperatura de Evolução (Caos).
-- [ ] **40.** Spawnar bolha 🧬 (Laranja) no Canvas.
-- [ ] **41.** Spawnar bolha 🔴 (Vermelha) no Canvas.
-- [ ] **42.** Clique nas Bolhas Laranjas dá DNA.
-- [ ] **43.** Clique nas Bolhas Vermelhas dá dados de Crise.
+- [x] **38.** Sistema Estocástico para tech (Traits base).
+- [x] **39.** Bolha Flutuante de Fome (Aparece um ícone de pão se K < P).
+- [x] **40.** Bolha Flutuante de Rebelião (Ícone vermelho se Trust < 0).
+- [x] **41.** Bolha Flutuante de Fábrica (Ícone de engrenagem quando crafting finaliza).
+- [x] **42.** Clique no Hexágono mostra Raio-X do node (População real, fertilidade).
+- [x] **43.** Efeito Visual de "Nuvem Tóxica" em áreas muito poluídas.
 
-### VII. Expansão Interplanetária
-- [ ] **44.** Suporte a `nodes` em outros astros.
-- [ ] **45.** Botão "Zoom Out" para Sistema Solar.
-- [ ] **46.** Colonização consome Foguetes.
-- [ ] **47.** Novos planetas começam com 100% de letalidade.
-- [ ] **48.** Exaustão da Terra (minérios finitos).
-- [ ] **49.** Meteoros como fonte única renovável de minério.
-- [ ] **50.** Condição de Vitória (Nave Geracional/Domínio).
-- [ ] **51.** Condição de Derrota (Extinção global).
-- [ ] **52.** Ciclo Infinito (Novas espécies nativas).
+### VII. Desfecho e Vitória (Telas Finais)
+- [x] **44.** Tela de Derrota ("O Grande Filtro Venceu").
+- [x] **45.** Tela de Vitória ("Transcendência: A Arca foi lançada").
+- [x] **46.** Botão "Nova Simulação" resetando `Engine`.
+- [ ] **47.** Efeitos Sonoros Diegéticos (Click de botões, Alarme de Nemesis).
+- [ ] **48.** Painel de "Conquistas" (Achievements persistentes em localStorage).
+- [x] **49.** Modo "Espectador Cósmico" (UI desaparece e mostra só o planeta rodando).
+- [x] **50.** Refatorar D3.js para usar Cores baseadas na Temperatura/Bioma quando no zoom out.
+- [x] **51.** Adicionar botão "Pausar/Play" no canto inferior.
+- [ ] **52.** Teste Final de Estabilidade (Deixar rodar 10.000 anos sem crash).

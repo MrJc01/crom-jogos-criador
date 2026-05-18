@@ -152,6 +152,65 @@ export class MapRenderer {
     update() {
         this.renderCanvas();
         this.renderSeaRoutes();
+        this.renderBubbles(); // Tarefas 39-41 e 43
+    }
+    
+    renderBubbles() {
+        if (!this.hexNodes) return;
+        
+        // Remove bolhas antigas
+        this.bubblesLayer.selectAll('*').remove();
+        
+        const zoomLevel = this.currentTransform.k;
+        if (zoomLevel < 2) return; // Só mostra bolhas com zoom aproximado
+        
+        const bubbles = [];
+        
+        for(let i = 0; i < this.hexNodes.length; i++) {
+            const h = this.hexNodes[i];
+            const node = this.engine.nodes.get(h.id);
+            if (!node || !node.infected) continue;
+            
+            // Nuvem Tóxica (Poluição Extrema / Antimatéria)
+            if (this.engine.severity > 80 && Math.random() < 0.05) {
+                bubbles.push({ x: h.x, y: h.y, icon: '☣️', color: '#8e44ad', size: 8 });
+            }
+            
+            // Fome (Tarefa 39)
+            const K = Math.floor(node.capacity * this.engine.currentEra.mult);
+            if (node.demographics.total > K) {
+                bubbles.push({ x: h.x, y: h.y - 3, icon: '🍞', color: '#e74c3c', size: 10 });
+            }
+            
+            // Rebelião / Trust Negativo (Tarefa 40)
+            const domFac = this.engine.economy.getDominantFaction(node);
+            if (domFac && this.engine.economy.getTrust(domFac) < 0) {
+                bubbles.push({ x: h.x + 3, y: h.y - 3, icon: '😡', color: '#c0392b', size: 10 });
+            }
+            
+            // Crafting / Fábrica (Tarefa 41)
+            // Para simplificar, mostra se a facção dominante tiver a especialização "fabrication" ou "assembly"
+            if (domFac && this.engine.economy.specializations) {
+                const spec = this.engine.economy.specializations[domFac];
+                if (spec === 'fabrication' || spec === 'assembly') {
+                    bubbles.push({ x: h.x - 3, y: h.y - 3, icon: '⚙️', color: '#7f8c8d', size: 8 });
+                }
+            }
+        }
+        
+        // Renderiza as bolhas
+        this.bubblesLayer.selectAll('.bubble')
+            .data(bubbles)
+            .enter()
+            .append('text')
+            .attr('class', 'bubble')
+            .attr('x', d => d.x)
+            .attr('y', d => d.y)
+            .attr('text-anchor', 'middle')
+            .style('font-size', d => `${d.size / zoomLevel}px`)
+            .style('pointer-events', 'none')
+            .style('opacity', 0.8)
+            .text(d => d.icon);
     }
     
     renderCanvas() {
@@ -227,7 +286,15 @@ export class MapRenderer {
                         }
                         const facColor = this.getFactionColor(domFac);
                         const ratio = Math.max(0.1, Math.min(1, node.demographics.total / node.capacity));
-                        color = d3.interpolateLab(baseColor, facColor)(ratio * 0.9);
+                        
+                        // Tarefa 50: Cores baseadas em Bioma no Zoom Out
+                        if (zoomLevel < 1.2) {
+                            // De longe, o planeta parece natural, com leve brilho da facção
+                            color = d3.interpolateLab(baseColor, facColor)(ratio * 0.3);
+                        } else {
+                            // De perto, as cores políticas ficam fortes
+                            color = d3.interpolateLab(baseColor, facColor)(ratio * 0.9);
+                        }
                     } else {
                         color = baseColor;
                     }

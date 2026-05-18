@@ -100,3 +100,28 @@
 23:52:25 [vite] page reload src/modules/technologies/sociology/dark_eugenics.js
 23:52:28 [vite] page reload src/modules/technologies/physical/space_dyson.js
 23:52:43 [vite] page reload src/modules/technologies/sociology/space_ark.js
+23:56:52 [vite] page reload src/ui/MapRenderer.js
+23:57:27 [vite] page reload src/index.js
+23:58:08 [vite] page reload src/index.js
+23:59:38 [vite] page reload index.html
+23:59:51 [vite] page reload src/index.js
+23:59:52 [vite] Pre-transform error: Failed to parse source for import analysis because the content contains invalid JS syntax. If you are using JSX, make sure to name the file with the .jsx or .tsx extension.
+23:59:52 [vite] Internal server error: Failed to parse source for import analysis because the content contains invalid JS syntax. If you are using JSX, make sure to name the file with the .jsx or .tsx extension.
+  Plugin: vite:import-analysis
+  File: /home/j/Documentos/GitHub/crom-jogos/crom-jogos-criador/client/src/index.js:433:5
+  432|        fList.innerHTML = '<div style="color:#666; padding:10px;">Nenhuma atividade detectada.</div>';
+  433|    }
+  434|  }
+     |  ^
+  435|  
+  436|  // ==========================================
+      at TransformPluginContext._formatError (file:///home/j/Documentos/GitHub/crom-jogos/crom-jogos-criador/client/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49258:41)
+      at TransformPluginContext.error (file:///home/j/Documentos/GitHub/crom-jogos/crom-jogos-criador/client/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49253:16)
+      at TransformPluginContext.transform (file:///home/j/Documentos/GitHub/crom-jogos/crom-jogos-criador/client/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64259:14)
+      at async PluginContainer.transform (file:///home/j/Documentos/GitHub/crom-jogos/crom-jogos-criador/client/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49099:18)
+      at async loadAndTransform (file:///home/j/Documentos/GitHub/crom-jogos/crom-jogos-criador/client/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:51978:27)
+      at async viteTransformMiddleware (file:///home/j/Documentos/GitHub/crom-jogos/crom-jogos-criador/client/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:62106:24)
+23:59:52 [vite] Pre-transform error: Failed to parse source for import analysis because the content contains invalid JS syntax. If you are using JSX, make sure to name the file with the .jsx or .tsx extension.
+00:00:26 [vite] page reload src/index.js
+00:01:41 [vite] page reload src/ui/MapRenderer.js
+00:02:10 [vite] page reload src/index.js

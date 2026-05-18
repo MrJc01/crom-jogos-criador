@@ -291,19 +291,43 @@ renderer.init().then(() => {
       }
       const domData = FactionsData.getFaction(domFac);
       uiFaction.textContent = domData.name;
-      uiFaction.style.color = domData.baseColor;
-      
-      if (engine.severity < 30) uiSeverity.style.color = '#fff';
-      else if (engine.severity < 60) uiSeverity.style.color = '#ffaa00';
-      else uiSeverity.style.color = '#ff4444';
-      
-      // Atualizar Inventário Global
-      uiInvWood.textContent = numFormat.format(engine.inventory.wood || 0);
-      uiInvMinerals.textContent = numFormat.format(engine.inventory.minerals || 0);
-      uiInvSteel.textContent = numFormat.format(engine.inventory.steel || 0);
-      uiInvSilicon.textContent = numFormat.format(engine.inventory.silicon || 0);
-      uiInvChips.textContent = numFormat.format(engine.inventory.chips || 0);
-      uiInvComputers.textContent = numFormat.format(engine.inventory.computers || 0);
+        // --- Tarefas 44 e 45: Telas Finais (Vitória e Derrota) ---
+        if (engine.gameWon) {
+            engine.pause();
+            const gameOverScreen = document.getElementById('loading-screen'); // Reusando div preta
+            gameOverScreen.style.display = 'flex';
+            gameOverScreen.innerHTML = `
+                <div style="text-align:center; padding: 40px; background: rgba(0,0,0,0.8); border: 2px solid #00ff88; border-radius: 10px;">
+                    <h1 style="color:#00ff88; font-size:48px;">TRANSCENDÊNCIA</h1>
+                    <p style="font-size:24px;">A Arca Geracional foi lançada. A humanidade escapou do Grande Filtro.</p>
+                    <p style="font-size:18px; color:#aaa;">O motor rodou por ${engine.year} anos.</p>
+                    <button id="btn-restart" style="margin-top:20px; padding: 10px 20px; font-size:18px; cursor:pointer;">Nova Simulação</button>
+                </div>
+            `;
+            document.getElementById('btn-restart').onclick = () => location.reload();
+            return;
+        } else if (engine.globalPop === 0 && engine.year > 1) {
+            engine.pause();
+            const gameOverScreen = document.getElementById('loading-screen');
+            gameOverScreen.style.display = 'flex';
+            gameOverScreen.innerHTML = `
+                <div style="text-align:center; padding: 40px; background: rgba(0,0,0,0.8); border: 2px solid #ff4444; border-radius: 10px;">
+                    <h1 style="color:#ff4444; font-size:48px;">O GRANDE FILTRO VENCEU</h1>
+                    <p style="font-size:24px;">A humanidade foi extinta. O planeta Terra respira novamente.</p>
+                    <p style="font-size:18px; color:#aaa;">Sobreviveram por ${engine.year} anos antes do colapso sistêmico.</p>
+                    <button id="btn-restart" style="margin-top:20px; padding: 10px 20px; font-size:18px; cursor:pointer;">Tentar Novamente</button>
+                </div>
+            `;
+            document.getElementById('btn-restart').onclick = () => location.reload();
+            return;
+        }
+        
+        // Atualiza inventário global
+        uiInvMinerals.textContent = numFormat.format(Math.floor(engine.inventory.minerals || 0));
+        uiInvSilicon.textContent = numFormat.format(Math.floor(engine.inventory.silicon || 0));
+        uiInvChips.textContent = numFormat.format(Math.floor(engine.inventory.chips || 0));
+        uiInvComputers.textContent = numFormat.format(Math.floor(engine.inventory.computers || 0));
+        uiInvWood.textContent = numFormat.format(Math.floor(engine.inventory.wood || 0));
       
       // Atualiza modais se estiverem abertos
       if (!document.getElementById('tech-modal').classList.contains('hidden')) renderTechList();
@@ -372,10 +396,16 @@ function updateSidebar(node) {
       document.getElementById('info-wood').textContent = numFormat.format(Math.floor(node.resources.wood || 0));
       document.getElementById('info-water').textContent = numFormat.format(Math.floor(node.resources.water || 0));
       document.getElementById('info-minerals').textContent = numFormat.format(Math.floor(node.resources.minerals || 0));
+      document.getElementById('info-soil').textContent = `${Math.floor(node.soil || 100)}%`;
+      
+      const soilEl = document.getElementById('info-soil');
+      if (node.soil < 50) soilEl.style.color = '#ffaa00';
+      if (node.soil < 20) soilEl.style.color = '#ff4444';
   } else {
       document.getElementById('info-wood').textContent = 0;
       document.getElementById('info-water').textContent = 0;
       document.getElementById('info-minerals').textContent = 0;
+      document.getElementById('info-soil').textContent = '100%';
   }
 
   // Facções Locais
@@ -456,3 +486,16 @@ makeDraggable('industry-modal');
 makeDraggable('factions-modal');
 makeDraggable('country-info');
 makeDraggable('instructions');
+makeDraggable('disasters-modal');
+
+// Modo Espectador Cósmico (Tarefa 49)
+let cosmicMode = false;
+document.addEventListener('keydown', (e) => {
+    if (e.key.toLowerCase() === 'h') {
+        cosmicMode = !cosmicMode;
+        document.querySelectorAll('.stone-panel, .floating-toolbar, #resource-bar').forEach(el => {
+            el.style.display = cosmicMode ? 'none' : '';
+        });
+        showFloatText(cosmicMode ? '🌌 Modo Espectador Ativado' : '🌌 UI Restaurada', '#00ff88');
+    }
+});
