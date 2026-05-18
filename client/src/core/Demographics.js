@@ -80,9 +80,26 @@ export class Demographics {
         const stage = this.getDTMStage(eraMult);
         const demoCfg = Config.demographics() || {};
         
+        // ESTOCÁSTICA (CAOS)
+        let chaosFactorBirths = 0.5 + Math.random(); // 0.5x a 1.5x
+        let chaosFactorDeaths = 0.5 + Math.random(); // 0.5x a 1.5x
+        
+        // EVENTOS CISNE NEGRO (BLACK SWANS) - 1% de chance de algo brutal acontecer ao ano por região
+        if (deltaDays > 1 && Math.random() < (0.01 * (deltaDays / 365))) {
+            if (Math.random() > 0.5) {
+                // Cisne Negro Positivo (Baby Boom / Era de Ouro Oculta)
+                chaosFactorBirths *= 3.0;
+                chaosFactorDeaths *= 0.2;
+            } else {
+                // Cisne Negro Negativo (Praga Oculta / Fome Súbita)
+                chaosFactorBirths *= 0.2;
+                chaosFactorDeaths *= 5.0;
+            }
+        }
+        
         // Nascimentos baseados no DTM (Crude Birth Rate se aplica à população total)
         const dailyBirthRate = stage.birthRate / 365;
-        const exactBirths = this.total * dailyBirthRate * deltaDays;
+        const exactBirths = this.total * dailyBirthRate * deltaDays * chaosFactorBirths;
         const totalBirths = Math.floor(exactBirths) + (Math.random() < (exactBirths % 1) ? 1 : 0);
         
         let newborns = 0;
@@ -107,12 +124,12 @@ export class Demographics {
         }
         
         // 006. Mortalidade infantil
-        let infantMortality = stage.infantMortality;
+        let infantMortality = stage.infantMortality * chaosFactorDeaths;
         const sanitCfg = demoCfg.sanitationImpact || {};
         if (!hasSanitation) {
             infantMortality *= (sanitCfg.noSanitationMortalityMultiplier || 1.5); // Reduzido de 3.0 para 1.5 para sobrevivência inicial
         }
-        infantMortality = Math.min(0.40, infantMortality); // Cap em 40% (historicamente realista)
+        infantMortality = Math.min(0.80, infantMortality); // Cap elevado em caso de pragas
         
         const exactSurvivingBabies = newborns * (1 - infantMortality);
         const survivingBabies = Math.floor(exactSurvivingBabies) + (Math.random() < (exactSurvivingBabies % 1) ? 1 : 0);
@@ -120,7 +137,7 @@ export class Demographics {
         
         // Mortalidade natural calculada sobre a população inicial do tick
         const dailyDeathRate = stage.deathRate / 365;
-        const exactDeaths = this.total * dailyDeathRate * deltaDays;
+        const exactDeaths = this.total * dailyDeathRate * deltaDays * chaosFactorDeaths;
         const naturalDeaths = Math.floor(exactDeaths) + (Math.random() < (exactDeaths % 1) ? 1 : 0);
         
         if (survivingBabies > 0) {

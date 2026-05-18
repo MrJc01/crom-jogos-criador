@@ -11,59 +11,23 @@
  * Nenhuma probabilidade, %, ou threshold deve ser hardcoded nos scripts.
  */
 
-import { createRequire } from 'module';
-import { fileURLToPath } from 'url';
-import { dirname, join } from 'path';
+import GameConfigData from './GameConfig.json' assert { type: 'json' };
+import EventsConfigData from './EventsConfig.json' assert { type: 'json' };
 
-let GameConfig, EventsConfig, TechTreeConfig, FactionsConfig, RecipesConfig, DemographicsConfig, EconomyConfig;
+// Tenta importar as outras (como já existem, a importação estática funciona)
+import TechTreeConfigData from './TechTreeConfig.json' assert { type: 'json' };
+import FactionsConfigData from './FactionsConfig.json' assert { type: 'json' };
+import RecipesConfigData from './RecipesConfig.json' assert { type: 'json' };
+import DemographicsConfigData from './DemographicsConfig.json' assert { type: 'json' };
+import EconomyConfigData from './EconomyConfig.json' assert { type: 'json' };
 
-// Compatível com Node.js (testes) E Vite (browser)
-try {
-    // Vite bundler: suporta import direto de JSON
-    if (typeof import.meta.glob === 'function' || (typeof process === 'undefined')) {
-        // Browser/Vite path — dynamic import não funciona aqui, usa fallback inline
-        GameConfig = null;
-        EventsConfig = null;
-    }
-} catch (e) {
-    // Fallback silencioso
-}
-
-// Node.js path: usa createRequire para carregar JSON sem assertion
-if (!GameConfig) {
-    try {
-        const __filename = fileURLToPath(import.meta.url);
-        const __dirname = dirname(__filename);
-        const require = createRequire(import.meta.url);
-        GameConfig = require(join(__dirname, 'GameConfig.json'));
-        EventsConfig = require(join(__dirname, 'EventsConfig.json'));
-        try { TechTreeConfig = require(join(__dirname, 'TechTreeConfig.json')); } catch(e) { TechTreeConfig = {}; }
-        try { FactionsConfig = require(join(__dirname, 'FactionsConfig.json')); } catch(e) { FactionsConfig = {}; }
-        try { RecipesConfig = require(join(__dirname, 'RecipesConfig.json')); } catch(e) { RecipesConfig = {}; }
-        try { DemographicsConfig = require(join(__dirname, 'DemographicsConfig.json')); } catch(e) { DemographicsConfig = {}; }
-        try { EconomyConfig = require(join(__dirname, 'EconomyConfig.json')); } catch(e) { EconomyConfig = {}; }
-    } catch (e) {
-        // Fallback para hardcoded mínimo se tudo falhar
-        console.warn('[ConfigLoader] Falha ao carregar JSONs, usando defaults mínimos:', e.message);
-        GameConfig = {
-            engine: { tickRate: 2465, baseTrustDecayPerYear: 0.95, initialTrust: 100, bubbleSpawnChance: 0.02, bubbleCrisisThreshold: 0.8, bubbleCrisisChance: 0.7 },
-            severity: { logMultiplier: 15, logOffset: -30, maxSeverity: 100, disasterThreshold: 95 },
-            demographics: { baseGrowthRate: 0.02, migrationThreshold: 0.95, geneticWinter: { popThreshold: 5000, yearThreshold: 50, dailyChance: 0.01, kPenaltyMultiplier: 0.85, kPenaltyRecoveryRate: 1.002, kPenaltyMinimum: 0.05 }, darkAge: { peakPopThreshold: 100000, popCollapseRatio: 0.30, dailyTechLossChance: 0.05, peakResetMultiplier: 1.5 } },
-            biomes: { DESERT: { id: 'desert', name: 'Deserto', difficulty: 1.0, capacityBase: 10000 }, TUNDRA: { id: 'tundra', name: 'Tundra', difficulty: 0.9, capacityBase: 20000 }, PLAINS: { id: 'plains', name: 'Planície Temperada', difficulty: 0.2, capacityBase: 500000 }, JUNGLE: { id: 'jungle', name: 'Floresta Tropical', difficulty: 0.5, capacityBase: 100000 } },
-            biomeResources: { jungle: { wood: 8000, water: 6000, mineralsMin: 1000, mineralsMax: 6000 }, plains: { wood: 4000, water: 6000, mineralsMin: 1000, mineralsMax: 6000 }, tundra: { wood: 1000, water: 6000, mineralsMin: 1000, mineralsMax: 6000 }, desert: { wood: 1000, water: 500, mineralsMin: 1000, mineralsMax: 6000 } },
-            capacityDivisor: 20,
-            seasons: { winterStart: 271, summerStart: 91, summerEnd: 180, winterModifier: 0.70, summerModifier: 1.20, winterWoodBurnDivisor: 1000 },
-            climate: { emissionThresholdMinerals: 100000, emissionThresholdWood: 50000, dailyEmissionRate: 0.001, permafrostTriggerTemp: 5.0, permafrostTempJump: 2.0, permafrostKPenalty: 0.80, climatePenaltyMultiplier: 0.05, climatePenaltyFloor: 0.10, policyForestSeasonPenalty: 0.80, policyForestWoodGainDivisor: 5000, policyForestTempRecovery: 0.005, policyWaterSocialPressureRate: 0.01 },
-            stockDecay: { wood: 0.999, water: 0.995, minerals: 0.9999 },
-            eras: [ { name: 'Idade da Pedra', minTechs: 0, mult: 1 }, { name: 'Idade do Cobre', minTechs: 5, mult: 3 }, { name: 'Idade do Bronze', minTechs: 12, mult: 10 }, { name: 'Idade do Ferro', minTechs: 20, mult: 50 }, { name: 'Era Industrial', minTechs: 30, mult: 200 }, { name: 'Era da Informação', minTechs: 40, mult: 1000 }, { name: 'Era Espacial', minTechs: 50, mult: 5000 } ],
-            greatFilter: { nuclear: { techRequired: 'tech_nuclear', trustThreshold: 20, socialPressureThreshold: 0.80, dailyChance: 0.005 }, kessler: { eraMultThreshold: 5000, dailyDebrisRate: 0.01, debrisThreshold: 10.0 } },
-            pressures: { tectonic: { highMineralThreshold: 50000, highRate: 0.0001, lowRate: 0.00001 }, climatic: { lowWoodThreshold: 100000, highRate: 0.0005, lowRate: 0.00005 }, biological: { highPopThreshold: 1000000, highRate: 0.0002, lowRate: 0.00002 }, social: { highPopThreshold: 500000, lowTrustThreshold: 80, highRate: 0.001, lowRate: 0.0001 } },
-            dnaGeneration: { popPerPoint: 100000, computerBonusBase: 1 },
-            warConfig: { warChance: 0.05, techCostMultiplier: 1.0 }
-        };
-        EventsConfig = {};
-    }
-}
+let GameConfig = GameConfigData;
+let EventsConfig = EventsConfigData;
+let TechTreeConfig = TechTreeConfigData;
+let FactionsConfig = FactionsConfigData;
+let RecipesConfig = RecipesConfigData;
+let DemographicsConfig = DemographicsConfigData;
+let EconomyConfig = EconomyConfigData;
 
 class ConfigManager {
     constructor() {

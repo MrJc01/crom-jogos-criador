@@ -220,9 +220,12 @@ export class GameEngine {
       // Inicializa sistemas de expansão v3
       const eraInfo = this.currentEra;
       const initialDilation = eraInfo?.timeDilation || 1;
-      region.food = 10000 * initialDilation; // Boost de sobrevivência inicial maciço
-      region.morale = 50; // Estável
-      region.wildGame = 5000; // Fauna abundante disponível para caça
+      
+      // Sorteio de Ambiente (0 a 10.000) - Caos no Início!
+      const luck = Math.random();
+      region.food = Math.floor(luck * 10000) * initialDilation; 
+      region.morale = 50; 
+      region.wildGame = Math.floor(Math.random() * 5000); // Fauna aleatória
       region.famineDays = 0;
       region.crops = [];
       region.moraleFactors = {};
@@ -608,6 +611,19 @@ export class GameEngine {
             
             if (this.onEvent) {
                 this.onEvent({ nodeId: randomNode.id, type: bType }, "bubble_spawn");
+            }
+        }
+    }
+    
+    // CAOS: Cisne Negro de Desastre Natural (Act of God) - Independente do clima ou era
+    if (this.globalPop > 0 && Math.random() < 0.0005) { // ~ 1 a cada 5 anos
+        const nodesArray = Array.from(this.nodes.values()).filter(n => n.infected);
+        if (nodesArray.length > 0) {
+            const unluckyNode = nodesArray[Math.floor(Math.random() * nodesArray.length)];
+            const deathToll = Math.floor(unluckyNode.demographics.total * (0.5 + (Math.random() * 0.4))); // Mata de 50% a 90%
+            if (deathToll > 0) {
+                unluckyNode.demographics.kill(deathToll);
+                if (this.onEvent) this.onEvent({ message: `🌩️ ATO DOS DEUSES: Um desastre cataclísmico e imprevisível varreu ${unluckyNode.name}, ceifando ${deathToll} vidas!`, type: "nemesis", color: "#330000" }, "nemesis");
             }
         }
     }

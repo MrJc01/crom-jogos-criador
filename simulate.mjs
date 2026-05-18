@@ -77,14 +77,18 @@ async function run() {
     }
     engine.initWorld(mockHexes);
 
-    // Infecta o primeiro nó
-    const startNode = Array.from(engine.nodes.values())[0];
+    // Infecta um nó aleatório (Roleta Geográfica)
+    const nodesArray = Array.from(engine.nodes.values());
+    const startNode = nodesArray[Math.floor(Math.random() * nodesArray.length)];
     startNode.infect(0);
     
-    // Configura a facção inicial com alguns fundadores
+    // Semente Fundadora Aleatória (Founder Effect) - Pode ser de 10 sobreviventes a 500 nômades
+    const initialPop = Math.floor(Math.random() * 490) + 10;
+    
+    // Configura a facção inicial com os fundadores
     startNode.demographics.dist.factions = { [selectedFaction]: 1.0 };
-    startNode.demographics.addBirths(100); 
-    engine.globalPop = 100;
+    startNode.demographics.addBirths(initialPop); 
+    engine.globalPop = initialPop;
 
     // Configura listeners para Crônicas (Avisos de Genocídio, Cisma, Estado, etc)
     const recentEvents = [];
