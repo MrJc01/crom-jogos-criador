@@ -1,0 +1,20 @@
+{
+  "_meta": "CROM VictoryConfig — Condições de vitória e scoring.",
+  "conditions": {
+    "domination":  { "threshold": 75, "description": "Controlar 75% dos hexes habitados" },
+    "science":     { "threshold": 100, "description": "Construir Esfera de Dyson + Arca Geracional", "techs": ["space_dyson", "space_ark"] },
+    "culture":     { "threshold": 90, "description": "Influência cultural em 90% dos hexes" },
+    "religion":    { "threshold": 80, "description": "Uma religião em 80% dos hexes habitados" },
+    "diplomacy":   { "threshold": 80, "description": "Federação com 80%+ das facções" },
+    "score":       { "turnLimit": 10000, "description": "Maior score após 10.000 anos" }
+  },
+  "scoring": {
+    "popWeight": 0.001,
+    "techWeight": 100,
+    "wonderWeight": 500,
+    "literacyWeight": 10,
+    "gdpWeight": 0.1,
+    "cultureWeight": 5,
+    "religionWeight": 3
+  }
+}

@@ -86,6 +86,14 @@ export class GameEngine {
       const techModules = import.meta.glob('../modules/technologies/**/*.js', { eager: true });
       const eventModules = import.meta.glob('../modules/events/**/*.js', { eager: true });
       const knowledgeModules = import.meta.glob('../modules/knowledge/**/*.js', { eager: true });
+      const agricultureModules = import.meta.glob('../modules/agriculture/*.js', { eager: true });
+      const happinessModules = import.meta.glob('../modules/happiness/*.js', { eager: true });
+      const governanceModules = import.meta.glob('../modules/governance/*.js', { eager: true });
+      const cultureModules = import.meta.glob('../modules/culture/*.js', { eager: true });
+      const educationModules = import.meta.glob('../modules/education/*.js', { eager: true });
+      const infraModules = import.meta.glob('../modules/infrastructure/*.js', { eager: true });
+      const tradeModules = import.meta.glob('../modules/trade/*.js', { eager: true });
+      const victoryModules = import.meta.glob('../modules/victory/*.js', { eager: true });
       
       this.injectModules(biologyModules);
       this.injectModules(sociologyModules);
@@ -94,6 +102,14 @@ export class GameEngine {
       this.injectModules(techModules);
       this.injectModules(eventModules);
       this.injectModules(knowledgeModules);
+      this.injectModules(agricultureModules);
+      this.injectModules(happinessModules);
+      this.injectModules(governanceModules);
+      this.injectModules(cultureModules);
+      this.injectModules(educationModules);
+      this.injectModules(infraModules);
+      this.injectModules(tradeModules);
+      this.injectModules(victoryModules);
   }
 
   injectModules(modulesMap) {
@@ -200,6 +216,16 @@ export class GameEngine {
       
       region.infect(100);
       this.globalPop += 100;
+      
+      // Inicializa sistemas de expansão v3
+      const eraInfo = this.currentEra;
+      const initialDilation = eraInfo?.timeDilation || 1;
+      region.food = 500 * initialDilation; // Comida inicial para sobreviver o primeiro mega-salto
+      region.morale = 50; // Estável
+      region.wildGame = 100; // Fauna disponível para caça
+      region.famineDays = 0;
+      region.crops = [];
+      region.moraleFactors = {};
       return true;
     }
     return false;
@@ -227,9 +253,12 @@ export class GameEngine {
   }
 
   processTick() {
-    this.day++;
-    if (this.day > 365) {
-        this.day = 1;
+    const eraInfo = this.currentEra;
+    this.deltaDays = eraInfo.timeDilation || 1;
+    this.day += this.deltaDays;
+    
+    while (this.day > 365) {
+        this.day -= 365;
         this.year++;
         // Tarefa 22: Trust decai por ano (config) — FIX: Floor para não ficar em 0 eterno
         const trustFloor = Config.get('engine.trustFloor', 5);
@@ -257,8 +286,7 @@ export class GameEngine {
         }
     }
     
-    // Multiplicador da Era Atual
-    const eraInfo = this.currentEra;
+    // Multiplicador da Era Atual (declarado acima)
     
     // Calcula Modificadores Globais dinamicamente através da Tech Tree
     let global_K_boost = 1.0 * eraInfo.mult;
@@ -325,7 +353,8 @@ export class GameEngine {
         global_K_boost: global_K_boost * seasonModifier * climatePenalty,
         global_r_boost,
         globalKPenalty: this.globalKPenalty,
-        policyWater: this.policies.water
+        policyWater: this.policies.water,
+        deltaDays: this.deltaDays || 1
     };
 
     let newGlobalPop = 0;
@@ -334,7 +363,7 @@ export class GameEngine {
     this.nodes.forEach(node => {
         if (!node.infected) return;
         this.plugins.forEach(plugin => {
-            if (plugin.type !== 'event') {
+            if (plugin.type !== 'event' && typeof plugin.applyTick === 'function') {
                 plugin.applyTick(node, globalRules, this);
             }
         });
@@ -342,7 +371,7 @@ export class GameEngine {
         // 006/009/011: Processar DTM (nascimentos, mortalidade infantil, mortes naturais)
         if (node.demographics.processDTM) {
             const hasSanitation = this.unlockedTechs.has('saneamento_basico');
-            node.demographics.processDTM(eraInfo.mult, hasSanitation, node.biome?.id || 'plains');
+            node.demographics.processDTM(eraInfo.mult, hasSanitation, node.biome?.id || 'plains', this.deltaDays || 1);
         }
         
         // TAREFA 34 e 35: Limites Urbanos (Verticalização e Ilha de Calor)

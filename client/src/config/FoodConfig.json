@@ -1,0 +1,62 @@
+{
+  "_meta": "CROM FoodConfig — Sistema de agricultura, comida e fome.",
+
+  "crops": {
+    "_comment": "Crops disponíveis por bioma. Yield = food/ano por worker.",
+    "wheat":  { "biomes": ["plains"], "yieldBase": 50, "waterCost": 2, "seasonBonus": { "summer": 1.3, "winter": 0.3 } },
+    "rice":   { "biomes": ["jungle", "plains"], "yieldBase": 70, "waterCost": 5, "seasonBonus": { "summer": 1.5, "winter": 0.1 } },
+    "potato": { "biomes": ["plains", "tundra"], "yieldBase": 40, "waterCost": 1, "seasonBonus": { "summer": 1.1, "winter": 0.7 } },
+    "corn":   { "biomes": ["plains", "jungle"], "yieldBase": 60, "waterCost": 3, "seasonBonus": { "summer": 1.4, "winter": 0.2 } },
+    "dates":  { "biomes": ["desert"], "yieldBase": 20, "waterCost": 4, "seasonBonus": { "summer": 1.0, "winter": 0.8 } },
+    "berries":{ "biomes": ["jungle", "tundra"], "yieldBase": 15, "waterCost": 1, "seasonBonus": { "summer": 1.5, "winter": 0.0 } }
+  },
+
+  "livestock": {
+    "_comment": "Animais domesticados. Consomem food mas multiplicam produção.",
+    "cattle":  { "foodCost": 10, "foodYield": 25, "minPop": 500, "biomes": ["plains"] },
+    "sheep":   { "foodCost": 5,  "foodYield": 12, "minPop": 200, "biomes": ["plains", "tundra"] },
+    "chicken": { "foodCost": 2,  "foodYield": 8,  "minPop": 100, "biomes": ["plains", "jungle", "desert"] },
+    "fish":    { "foodCost": 0,  "foodYield": 15, "minPop": 50,  "biomes": ["jungle"], "requiresCoastal": true }
+  },
+
+  "consumption": {
+    "_comment": "Consumo diário de food por pessoa por faixa etária.",
+    "child": 0.5,
+    "young": 1.0,
+    "adult": 1.0,
+    "elder": 0.7
+  },
+
+  "famine": {
+    "_comment": "Sem food por X dias = morte acelerada.",
+    "daysToStarvation": 30,
+    "dailyDeathRate": 0.005,
+    "moraleImpact": -20,
+    "cannibalismThreshold": 90,
+    "cannibalismChance": 0.01
+  },
+
+  "irrigation": {
+    "_comment": "Irrigação multiplica yield de farms.",
+    "basicMultiplier": 1.5,
+    "advancedMultiplier": 2.5,
+    "techRequired": "saneamento_basico",
+    "advancedTechRequired": "arquitetura_vertical"
+  },
+
+  "variety": {
+    "_comment": "Variedade de comida afeta morale (como DF).",
+    "singleCropPenalty": -5,
+    "twoCropsBonus": 0,
+    "threePlusCropsBonus": 5,
+    "livestockBonus": 3
+  },
+
+  "hunting": {
+    "_comment": "Caça e coleta pré-agricultura.",
+    "baseYieldPerHunter": 3,
+    "maxHuntersPerHex": 50,
+    "depletionRate": 0.01,
+    "recoveryRate": 0.005
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "_meta": "CROM InfraConfig — Transporte, energia, comunicação.",
+  "transport": {
+    "trail":    { "level": 1, "name": "Trilha",              "cost": { "wood": 20 },  "tradeMult": 1.5, "migMult": 1.3, "minPop": 500 },
+    "road":     { "level": 2, "name": "Estrada",             "cost": { "wood": 50 },  "tradeMult": 2.0, "migMult": 2.0, "minPop": 5000 },
+    "paved":    { "level": 3, "name": "Estrada Pavimentada", "cost": { "minerals": 100 }, "tradeMult": 3.0, "migMult": 2.5, "minPop": 20000, "minTechs": 10 },
+    "railway":  { "level": 4, "name": "Ferrovia",            "cost": { "minerals": 300 }, "tradeMult": 10.0, "migMult": 3.0, "minPop": 50000, "minTechs": 15 },
+    "highway":  { "level": 5, "name": "Rodovia",             "cost": { "minerals": 500 }, "tradeMult": 5.0, "migMult": 5.0, "minPop": 100000, "minTechs": 20 },
+    "airport":  { "level": 6, "name": "Aeroporto",           "cost": { "minerals": 1000, "chips": 10 }, "tradeMult": 20.0, "migMult": 10.0, "minPop": 200000, "minTechs": 25 }
+  },
+  "energy": {
+    "biomass":  { "output": 1,   "pollution": 0.1, "minTechs": 0 },
+    "coal":     { "output": 5,   "pollution": 0.5, "minTechs": 10 },
+    "oil":      { "output": 20,  "pollution": 0.8, "minTechs": 15 },
+    "nuclear":  { "output": 100, "pollution": 0.1, "minTechs": 25, "tech": "fissao_nuclear" },
+    "solar":    { "output": 50,  "pollution": 0.0, "minTechs": 20 },
+    "fusion":   { "output": 500, "pollution": 0.0, "minTechs": 35, "tech": "fusao_nuclear" }
+  },
+  "communication": {
+    "smoke":    { "level": 1, "name": "Sinais de Fumaça", "awareness": 0.1, "minPop": 1000 },
+    "mail":     { "level": 2, "name": "Correio",          "awareness": 0.3, "minPop": 10000, "minLit": 15 },
+    "press":    { "level": 3, "name": "Imprensa",         "awareness": 0.5, "minPop": 50000, "minLit": 30 },
+    "telegraph":{ "level": 4, "name": "Telégrafo",        "awareness": 0.7, "minPop": 100000, "minLit": 50 },
+    "radio":    { "level": 5, "name": "Rádio",            "awareness": 0.8, "minPop": 200000, "minLit": 60 },
+    "tv":       { "level": 6, "name": "Televisão",        "awareness": 0.9, "minPop": 500000, "minLit": 70 },
+    "internet": { "level": 7, "name": "Internet",         "awareness": 1.0, "minPop": 1000000, "minLit": 80 }
+  }
+}

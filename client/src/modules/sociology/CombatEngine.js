@@ -29,6 +29,10 @@ export default {
             let willAttack = data.traits.includes("militarist") || data.traits.includes("chaotic");
             if (capacityRatio > 0.8 && data.traits.includes("survivalist")) willAttack = true;
             
+            // GUERRA DE DESESPERO: Quando a K (capacidade) entra em colapso (ex: Era do Gelo) ou há fome generalizada
+            if (capacityRatio > 1.2) willAttack = true; // Desespero por espaço
+            if (capacityRatio > 1.0 && (node.food || 0) <= 0) willAttack = true; // Fome Malthusiana
+            
             if (willAttack) {
                 const targets = factionsPresent.filter(f => f !== agressorId);
                 if (targets.length === 0) continue;

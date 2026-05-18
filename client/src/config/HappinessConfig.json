@@ -1,0 +1,63 @@
+{
+  "_meta": "CROM HappinessConfig — Morale local por hex, amenidades, crime.",
+
+  "baselineMorale": 50,
+  "maxMorale": 100,
+  "minMorale": 0,
+
+  "factors": {
+    "_comment": "Cada fator adiciona ou subtrai do morale base de 50.",
+    "foodSurplus":      { "threshold": 100, "bonus": 10 },
+    "foodDeficit":      { "threshold": 0,   "penalty": -25 },
+    "foodVariety":      { "singleCropPenalty": -5, "multiCropBonus": 5 },
+    "overcrowding":     { "threshold": 0.85, "penalty": -15 },
+    "warActive":        { "penalty": -20 },
+    "warVictory":       { "bonus": 10, "duration": 365 },
+    "warDefeat":        { "penalty": -15, "duration": 730 },
+    "plague":           { "penalty": -25 },
+    "temple":           { "bonus": 10 },
+    "school":           { "bonus": 5 },
+    "market":           { "bonus": 5 },
+    "pollution":        { "threshold": 80, "penalty": -10 },
+    "recentDisaster":   { "penalty": -15, "decayDays": 180 },
+    "goldenAge":        { "bonus": 15 },
+    "lowTrust":         { "threshold": 30, "penalty": -10 },
+    "highTrust":        { "threshold": 120, "bonus": 5 }
+  },
+
+  "thresholds": {
+    "_comment": "Faixas de morale e seus efeitos.",
+    "rebellion":   { "max": 20, "revoltChance": 0.005, "killRate": 0.10 },
+    "unrest":      { "max": 35, "productionPenalty": 0.30 },
+    "discontent":  { "max": 45, "productionPenalty": 0.10 },
+    "stable":      { "max": 65, "productionPenalty": 0 },
+    "content":     { "max": 80, "productionBonus": 0.10 },
+    "goldenAge":   { "min": 80, "productionBonus": 0.50, "researchBonus": 0.30 }
+  },
+
+  "amenities": {
+    "_comment": "Estruturas que dão morale. Requerem manutenção.",
+    "tavern":    { "moraleBonus": 8,  "woodCost": 50,  "maintenanceWood": 1 },
+    "park":      { "moraleBonus": 5,  "woodCost": 20,  "maintenanceWood": 0 },
+    "theater":   { "moraleBonus": 10, "woodCost": 100, "maintenanceWood": 2 },
+    "bathhouse": { "moraleBonus": 7,  "waterCost": 50, "maintenanceWater": 2 },
+    "arena":     { "moraleBonus": 12, "mineralCost": 200, "maintenanceMinerals": 1 }
+  },
+
+  "crime": {
+    "_comment": "Crime emerge quando morale baixo + overcrowding.",
+    "baseCrimeRate": 0.01,
+    "moraleFactor": -0.001,
+    "overcrowdingFactor": 0.02,
+    "povertyFactor": 0.015,
+    "crimeEffects": {
+      "productionLoss": 0.05,
+      "moraleImpact": -3,
+      "deathRate": 0.0001
+    },
+    "policing": {
+      "baseCostPerPop": 0.01,
+      "crimeReduction": 0.5
+    }
+  }
+}

@@ -20,9 +20,14 @@ export default {
             const drive = data.explorationDrive || 0.01;
             
             // Fator de pressão: Se o nó está cheio, o drive aumenta exponencialmente
-            // Se o nó tem folga, depende unicamente da curiosidade nativa (explorationDrive)
-            const pressure = capacityRatio > 0.8 ? (capacityRatio - 0.8) * 5 : 0;
-            const effectiveDrive = Math.min(1.0, drive + pressure);
+            // CLIMATE MIGRATION: Se a adaptação ao bioma for terrível (< 50%), pânico migratório engatilha!
+            const currentBiome = node.biome?.id || 'plains';
+            const adaptation = node.biomeAdaptation?.[currentBiome] || 0;
+            let climatePressure = 0;
+            if (adaptation < 50) climatePressure = (50 - adaptation) / 10; // Até 5.0 de pressão
+            
+            const pressure = (capacityRatio > 0.8 ? (capacityRatio - 0.8) * 5 : 0) + climatePressure;
+            const effectiveDrive = Math.min(2.0, drive + pressure); // Cap maior em desespero
             
             // A taxa de pessoas que decide migrar (Média de 0.1% a 2% da facção por mês)
             const migrationRate = effectiveDrive * 0.02;

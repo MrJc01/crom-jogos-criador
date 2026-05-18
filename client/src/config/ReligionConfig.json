@@ -1,0 +1,53 @@
+{
+  "_meta": "CROM ReligionConfig — Religiões procedurais emergentes.",
+
+  "spawn": {
+    "minPop": 3000,
+    "maxLiteracy": 40,
+    "spawnChance": 0.002,
+    "maxReligionsPerHex": 2,
+    "maxGlobalReligions": 8
+  },
+
+  "tenets": {
+    "_comment": "Cada religião recebe 2-3 tenets aleatórios que definem seu comportamento.",
+    "pacifism":     { "warPenalty": -0.30, "moraleBonus": 5,  "trustBonus": 10, "description": "Proíbe a guerra" },
+    "sacrifice":    { "killRate": 0.001, "moraleBonus": 8,  "foodCost": 5, "description": "Sacrifícios rituais" },
+    "asceticism":   { "consumptionReduction": 0.20, "moraleBonus": 3, "description": "Vida simples" },
+    "expansion":    { "spreadRate": 2.0, "militaryBonus": 0.10, "description": "Conversão ativa" },
+    "mysticism":    { "researchPenalty": -0.10, "moraleBonus": 10, "description": "Experiência espiritual" },
+    "stewardship":  { "farmingBonus": 0.15, "moraleBonus": 3, "description": "Cuidado com a terra" },
+    "ancestor_worship": { "moraleBonus": 7, "elderRespect": true, "description": "Culto aos ancestrais" },
+    "holy_war":     { "warBonus": 0.30, "moralePenalty": -5, "description": "Guerra sagrada" },
+    "knowledge":    { "researchBonus": 0.10, "literacyBonus": 0.5, "description": "Saber é divino" },
+    "nature_worship": { "pollutionReduction": 0.30, "farmingBonus": 0.10, "description": "Reverência à natureza" }
+  },
+
+  "schism": {
+    "_comment": "Religiões se dividem quando ficam grandes demais.",
+    "popThreshold": 50000,
+    "chance": 0.005,
+    "instabilityDuration": 180,
+    "trustLoss": 20
+  },
+
+  "conversion": {
+    "baseRate": 0.001,
+    "proximityBonus": 0.5,
+    "tradeRouteBonus": 0.3,
+    "literacyResistance": 0.01,
+    "secularizationThreshold": 80
+  },
+
+  "temples": {
+    "buildCost": { "wood": 200, "minerals": 100 },
+    "maintenanceCost": { "wood": 2 },
+    "moraleBonus": 10,
+    "maxPerHex": 3
+  },
+
+  "names": {
+    "prefixes": ["Culto de", "Igreja de", "Irmandade de", "Ordem de", "Templo de", "Fé em", "Caminho de"],
+    "concepts": ["Luz Eterna", "Pedra Sagrada", "Fogo Interior", "Águas Profundas", "Céu Infinito", "Raiz do Mundo", "Sol Negro", "Lua Vermelha", "Espírito Antigo", "Chama Imortal", "Vento Norte", "Sombra Mãe"]
+  }
+}

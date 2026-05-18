@@ -60,10 +60,10 @@
   },
 
   "biomes": {
-    "DESERT": { "id": "desert", "name": "Deserto", "difficulty": 1.0, "capacityBase": 10000 },
-    "TUNDRA": { "id": "tundra", "name": "Tundra", "difficulty": 0.9, "capacityBase": 20000 },
-    "PLAINS": { "id": "plains", "name": "Planície Temperada", "difficulty": 0.2, "capacityBase": 500000 },
-    "JUNGLE": { "id": "jungle", "name": "Floresta Tropical", "difficulty": 0.5, "capacityBase": 100000 }
+    "DESERT": { "id": "desert", "name": "Deserto", "difficulty": 1.0, "capacityBase": 10000, "diseasePressure": 0.2, "adaptationReq": "qanat_irrigation" },
+    "TUNDRA": { "id": "tundra", "name": "Tundra", "difficulty": 0.9, "capacityBase": 20000, "diseasePressure": 0.1, "adaptationReq": "ice_fishing" },
+    "PLAINS": { "id": "plains", "name": "Planície Temperada", "difficulty": 0.2, "capacityBase": 500000, "diseasePressure": 0.5, "adaptationReq": null },
+    "JUNGLE": { "id": "jungle", "name": "Floresta Tropical", "difficulty": 0.5, "capacityBase": 100000, "diseasePressure": 1.5, "adaptationReq": "jungle_herbalism" }
   },
 
   "biomeResources": {
@@ -113,13 +113,13 @@
   },
 
   "eras": [
-    { "name": "Idade da Pedra",     "minTechs": 0,  "mult": 1 },
-    { "name": "Idade do Cobre",     "minTechs": 4,  "mult": 3 },
-    { "name": "Idade do Bronze",    "minTechs": 8,  "mult": 10 },
-    { "name": "Idade do Ferro",     "minTechs": 13, "mult": 50 },
-    { "name": "Era Industrial",     "minTechs": 20, "mult": 200 },
-    { "name": "Era da Informação",  "minTechs": 28, "mult": 1000 },
-    { "name": "Era Espacial",       "minTechs": 35, "mult": 5000 }
+    { "name": "Idade da Pedra",     "minTechs": 0,  "mult": 1, "timeDilation": 3650 },
+    { "name": "Idade do Cobre",     "minTechs": 4,  "mult": 3, "timeDilation": 365 },
+    { "name": "Idade do Bronze",    "minTechs": 8,  "mult": 10, "timeDilation": 30 },
+    { "name": "Idade do Ferro",     "minTechs": 13, "mult": 50, "timeDilation": 30 },
+    { "name": "Era Industrial",     "minTechs": 20, "mult": 200, "timeDilation": 7 },
+    { "name": "Era da Informação",  "minTechs": 28, "mult": 1000, "timeDilation": 1 },
+    { "name": "Era Espacial",       "minTechs": 35, "mult": 5000, "timeDilation": 1 }
   ],
 
   "greatFilter": {

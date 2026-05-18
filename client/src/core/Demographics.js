@@ -62,7 +62,7 @@ export class Demographics {
     getDTMStage(eraMult) {
         const demoCfg = Config.demographics() || {};
         const stages = demoCfg.dtm?.stages || [
-            { name: "Pré-Industrial", minEra: 1, birthRate: 0.045, deathRate: 0.040, infantMortality: 0.30 }
+            { name: "Pré-Industrial", minEra: 1, birthRate: 0.080, deathRate: 0.040, infantMortality: 0.30 }
         ];
         let current = stages[0];
         for (const stage of stages) {
@@ -75,48 +75,59 @@ export class Demographics {
      * 006+011. Processa nascimentos e mortes baseado no DTM.
      * Chamado por tick no Engine.
      */
-    processDTM(eraMult, hasSanitation, biomeId) {
+    processDTM(eraMult, hasSanitation, biomeId, deltaDays = 1) {
         const stage = this.getDTMStage(eraMult);
         const demoCfg = Config.demographics() || {};
         
-        // Nascimentos diários baseados no DTM (convertido de anual para diário)
+        // Nascimentos baseados no DTM (Crude Birth Rate se aplica à população total)
         const dailyBirthRate = stage.birthRate / 365;
-        const fertileFemales = this.total * this.dist.sex.F * (this.dist.age.young + this.dist.age.adult);
-        const births = Math.floor(fertileFemales * dailyBirthRate);
+        const exactBirths = this.total * dailyBirthRate * deltaDays;
+        const totalBirths = Math.floor(exactBirths) + (Math.random() < (exactBirths % 1) ? 1 : 0);
         
-        if (births > 0) {
-            // Adiciona à fila de gestação (nascem em ~270 dias)
-            this.pregnancyQueue[this.pregnancyQueue.length - 1] += births;
+        let newborns = 0;
+        
+        // Fast-forward na fila de gestação
+        const advance = Math.min(deltaDays, this.pregnancyQueue.length);
+        for (let i = 0; i < advance; i++) {
+            newborns += this.pregnancyQueue.shift() || 0;
         }
         
-        // Nascimentos que saem da fila
-        const newborns = this.pregnancyQueue.shift();
-        this.pregnancyQueue.push(0);
+        // Preenche a fila de volta para 270 dias
+        while (this.pregnancyQueue.length < 270) {
+            this.pregnancyQueue.push(0);
+        }
         
-        // 006. Mortalidade infantil aplica-se aos recém-nascidos
+        if (deltaDays >= 270) {
+            // Tempo passou tão rápido que nasceram instantaneamente
+            newborns += totalBirths;
+        } else {
+            // Coloca no fim da fila
+            this.pregnancyQueue[this.pregnancyQueue.length - 1] += totalBirths;
+        }
+        
+        // 006. Mortalidade infantil
         let infantMortality = stage.infantMortality;
-        
-        // 009. Sem saneamento = mortalidade 3× maior
         const sanitCfg = demoCfg.sanitationImpact || {};
         if (!hasSanitation) {
-            infantMortality *= (sanitCfg.noSanitationMortalityMultiplier || 3.0);
+            infantMortality *= (sanitCfg.noSanitationMortalityMultiplier || 1.5); // Reduzido de 3.0 para 1.5 para sobrevivência inicial
         }
-        infantMortality = Math.min(0.95, infantMortality); // Cap em 95%
+        infantMortality = Math.min(0.40, infantMortality); // Cap em 40% (historicamente realista)
         
-        const survivingBabies = Math.floor(newborns * (1 - infantMortality));
+        const exactSurvivingBabies = newborns * (1 - infantMortality);
+        const survivingBabies = Math.floor(exactSurvivingBabies) + (Math.random() < (exactSurvivingBabies % 1) ? 1 : 0);
         const infantDeaths = newborns - survivingBabies;
+        
+        // Mortalidade natural calculada sobre a população inicial do tick
+        const dailyDeathRate = stage.deathRate / 365;
+        const exactDeaths = this.total * dailyDeathRate * deltaDays;
+        const naturalDeaths = Math.floor(exactDeaths) + (Math.random() < (exactDeaths % 1) ? 1 : 0);
         
         if (survivingBabies > 0) {
             this.addBirths(survivingBabies);
             this.yearlyBirths += survivingBabies;
         }
         this.infantDeathsThisYear += infantDeaths;
-        
-        // Mortalidade geral diária baseada no DTM
-        const dailyDeathRate = stage.deathRate / 365;
-        const naturalDeaths = Math.floor(this.total * dailyDeathRate);
         if (naturalDeaths > 0) {
-            // Idosos morrem proporcionalmente mais
             const elderDeaths = Math.floor(naturalDeaths * 0.6);
             const otherDeaths = naturalDeaths - elderDeaths;
             this.killByAge('elder', elderDeaths);
@@ -124,7 +135,11 @@ export class Demographics {
             this.yearlyDeaths += naturalDeaths;
         }
         
-        // Aging: a cada 365 ticks (1 ano), a pirâmide etária envelhece
+        // DEBUG LOG PARA ACHAR O BUG DO POP DROP
+        if (this.total < 100 && this.total > 0 && Math.random() < 0.05) {
+            console.log(`[DEBUG DTM] Era: ${eraMult}, Pop: ${this.total}, Births: ${totalBirths}, Surviving: ${survivingBabies}, NatDeaths: ${naturalDeaths}`);
+        }
+        
         return { births: survivingBabies, deaths: naturalDeaths + infantDeaths, infantDeaths };
     }
     

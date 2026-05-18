@@ -48,6 +48,8 @@ export class UIManager {
         this.createPopGraphPanel(container);
         // 079. EROI Panel
         this.createEROIPanel(container);
+        // NOVO: Climate Panel
+        this.createClimatePanel(container);
         // 083. Cemetery Panel
         this.createCemeteryPanel(container);
     }
@@ -167,6 +169,7 @@ export class UIManager {
         panel.innerHTML = `
             <div style="color:#ffaa00;font-weight:bold;margin-bottom:5px;">📍 ${node.name || node.id}</div>
             <div>🌍 Bioma: <span style="color:#aaa">${biome}</span></div>
+            <div>🧬 Adaptação: <span style="color:#9b59b6">${Math.floor(node.biomeAdaptation?.[biome] || 0)}%</span></div>
             <div>👥 Pop: <span style="color:#3498db">${pop.toLocaleString('pt-BR')}</span> / ${cap.toLocaleString('pt-BR')} (${ratio}%)</div>
             <div>🪵 Madeira: ${(node.resources?.wood || 0).toLocaleString('pt-BR')}</div>
             <div>💧 Água: ${(node.resources?.water || 0).toLocaleString('pt-BR')}</div>
@@ -329,6 +332,37 @@ export class UIManager {
     }
     
     // =============================================
+    // NOVO: Climate Panel — Temperatura Global
+    // =============================================
+    createClimatePanel(container) {
+        const panel = document.createElement('div');
+        panel.id = 'climate-panel';
+        panel.style.cssText = 'pointer-events:auto;background:rgba(0,0,0,0.85);color:#ddd;padding:10px;margin:5px;border-radius:8px;font-size:11px;border:1px solid #333;';
+        panel.innerHTML = '<div style="color:#00cec9;font-weight:bold;margin-bottom:5px;">🌍 CLIMA GLOBAL</div><div id="climate-bar-container"></div><div id="climate-stats" style="margin-top:4px;"></div>';
+        container.appendChild(panel);
+    }
+    
+    updateClimate() {
+        const container = document.getElementById('climate-bar-container');
+        const stats = document.getElementById('climate-stats');
+        if (!container || !stats || this.engine.globalTemperature === undefined) return;
+        
+        const temp = this.engine.globalTemperature; // -1.0 a 1.0
+        // Normaliza de 0.0 (Gelo) a 1.0 (Calor)
+        const normalized = (temp + 1) / 2;
+        
+        let color = '#2ecc71'; // Temperado
+        let phase = 'Temperado';
+        if (temp > 0.8) { color = '#e74c3c'; phase = '⚠️ Grande Seca'; }
+        else if (temp > 0.4) { color = '#f39c12'; phase = 'Aquecimento'; }
+        else if (temp < -0.8) { color = '#0984e3'; phase = '❄️ Era do Gelo'; }
+        else if (temp < -0.4) { color = '#74b9ff'; phase = 'Resfriamento'; }
+        
+        container.innerHTML = `<div style="background:#222;border-radius:4px;height:12px;position:relative;"><div style="position:absolute;left:50%;top:0;bottom:0;width:1px;background:#fff;z-index:10;"></div><div style="background:${color};height:100%;width:${normalized * 100}%;border-radius:4px;transition:width 0.3s;"></div></div>`;
+        stats.innerHTML = `Fase: <span style="color:${color};font-weight:bold;">${phase}</span>`;
+    }
+
+    // =============================================
     // 083. Cemitério de Civilizações (localStorage)
     // =============================================
     createCemeteryPanel(container) {
@@ -381,6 +415,7 @@ export class UIManager {
             this.updateDemographics();
             this.updateEROI();
             this.updateDarkAgeFilter();
+            this.updateClimate(); // NOVO
         }
         if (this.engine.day === 0) { // Anual
             this.updatePopGraph();

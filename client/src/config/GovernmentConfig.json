@@ -1,0 +1,109 @@
+{
+  "_meta": "CROM GovernmentConfig — Tipos de governo, transições, policies.",
+
+  "governments": {
+    "tribal": {
+      "name": "Tribal",
+      "minPop": 0,
+      "maxPop": 5000,
+      "modifiers": { "growthBonus": 0.10, "researchPenalty": -0.20, "warBonus": 0.05 },
+      "policySlots": 1,
+      "description": "Liderança por anciãos. Coesão alta, progresso lento."
+    },
+    "chiefdom": {
+      "name": "Chefia",
+      "minPop": 500,
+      "maxPop": 20000,
+      "modifiers": { "growthBonus": 0.05, "trustBonus": 5, "militaryBonus": 0.10 },
+      "policySlots": 1,
+      "description": "Chefe hereditário. Início da hierarquia."
+    },
+    "theocracy": {
+      "name": "Teocracia",
+      "minPop": 2000,
+      "requires": { "religion": true },
+      "modifiers": { "moraleBonus": 15, "researchPenalty": -0.30, "religionSpread": 2.0 },
+      "policySlots": 2,
+      "description": "Líderes religiosos governam. Morale alta, ciência baixa."
+    },
+    "monarchy": {
+      "name": "Monarquia",
+      "minPop": 5000,
+      "modifiers": { "stabilityBonus": 0.20, "trustBonus": 10, "taxRate": 0.15 },
+      "policySlots": 2,
+      "description": "Rei hereditário. Estável mas inflexível."
+    },
+    "republic": {
+      "name": "República",
+      "minPop": 20000,
+      "requires": { "literacy": 30 },
+      "modifiers": { "moraleBonus": 10, "researchBonus": 0.15, "bureaucracyCost": 1.5 },
+      "policySlots": 3,
+      "description": "Representantes eleitos. Equilibrada."
+    },
+    "democracy": {
+      "name": "Democracia",
+      "minPop": 50000,
+      "requires": { "literacy": 50, "minTechs": 15 },
+      "modifiers": { "moraleBonus": 20, "researchBonus": 0.25, "bureaucracyCost": 2.0, "warPenalty": -0.20 },
+      "policySlots": 4,
+      "description": "Voto popular. Alta morale, burocracia pesada."
+    },
+    "autocracy": {
+      "name": "Autocracia",
+      "minPop": 10000,
+      "requires": { "morale": {"max": 30} },
+      "modifiers": { "stabilityBonus": 0.30, "moralePenalty": -10, "militaryBonus": 0.30, "researchPenalty": -0.15 },
+      "policySlots": 2,
+      "description": "Ditador de crise. Surge quando morale colapsa."
+    },
+    "technocracy": {
+      "name": "Tecnocracia",
+      "minPop": 100000,
+      "requires": { "literacy": 80, "minTechs": 25 },
+      "modifiers": { "researchBonus": 0.50, "moralePenalty": -5, "bureaucracyCost": 3.0 },
+      "policySlots": 4,
+      "description": "Cientistas governam. Pesquisa máxima."
+    },
+    "corporatocracy": {
+      "name": "Corporatocracia",
+      "minPop": 100000,
+      "requires": { "minTechs": 20 },
+      "modifiers": { "tradeBonus": 0.50, "moralePenalty": -15, "pollutionRate": 1.5 },
+      "policySlots": 3,
+      "description": "Corporações governam. Riqueza mas desigualdade."
+    },
+    "hivemind": {
+      "name": "Mente Colmeia",
+      "minPop": 500000,
+      "requires": { "tech": "cyberpunk_upload" },
+      "modifiers": { "researchBonus": 1.0, "moraleFixed": 60, "individuality": 0 },
+      "policySlots": 0,
+      "description": "Consciência coletiva. Sem individuo, sem crime."
+    }
+  },
+
+  "policies": {
+    "_comment": "Policy cards que podem ser colocadas nos slots do governo.",
+    "conscription":      { "name": "Recrutamento",     "militaryBonus": 0.30, "moralePenalty": -5 },
+    "free_trade":        { "name": "Livre Comércio",    "tradeBonus": 0.20, "taxPenalty": -0.10 },
+    "protectionism":     { "name": "Protecionismo",     "productionBonus": 0.15, "tradepenalty": -0.20 },
+    "religious_freedom": { "name": "Liberdade Religiosa", "moraleBonus": 5, "religionSpread": 0.5 },
+    "state_religion":    { "name": "Religião de Estado", "moraleBonus": 10, "moralePenalty": -5, "religionSpread": 2.0 },
+    "public_education":  { "name": "Educação Pública",  "literacyBonus": 2.0, "taxRate": 0.05 },
+    "martial_law":       { "name": "Lei Marcial",       "crimeReduction": 0.80, "moralePenalty": -20 },
+    "land_reform":       { "name": "Reforma Agrária",   "farmingBonus": 0.30, "elitePenalty": 0.20 },
+    "rationing":         { "name": "Racionamento",      "foodConservation": 0.50, "moralePenalty": -10 },
+    "propaganda":        { "name": "Propaganda",        "moraleBonus": 15, "trustPenalty": -5 },
+    "scientific_method": { "name": "Método Científico",  "researchBonus": 0.20, "religionPenalty": -0.10 },
+    "welfare_state":     { "name": "Estado de Bem-Estar", "moraleBonus": 10, "taxRate": 0.15 }
+  },
+
+  "transitions": {
+    "_comment": "Custo de transição entre governos.",
+    "revolutionChance": 0.005,
+    "instabilityDuration": 365,
+    "instabilityMoralePenalty": -20,
+    "instabilityProductionPenalty": 0.50
+  }
+}

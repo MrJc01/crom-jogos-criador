@@ -15,6 +15,15 @@ export class KnowledgeBase {
 
     processTick(engine) {
         this.knowledges.forEach(k => {
+            // Novo formato: applyTick (auto-gerenciado)
+            if (typeof k.applyTick === 'function') {
+                engine.nodes.forEach(node => {
+                    k.applyTick(node, {}, engine);
+                });
+                return;
+            }
+            // Legacy formato: calculateDailyXP
+            if (typeof k.calculateDailyXP !== 'function') return;
             const currentMastery = this.mastery.get(k.id) || 0;
             if (currentMastery < 1.0) {
                 const xp = k.calculateDailyXP(engine);

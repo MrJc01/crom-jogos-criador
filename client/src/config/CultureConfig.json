@@ -1,0 +1,40 @@
+{
+  "_meta": "CROM CultureConfig — Cultura, influência, arte, tradições.",
+  "generation": {
+    "basePerPop": 0.00001,
+    "literacyMultiplier": 1.0,
+    "moraleThreshold": 50,
+    "moraleHighMultiplier": 1.2,
+    "moraleLowMultiplier": 0.8
+  },
+  "spread": {
+    "baseRate": 0.001,
+    "neighborDiffThreshold": 3,
+    "conversionInfluenceThreshold": 10,
+    "maxConversionRate": 0.001
+  },
+  "rigidity": {
+    "cultureLevelThreshold": 50,
+    "rigidityFactor": 0.01,
+    "description": "Alta cultura = difícil mudar governo/tech (Diamond)"
+  },
+  "art": {
+    "minMorale": 60,
+    "minLiteracy": 20,
+    "minPop": 2000,
+    "spawnChance": 0.001,
+    "types": ["pintura rupestre", "escultura", "poema épico", "ópera", "tratado filosófico", "mural sagrado"]
+  },
+  "monuments": {
+    "minCulture": 20,
+    "minPop": 10000,
+    "maxPerHex": 3,
+    "mineralCost": 500,
+    "types": ["Obelisco", "Estátua Colossal", "Arco do Triunfo", "Biblioteca", "Pirâmide"]
+  },
+  "traditions": {
+    "maxPerHex": 5,
+    "minPop": 1000,
+    "spawnChance": 0.002
+  }
+}

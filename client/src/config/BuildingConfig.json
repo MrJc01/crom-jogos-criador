@@ -1,0 +1,37 @@
+{
+  "_meta": "CROM BuildingConfig — Estruturas, maravilhas e infraestrutura.",
+
+  "buildings": {
+    "farm":     { "name": "Fazenda",      "cost": { "wood": 50 },  "maintenance": { "wood": 1 },  "effects": { "foodBonus": 0.20 }, "maxPerHex": 5 },
+    "mine":     { "name": "Mina",         "cost": { "wood": 100 }, "maintenance": { "wood": 2 },  "effects": { "mineralBonus": 0.30 }, "maxPerHex": 3 },
+    "temple":   { "name": "Templo",       "cost": { "wood": 200, "minerals": 100 }, "maintenance": { "wood": 2 },  "effects": { "moraleBonus": 10 }, "maxPerHex": 3 },
+    "market":   { "name": "Mercado",      "cost": { "wood": 80 },  "maintenance": { "wood": 1 },  "effects": { "tradeBonus": 0.20, "moraleBonus": 5 }, "maxPerHex": 2 },
+    "fort":     { "name": "Forte",        "cost": { "minerals": 300 }, "maintenance": { "minerals": 1 }, "effects": { "defenseBonus": 0.50 }, "maxPerHex": 1 },
+    "school":   { "name": "Escola",       "cost": { "wood": 100 }, "maintenance": { "wood": 2 },  "effects": { "literacyBonus": 0.5 }, "maxPerHex": 3 },
+    "hospital": { "name": "Hospital",     "cost": { "wood": 150, "minerals": 50 }, "maintenance": { "wood": 2 }, "effects": { "deathRateReduction": 0.20 }, "maxPerHex": 2 },
+    "tavern":   { "name": "Taverna",      "cost": { "wood": 50 },  "maintenance": { "wood": 1 },  "effects": { "moraleBonus": 8 }, "maxPerHex": 3 },
+    "aqueduct": { "name": "Aqueduto",     "cost": { "minerals": 200 }, "maintenance": { "minerals": 1 }, "effects": { "waterBonus": 0.50, "farmingBonus": 0.30 }, "maxPerHex": 1 },
+    "granary":  { "name": "Celeiro",      "cost": { "wood": 80 },  "maintenance": { "wood": 1 },  "effects": { "foodDecayReduction": 0.50 }, "maxPerHex": 2 },
+    "wall":     { "name": "Muralha",      "cost": { "minerals": 500 }, "maintenance": { "minerals": 2 }, "effects": { "defenseBonus": 1.0, "moraleBonus": 3 }, "maxPerHex": 1 },
+    "port":     { "name": "Porto",        "cost": { "wood": 200, "minerals": 100 }, "maintenance": { "wood": 3 }, "effects": { "tradeBonus": 0.50 }, "maxPerHex": 1, "requiresCoastal": true }
+  },
+
+  "wonders": {
+    "_comment": "Únicas no mundo. Primeira facção a construir ganha.",
+    "pyramids":       { "name": "Pirâmides",           "cost": { "minerals": 2000 }, "effects": { "constructionSpeed": 1.20, "moraleBonus": 10 }, "era": "cobre" },
+    "great_library":  { "name": "Grande Biblioteca",   "cost": { "wood": 1500, "minerals": 500 }, "effects": { "researchBonus": 0.30, "literacyBonus": 5 }, "era": "bronze" },
+    "great_wall":     { "name": "Grande Muralha",      "cost": { "minerals": 5000 }, "effects": { "defenseBonus": 2.0, "invasionReduction": 0.50 }, "era": "ferro" },
+    "colosseum":      { "name": "Coliseu",             "cost": { "minerals": 3000 }, "effects": { "moraleBonus": 20, "cultureBonus": 0.50 }, "era": "ferro" },
+    "hagia_sophia":   { "name": "Hagia Sophia",        "cost": { "minerals": 4000, "wood": 2000 }, "effects": { "religionSpread": 3.0, "moraleBonus": 15 }, "era": "ferro" },
+    "printing_press": { "name": "Prensa de Gutenberg", "cost": { "minerals": 1000, "wood": 500 }, "effects": { "literacyBonus": 10, "cultureSpread": 2.0 }, "era": "industrial" },
+    "internet":       { "name": "Internet Global",     "cost": { "chips": 100, "computers": 50 }, "effects": { "researchBonus": 1.0, "literacyBonus": 20, "dnaMultiplier": 2.0 }, "era": "informacao" },
+    "space_elevator": { "name": "Elevador Espacial",   "cost": { "minerals": 10000, "chips": 500 }, "effects": { "kesslerReduction": 0.50, "spaceBonus": 2.0 }, "era": "espacial" }
+  },
+
+  "infrastructure": {
+    "road":    { "name": "Estrada",    "cost": { "wood": 30 },  "effects": { "tradeSpeed": 2.0, "migrationSpeed": 1.5 } },
+    "railway": { "name": "Ferrovia",   "cost": { "minerals": 200 }, "effects": { "tradeSpeed": 10.0, "migrationSpeed": 3.0 }, "minTechs": 15 },
+    "highway": { "name": "Rodovia",    "cost": { "minerals": 300 }, "effects": { "tradeSpeed": 5.0, "migrationSpeed": 5.0 }, "minTechs": 20 },
+    "airport": { "name": "Aeroporto",  "cost": { "minerals": 1000, "chips": 10 }, "effects": { "tradeSpeed": 20.0, "migrationSpeed": 10.0 }, "minTechs": 25 }
+  }
+}
