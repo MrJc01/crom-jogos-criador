@@ -392,6 +392,39 @@ export class GameEngine {
             }
         }
         
+        // NOVO: Cálculo dinâmico de Infraestrutura (LOD Micro-Simulação)
+        if (node.demographics.total > 0) {
+            node.infrastructure = node.infrastructure || { agriculture: 0, urban: 0, military: 0, religious: 0 };
+            
+            // Fatores Base
+            let ag = ((node.resources?.water || 0) > 1000 && (node.soil || 100) > 50) ? 0.4 : 0.1;
+            let urb = node.demographics.total > 10000 ? 0.5 : 0.1;
+            let mil = (node.veteranBuff || 0) > 0 ? 0.3 : 0.05;
+            let rel = ((this.pressures.social || 0) > 0.5 || node.demographics.total < 1000) ? 0.3 : 0.1;
+            
+            // Facção Dominante influencia a arquitetura
+            let domFac = 'Tribal';
+            let maxFacPop = 0;
+            if (node.demographics.dist?.factions) {
+                for (const [fac, count] of Object.entries(node.demographics.dist.factions)) {
+                    if (count > maxFacPop) { maxFacPop = count; domFac = fac; }
+                }
+            }
+            if (domFac === 'Imperio') mil += 0.4;
+            if (domFac === 'Clero') rel += 0.4;
+            if (domFac === 'Corporacao') urb += 0.4;
+            if (domFac === 'Tribal') ag += 0.3;
+            
+            // Normalizar para 1.0 (100%)
+            const totalInfra = ag + urb + mil + rel;
+            if (totalInfra > 0) {
+                node.infrastructure.agriculture = ag / totalInfra;
+                node.infrastructure.urban = urb / totalInfra;
+                node.infrastructure.military = mil / totalInfra;
+                node.infrastructure.religious = rel / totalInfra;
+            }
+        }
+        
         newGlobalPop += node.demographics.total;
     });
     this.globalPop = newGlobalPop;

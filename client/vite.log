@@ -16,3 +16,5 @@
 20:17:58 [vite] page reload src/index.js
 20:18:30 [vite] page reload index.html
 20:20:30 [vite] page reload src/ui/UIManager.js
+20:26:30 [vite] page reload src/core/Engine.js
+20:27:57 [vite] page reload src/ui/MapRenderer.js

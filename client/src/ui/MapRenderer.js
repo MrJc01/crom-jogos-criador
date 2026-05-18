@@ -1,5 +1,6 @@
 import * as d3 from 'd3';
 import * as topojson from 'topojson-client';
+import { MicroSimRenderer } from './MicroSimRenderer.js';
 
 export class MapRenderer {
     constructor(containerId, engine, uiCallbacks) {
@@ -19,9 +20,10 @@ export class MapRenderer {
         this.g = this.svg.append('g');
         this.mapLayer = this.g.append('g').attr('class', 'map-layer');
         this.seaRoutesLayer = this.g.append('g').attr('class', 'sea-routes');
+        this.microSimLayer = this.g.append('g').attr('class', 'micro-sim-layer'); // NOVA CAMADA LOD
         this.bubblesLayer = this.g.append('g').attr('class', 'bubbles-layer');
         
-        this.svg.call(d3.zoom().scaleExtent([0.5, 8]).on('zoom', (event) => {
+        this.svg.call(d3.zoom().scaleExtent([0.5, 15]).on('zoom', (event) => {
             this.g.attr('transform', event.transform);
         }));
     }
@@ -48,11 +50,14 @@ export class MapRenderer {
 
         this.engine.initWorld(this.hexNodes);
         
+        // Inicializa o LOD Renderer
+        this.microSim = new MicroSimRenderer(this.engine, this.hexNodes);
+        
         this.renderPaths();
         this.update();
         
         this.zoom = d3.zoom()
-            .scaleExtent([0.5, 8])
+            .scaleExtent([0.5, 15]) // Escala aumentada para permitir visão microscópica
             .on("zoom", (event) => {
                 // Mover a camada de SVG interativa
                 this.g.attr("transform", event.transform);
@@ -60,6 +65,11 @@ export class MapRenderer {
                 // Redesenhar o Canvas de alta performance no fundo
                 this.currentTransform = event.transform;
                 this.renderCanvas();
+                
+                // Atualizar o LOD / Micro Simulação
+                if (this.microSim) {
+                    this.microSim.updateVisible(this.microSimLayer, event.transform, this.width, this.height);
+                }
             });
             
         this.svg.call(this.zoom);
@@ -153,6 +163,10 @@ export class MapRenderer {
         this.renderCanvas();
         this.renderSeaRoutes();
         this.renderBubbles(); // Tarefas 39-41 e 43
+        
+        if (this.microSim && this.currentTransform) {
+            this.microSim.updateVisible(this.microSimLayer, this.currentTransform, this.width, this.height);
+        }
     }
     
     renderBubbles() {
