@@ -230,38 +230,51 @@ renderer.init().then(() => {
     };
 
     const newsFeed = document.getElementById('news-feed-list');
-    function addNews(msg, color) {
+    function addNews(msg, color, dataObj = null) {
         const item = document.createElement('div');
         item.style.color = color;
         item.style.paddingBottom = '3px';
         item.style.borderBottom = '1px dashed #333';
-        item.textContent = msg;
+        
+        // Tarefa 97: Ícones de Causa/Efeito no Terminal (Ano e Tipo)
+        let prefix = '';
+        if (dataObj && dataObj.type) {
+            prefix = `<span style="font-size: 10px; opacity: 0.5; display: block; margin-bottom: 2px;">[Ano ${engine.year}] ${dataObj.type.toUpperCase()}</span>`;
+        }
+        
+        item.innerHTML = `${prefix}<span>${msg}</span>`;
         newsFeed.prepend(item);
-        if (newsFeed.children.length > 8) newsFeed.lastChild.remove();
+        
+        // Tarefa 98: Notificações Temporais (The Chronicle - 50 eventos max)
+        if (newsFeed.children.length > 50) newsFeed.lastChild.remove();
     }
 
     engine.onEvent = (data, type) => {
-        if (type === "disaster") {
-            addNews(data.message || data, '#ff4444');
-            showFloatText(data.message || data, '#ff4444');
+        // Tarefa 99: Destaque Visual em HEX (qualquer evento com nodeId pisca o hexágono)
+        if (data && data.nodeId && renderer.animateBlink) {
+            renderer.animateBlink(data.nodeId, data.color || '#ffffff');
+        }
+
+        if (type === "disaster" || type === "warning") {
+            const color = data.color || (type === "warning" ? '#ffaa00' : '#ff4444');
+            addNews(data.message || data, color, data);
+            showFloatText(data.message || data, color);
         } else if (type === "war") {
-            addNews(data.message || data, '#ff7700');
+            addNews(data.message || data, '#ff7700', data);
             showFloatText("⚔️ GUERRA", '#ff7700');
         } else if (type === "trade") {
-            addNews(data.message || data, '#f1c40f'); // Dourado
+            addNews(data.message || data, '#f1c40f', data); // Dourado
             showFloatText("🚢 COMÉRCIO", '#f1c40f');
             if (data.sourceId) renderer.animateBlink(data.sourceId, '#f1c40f');
             if (data.targetId) renderer.animateBlink(data.targetId, '#f1c40f');
             renderer.animateMigration(data);
         } else if (type === "cosmic" || type === "milestone") {
             const color = data.color || '#9b59b6';
-            addNews(data.message || data, color);
+            addNews(data.message || data, color, data);
             showFloatText(type === "cosmic" ? "☄️ EVENTO CÓSMICO" : "👁️ ASCENSÃO", color);
-            if (data.nodeId) renderer.animateBlink(data.nodeId, color);
         } else if (type === "nemesis") {
-            addNews(data.message || data, '#ff00ff');
-            showFloatText("🐺 RESISTÊNCIA", '#ff00ff');
-            if (data.nodeId) renderer.animateBlink(data.nodeId, '#ff00ff');
+            addNews(data.message || data, data.color || '#ff00ff', data);
+            showFloatText("🐺 RESISTÊNCIA / TENSÃO", data.color || '#ff00ff');
         } else if (type === "tech_auto") {
             showFloatText(`💡 Evolução: ${data}`, '#00ddff');
             if (!document.getElementById('tech-modal').classList.contains('hidden')) renderTechList();
@@ -406,6 +419,13 @@ function updateSidebar(node) {
       document.getElementById('info-water').textContent = 0;
       document.getElementById('info-minerals').textContent = 0;
       document.getElementById('info-soil').textContent = '100%';
+  }
+  // Fatores de Risco Sistêmicos (Global)
+  if (engine.pressures) {
+      document.getElementById('risk-tectonic').textContent = `${(engine.pressures.tectonic * 1000).toFixed(1)}%`;
+      document.getElementById('risk-climatic').textContent = `${(engine.pressures.climatic * 1000).toFixed(1)}%`;
+      document.getElementById('risk-biological').textContent = `${(engine.pressures.biological * 1000).toFixed(1)}%`;
+      document.getElementById('risk-social').textContent = `${(engine.pressures.social * 1000).toFixed(1)}%`;
   }
 
   // Facções Locais
