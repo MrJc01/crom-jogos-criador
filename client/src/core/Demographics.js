@@ -1,18 +1,172 @@
+import { Config } from '../config/ConfigLoader.js';
+
 export class Demographics {
     constructor(initialPopulation) {
         this.total = initialPopulation;
         
+        const demoCfg = Config.demographics() || {};
+        const ageCfg = demoCfg.ageDistribution || { child: { ratio: 0.2 }, young: { ratio: 0.3 }, adult: { ratio: 0.4 }, elder: { ratio: 0.1 } };
+        const sexCfg = demoCfg.sexDistribution || { M: 0.5, F: 0.5 };
+        
         // Tensores de Distribuição (Porcentagens 0.0 a 1.0)
         this.dist = {
-            sex: { M: 0.5, F: 0.5 },
-            age: { child: 0.2, young: 0.3, adult: 0.4, elder: 0.1 },
-            religion: { animism: 1.0 }, // Exemplo, pode ser injetado por scripts
-            factions: { tribal: 1.0 } // As facções lutarão por % dessa torta
+            sex: { ...sexCfg },
+            age: { 
+                child: ageCfg.child?.ratio || 0.2, 
+                young: ageCfg.young?.ratio || 0.3, 
+                adult: ageCfg.adult?.ratio || 0.4, 
+                elder: ageCfg.elder?.ratio || 0.1 
+            },
+            religion: { animism: 1.0 },
+            factions: { tribal: 1.0 }
         };
         
-        // Fila de Gestação: Cada índice é um dia. Índice 0 nasce amanhã.
-        // Array de 270 dias (9 meses). Valores são números absolutos de fetos.
-        this.pregnancyQueue = new Array(270).fill(0);
+        // Config de pirâmide etária para checks de capacidade
+        this._ageMeta = ageCfg;
+        
+        // Fila de Gestação: 270 dias (9 meses). Valores são números absolutos de fetos.
+        const pregnancyDays = demoCfg.pregnancyDays || 270;
+        this.pregnancyQueue = new Array(pregnancyDays).fill(0);
+        
+        // Contadores de mortalidade para relatórios
+        this.infantDeathsThisYear = 0;
+        this.elderDeathsThisYear = 0;
+        this.yearlyDeaths = 0;
+        this.yearlyBirths = 0;
+    }
+    
+    /**
+     * 007. Retorna a população ativa (young + adult) — os únicos que produzem.
+     */
+    get workingPopulation() {
+        return Math.floor(this.total * (this.dist.age.young + this.dist.age.adult));
+    }
+    
+    /**
+     * 007. Retorna a população que pode lutar (young + adult).
+     */
+    get militaryPopulation() {
+        return Math.floor(this.total * (this.dist.age.young + this.dist.age.adult));
+    }
+    
+    /**
+     * 007. Retorna a população dependente (child + elder).
+     */
+    get dependentPopulation() {
+        return Math.floor(this.total * (this.dist.age.child + this.dist.age.elder));
+    }
+    
+    /**
+     * 011. Determina o estágio DTM com base na era atual.
+     */
+    getDTMStage(eraMult) {
+        const demoCfg = Config.demographics() || {};
+        const stages = demoCfg.dtm?.stages || [
+            { name: "Pré-Industrial", minEra: 1, birthRate: 0.045, deathRate: 0.040, infantMortality: 0.30 }
+        ];
+        let current = stages[0];
+        for (const stage of stages) {
+            if (eraMult >= stage.minEra) current = stage;
+        }
+        return current;
+    }
+    
+    /**
+     * 006+011. Processa nascimentos e mortes baseado no DTM.
+     * Chamado por tick no Engine.
+     */
+    processDTM(eraMult, hasSanitation, biomeId) {
+        const stage = this.getDTMStage(eraMult);
+        const demoCfg = Config.demographics() || {};
+        
+        // Nascimentos diários baseados no DTM (convertido de anual para diário)
+        const dailyBirthRate = stage.birthRate / 365;
+        const fertileFemales = this.total * this.dist.sex.F * (this.dist.age.young + this.dist.age.adult);
+        const births = Math.floor(fertileFemales * dailyBirthRate);
+        
+        if (births > 0) {
+            // Adiciona à fila de gestação (nascem em ~270 dias)
+            this.pregnancyQueue[this.pregnancyQueue.length - 1] += births;
+        }
+        
+        // Nascimentos que saem da fila
+        const newborns = this.pregnancyQueue.shift();
+        this.pregnancyQueue.push(0);
+        
+        // 006. Mortalidade infantil aplica-se aos recém-nascidos
+        let infantMortality = stage.infantMortality;
+        
+        // 009. Sem saneamento = mortalidade 3× maior
+        const sanitCfg = demoCfg.sanitationImpact || {};
+        if (!hasSanitation) {
+            infantMortality *= (sanitCfg.noSanitationMortalityMultiplier || 3.0);
+        }
+        infantMortality = Math.min(0.95, infantMortality); // Cap em 95%
+        
+        const survivingBabies = Math.floor(newborns * (1 - infantMortality));
+        const infantDeaths = newborns - survivingBabies;
+        
+        if (survivingBabies > 0) {
+            this.addBirths(survivingBabies);
+            this.yearlyBirths += survivingBabies;
+        }
+        this.infantDeathsThisYear += infantDeaths;
+        
+        // Mortalidade geral diária baseada no DTM
+        const dailyDeathRate = stage.deathRate / 365;
+        const naturalDeaths = Math.floor(this.total * dailyDeathRate);
+        if (naturalDeaths > 0) {
+            // Idosos morrem proporcionalmente mais
+            const elderDeaths = Math.floor(naturalDeaths * 0.6);
+            const otherDeaths = naturalDeaths - elderDeaths;
+            this.killByAge('elder', elderDeaths);
+            this.kill(otherDeaths);
+            this.yearlyDeaths += naturalDeaths;
+        }
+        
+        // Aging: a cada 365 ticks (1 ano), a pirâmide etária envelhece
+        return { births: survivingBabies, deaths: naturalDeaths + infantDeaths, infantDeaths };
+    }
+    
+    /**
+     * Envelhece a pirâmide etária (chamado 1x por ano).
+     * child → young → adult → elder
+     */
+    ageOneYear() {
+        const agingRate = 0.05; // 5% de cada grupo envelhece por ano
+        
+        const childToYoung = this.dist.age.child * agingRate;
+        const youngToAdult = this.dist.age.young * agingRate;
+        const adultToElder = this.dist.age.adult * agingRate;
+        
+        this.dist.age.child = Math.max(0, this.dist.age.child - childToYoung);
+        this.dist.age.young = Math.max(0, this.dist.age.young - youngToAdult + childToYoung);
+        this.dist.age.adult = Math.max(0, this.dist.age.adult - adultToElder + youngToAdult);
+        this.dist.age.elder = Math.min(1.0, this.dist.age.elder + adultToElder);
+        
+        // Normalize para somar 1.0
+        const sum = this.dist.age.child + this.dist.age.young + this.dist.age.adult + this.dist.age.elder;
+        if (sum > 0 && Math.abs(sum - 1.0) > 0.001) {
+            this.dist.age.child /= sum;
+            this.dist.age.young /= sum;
+            this.dist.age.adult /= sum;
+            this.dist.age.elder /= sum;
+        }
+        
+        // Reset contadores anuais
+        this.infantDeathsThisYear = 0;
+        this.elderDeathsThisYear = 0;
+        this.yearlyDeaths = 0;
+        this.yearlyBirths = 0;
+    }
+    
+    /**
+     * 012. Calcula o consumo de recursos baseado no metabolismo do bioma.
+     */
+    getMetabolism(biomeId) {
+        const demoCfg = Config.demographics() || {};
+        const metab = demoCfg.metabolismByBiome || {};
+        return metab[biomeId] || { food: 1.0, wood: 1.0, water: 1.0 };
     }
     
     // Injeta novos nascimentos na demografia e recalcula a matriz de Idades
@@ -36,7 +190,31 @@ export class Demographics {
     kill(amount) {
         if (amount <= 0) return;
         this.total = Math.max(0, this.total - amount);
-        // Num futuro, desastres podem matar % específicas (ex: vírus mata idosos)
+    }
+    
+    /**
+     * Mata de um grupo etário específico (usado para idosos, crianças, etc.)
+     */
+    killByAge(ageGroup, amount) {
+        if (amount <= 0 || this.total <= 0) return;
+        const groupPop = Math.floor(this.total * (this.dist.age[ageGroup] || 0));
+        const actualKill = Math.min(amount, groupPop);
+        if (actualKill <= 0) return;
+        
+        const newTotal = this.total - actualKill;
+        if (newTotal <= 0) { this.total = 0; return; }
+        
+        // Recalcula proporções
+        const groupCount = groupPop - actualKill;
+        this.dist.age[ageGroup] = groupCount / newTotal;
+        
+        // Ajusta outros grupos proporcionalmente
+        for (const key of Object.keys(this.dist.age)) {
+            if (key !== ageGroup) {
+                this.dist.age[key] = (this.total * this.dist.age[key]) / newTotal;
+            }
+        }
+        this.total = newTotal;
     }
 
     // Função utilitária para mutação de distribuição genérica

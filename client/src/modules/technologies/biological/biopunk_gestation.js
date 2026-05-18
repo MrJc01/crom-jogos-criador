@@ -1,17 +1,18 @@
+// REBALANCEADO: Custo aumentado de 80k→80k, modifier de r×5→r×1.8
 export default {
     id: 'biopunk_gestation',
     type: 'technology',
     root: 'biological',
-    name: 'Úteros Artificiais',
-    desc: 'Remove o gargalo biológico da reprodução. O crescimento populacional (r) explode e as fêmeas biológicas deixam de ser um limitador demográfico.',
+    name: 'Úteros Artificiais (Biopunk)',
+    desc: 'Gestação artificial permite crescimento populacional sem limites biológicos.',
     baseCost: 80000,
-    requires: ['biopunk_photosynthesis'],
+    requires: ['clonagem_orgaos'],
     modifiers: {
-        global_r_boost: 5.0
+        global_r_boost: 1.8
     },
     onUnlock: (engine) => {
         if(engine.onEvent) {
-            engine.onEvent({ message: '🧬 BIOPUNK: Úteros Artificiais ativados. O crescimento humano tornou-se exponencial.', color: '#2ecc71'}, 'milestone');
+            engine.onEvent({ message: '🧬 BIOPUNK: Úteros artificiais online. A humanidade não depende mais da gestação natural.', color: '#9b59b6'}, 'milestone');
         }
     }
 };

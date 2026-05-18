@@ -4,6 +4,6 @@ export default {
     root: 'physical',
     name: 'Fusão Nuclear',
     desc: 'Tecnologia auto-gerada.',
-    baseCost: 500,
+    baseCost: 80000,
     modifiers: {}
 };

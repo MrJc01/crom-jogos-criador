@@ -1,0 +1,379 @@
+{
+  "_meta": "CROM TechTreeConfig — REBALANCEADO v2. Custos, requires e modifiers revisados por era.",
+  "_design": "Tier: Pedra(50-200) → Cobre(300-800) → Bronze(1k-3k) → Ferro(5k-15k) → Industrial(20k-60k) → Info(80k-200k) → Espacial(300k-1M)",
+
+  "medicine": {
+    "root": "biological",
+    "name": "Medicina Básica",
+    "baseCost": 100,
+    "requires": [],
+    "modifiers": { "global_r_boost": 1.3 },
+    "era": "Idade da Pedra"
+  },
+  "agriculture": {
+    "root": "social",
+    "name": "Agricultura Sedentária",
+    "baseCost": 80,
+    "requires": [],
+    "modifiers": { "global_K_boost": 1.3 },
+    "era": "Idade da Pedra"
+  },
+  "ferramentas_pedra": {
+    "root": "physical",
+    "name": "Ferramentas de Pedra",
+    "baseCost": 50,
+    "requires": [],
+    "modifiers": { "global_K_boost": 1.2 },
+    "era": "Idade da Pedra"
+  },
+  "animismo": {
+    "root": "philosophical",
+    "name": "Animismo",
+    "baseCost": 120,
+    "requires": [],
+    "modifiers": { "severity_flat_increase": -3 },
+    "era": "Idade da Pedra"
+  },
+
+  "saneamento_basico": {
+    "root": "biological",
+    "name": "Saneamento Básico",
+    "baseCost": 500,
+    "requires": ["medicine"],
+    "modifiers": { "global_K_boost": 1.2, "severity_flat_increase": -5 },
+    "era": "Idade do Cobre"
+  },
+  "metalurgia_bronze": {
+    "root": "physical",
+    "name": "Metalurgia do Bronze",
+    "baseCost": 400,
+    "requires": ["ferramentas_pedra"],
+    "modifiers": { "global_K_boost": 1.3 },
+    "era": "Idade do Cobre"
+  },
+  "codigo_de_leis": {
+    "root": "social",
+    "name": "Código de Leis",
+    "baseCost": 600,
+    "requires": ["agriculture"],
+    "modifiers": { "severity_flat_increase": -3 },
+    "era": "Idade do Cobre"
+  },
+  "determinismo": {
+    "root": "philosophical",
+    "name": "Determinismo",
+    "baseCost": 500,
+    "requires": ["animismo"],
+    "modifiers": { "global_r_boost": 1.1 },
+    "era": "Idade do Cobre"
+  },
+  "existencialismo": {
+    "root": "philosophical",
+    "name": "Existencialismo",
+    "baseCost": 500,
+    "requires": ["animismo"],
+    "modifiers": { "global_r_boost": 1.05 },
+    "era": "Idade do Cobre"
+  },
+
+  "antibioticos": {
+    "root": "biological",
+    "name": "Antibióticos",
+    "baseCost": 2000,
+    "requires": ["saneamento_basico"],
+    "modifiers": { "global_r_boost": 1.3 },
+    "era": "Idade do Bronze"
+  },
+  "arquitetura_vertical": {
+    "root": "physical",
+    "name": "Arquitetura Vertical",
+    "baseCost": 1500,
+    "requires": ["metalurgia_bronze"],
+    "modifiers": { "global_K_boost": 1.2 },
+    "era": "Idade do Bronze"
+  },
+  "educacao_universal": {
+    "root": "social",
+    "name": "Educação Universal",
+    "baseCost": 3000,
+    "requires": ["codigo_de_leis"],
+    "modifiers": { "global_r_boost": 1.1 },
+    "era": "Idade do Bronze"
+  },
+  "iluminismo": {
+    "root": "philosophical",
+    "name": "Iluminismo",
+    "baseCost": 2500,
+    "requires": ["determinismo"],
+    "modifiers": { "severity_flat_increase": -5 },
+    "era": "Idade do Bronze"
+  },
+  "metodo_cientifico": {
+    "root": "philosophical",
+    "name": "Método Científico",
+    "baseCost": 3000,
+    "requires": ["iluminismo"],
+    "modifiers": { "global_r_boost": 1.15 },
+    "era": "Idade do Bronze"
+  },
+
+  "industry_basic": {
+    "root": "technological",
+    "name": "Revolução Industrial",
+    "baseCost": 5000,
+    "requires": ["metalurgia_bronze", "educacao_universal"],
+    "modifiers": { "global_r_boost": 1.2, "severity_flat_increase": 10 },
+    "era": "Idade do Ferro"
+  },
+  "motor_a_combustao": {
+    "root": "physical",
+    "name": "Motor a Combustão",
+    "baseCost": 8000,
+    "requires": ["industry_basic"],
+    "modifiers": { "global_K_boost": 1.3, "severity_flat_increase": 5 },
+    "era": "Idade do Ferro"
+  },
+  "moeda_fiduciaria": {
+    "root": "social",
+    "name": "Moeda Fiduciária",
+    "baseCost": 8000,
+    "requires": ["codigo_de_leis"],
+    "modifiers": { "global_K_boost": 1.1 },
+    "era": "Idade do Ferro"
+  },
+  "propaganda_em_massa": {
+    "root": "social",
+    "name": "Propaganda em Massa",
+    "baseCost": 12000,
+    "requires": ["moeda_fiduciaria"],
+    "modifiers": { "severity_flat_increase": 5 },
+    "era": "Idade do Ferro"
+  },
+  "controle_populacional": {
+    "root": "social",
+    "name": "Controle Populacional",
+    "baseCost": 15000,
+    "requires": ["educacao_universal"],
+    "modifiers": { "global_r_boost": 0.8 },
+    "era": "Idade do Ferro"
+  },
+  "edicao_genetica_crispr": {
+    "root": "biological",
+    "name": "Edição Genética CRISPR",
+    "baseCost": 10000,
+    "requires": ["antibioticos", "metodo_cientifico"],
+    "modifiers": { "global_r_boost": 1.3 },
+    "era": "Idade do Ferro"
+  },
+  "etica_maquinal": {
+    "root": "philosophical",
+    "name": "Ética Maquinal",
+    "baseCost": 10000,
+    "requires": ["metodo_cientifico"],
+    "modifiers": { "severity_flat_increase": -8 },
+    "era": "Idade do Ferro"
+  },
+  "tech_dogmatism": {
+    "root": "spiritual",
+    "name": "Dogmatismo e Cultos Unificados",
+    "baseCost": 6000,
+    "requires": ["codigo_de_leis"],
+    "modifiers": { "severity_flat_increase": -5 },
+    "era": "Idade do Ferro"
+  },
+
+  "fissao_nuclear": {
+    "root": "physical",
+    "name": "Fissão Nuclear",
+    "baseCost": 30000,
+    "requires": ["motor_a_combustao", "metodo_cientifico"],
+    "modifiers": { "global_K_boost": 1.5, "severity_flat_increase": 15 },
+    "era": "Era Industrial"
+  },
+  "clonagem_orgaos": {
+    "root": "biological",
+    "name": "Clonagem de Órgãos",
+    "baseCost": 25000,
+    "requires": ["edicao_genetica_crispr"],
+    "modifiers": { "global_r_boost": 1.2, "global_K_boost": 1.15 },
+    "era": "Era Industrial"
+  },
+  "fotossintese_humana": {
+    "root": "biological",
+    "name": "Fotossíntese Humana",
+    "baseCost": 40000,
+    "requires": ["edicao_genetica_crispr"],
+    "modifiers": { "global_K_boost": 2.0, "severity_flat_increase": -8 },
+    "era": "Era Industrial"
+  },
+  "estado_de_bem_estar": {
+    "root": "social",
+    "name": "Estado de Bem-Estar",
+    "baseCost": 30000,
+    "requires": ["educacao_universal", "moeda_fiduciaria"],
+    "modifiers": { "severity_flat_increase": -10 },
+    "era": "Era Industrial"
+  },
+  "capitalismo_tardio": {
+    "root": "social",
+    "name": "Capitalismo Tardio",
+    "baseCost": 40000,
+    "requires": ["moeda_fiduciaria", "propaganda_em_massa"],
+    "modifiers": { "global_K_boost": 1.3, "severity_flat_increase": 10 },
+    "era": "Era Industrial"
+  },
+  "niilismo_cosmico": {
+    "root": "philosophical",
+    "name": "Niilismo Cósmico",
+    "baseCost": 35000,
+    "requires": ["etica_maquinal"],
+    "modifiers": { "severity_flat_increase": -12 },
+    "era": "Era Industrial"
+  },
+  "tech_transhumanism": {
+    "root": "philosophical",
+    "name": "Transumanismo e Imortalidade",
+    "baseCost": 50000,
+    "requires": ["niilismo_cosmico", "edicao_genetica_crispr"],
+    "modifiers": { "global_r_boost": 1.3 },
+    "era": "Era Industrial"
+  },
+
+  "fusao_nuclear": {
+    "root": "physical",
+    "name": "Fusão Nuclear",
+    "baseCost": 80000,
+    "requires": ["fissao_nuclear"],
+    "modifiers": { "global_K_boost": 2.0, "severity_flat_increase": -10 },
+    "era": "Era da Informação"
+  },
+  "uteros_artificiais": {
+    "root": "biological",
+    "name": "Úteros Artificiais",
+    "baseCost": 80000,
+    "requires": ["clonagem_orgaos"],
+    "modifiers": { "global_r_boost": 1.8 },
+    "era": "Era da Informação"
+  },
+  "simbiose_fungica": {
+    "root": "biological",
+    "name": "Simbiose Fúngica",
+    "baseCost": 100000,
+    "requires": ["fotossintese_humana"],
+    "modifiers": { "global_K_boost": 1.5 },
+    "era": "Era da Informação"
+  },
+  "hibernacao_criogenica": {
+    "root": "biological",
+    "name": "Hibernação Criogênica",
+    "baseCost": 120000,
+    "requires": ["clonagem_orgaos"],
+    "modifiers": { "global_K_boost": 1.2 },
+    "era": "Era da Informação"
+  },
+  "cyberpunk_upload": {
+    "root": "technological",
+    "name": "Mind Uploading",
+    "baseCost": 150000,
+    "requires": ["fusao_nuclear", "tech_transhumanism"],
+    "modifiers": { "global_K_boost": 3.0, "global_r_boost": 0.5 },
+    "era": "Era da Informação"
+  },
+  "governo_mundial_unificado": {
+    "root": "social",
+    "name": "Governo Mundial Unificado",
+    "baseCost": 200000,
+    "requires": ["capitalismo_tardio", "estado_de_bem_estar"],
+    "modifiers": { "severity_flat_increase": -20 },
+    "era": "Era da Informação"
+  },
+  "panteismo_galactico": {
+    "root": "philosophical",
+    "name": "Panteísmo Galáctico",
+    "baseCost": 120000,
+    "requires": ["niilismo_cosmico"],
+    "modifiers": { "global_K_boost": 1.3, "severity_flat_increase": -10 },
+    "era": "Era da Informação"
+  },
+
+  "imortalidade_celular": {
+    "root": "biological",
+    "name": "Imortalidade Celular",
+    "baseCost": 300000,
+    "requires": ["simbiose_fungica", "hibernacao_criogenica"],
+    "modifiers": { "global_r_boost": 2.0, "global_K_boost": 2.0 },
+    "era": "Era Espacial"
+  },
+  "elevador_espacial": {
+    "root": "physical",
+    "name": "Elevador Espacial",
+    "baseCost": 250000,
+    "requires": ["fusao_nuclear"],
+    "modifiers": { "global_K_boost": 1.5 },
+    "era": "Era Espacial"
+  },
+  "space_dyson": {
+    "root": "physical",
+    "name": "Esfera de Dyson",
+    "baseCost": 500000,
+    "requires": ["elevador_espacial", "fusao_nuclear"],
+    "modifiers": { "global_K_boost": 5.0, "severity_flat_increase": 15 },
+    "era": "Era Espacial"
+  },
+  "manipulacao_gravitacional": {
+    "root": "physical",
+    "name": "Manipulação Gravitacional",
+    "baseCost": 800000,
+    "requires": ["space_dyson"],
+    "modifiers": { "global_K_boost": 3.0 },
+    "era": "Era Espacial"
+  },
+  "dobra_espacial": {
+    "root": "physical",
+    "name": "Motor de Dobra Espacial",
+    "baseCost": 1000000,
+    "requires": ["manipulacao_gravitacional"],
+    "modifiers": { "global_K_boost": 2.0 },
+    "era": "Era Espacial"
+  },
+  "dark_antimatter": {
+    "root": "physical",
+    "name": "Bomba de Antimatéria",
+    "baseCost": 400000,
+    "requires": ["fusao_nuclear"],
+    "modifiers": { "severity_flat_increase": 30 },
+    "era": "Era Espacial"
+  },
+  "dark_eugenics": {
+    "root": "sociology",
+    "name": "Eugenia Algorítmica",
+    "baseCost": 350000,
+    "requires": ["dark_antimatter", "cyberpunk_upload"],
+    "modifiers": { "global_K_boost": 0.7, "severity_flat_increase": 25 },
+    "era": "Era Espacial"
+  },
+  "cyberpunk_matrix": {
+    "root": "technological",
+    "name": "Matriz de Simulação",
+    "baseCost": 400000,
+    "requires": ["cyberpunk_upload"],
+    "modifiers": { "severity_flat_increase": -25 },
+    "era": "Era Espacial"
+  },
+  "transcendencia_da_carne": {
+    "root": "philosophical",
+    "name": "Transcendência da Carne",
+    "baseCost": 600000,
+    "requires": ["imortalidade_celular", "cyberpunk_upload"],
+    "modifiers": { "global_K_boost": 2.0, "global_r_boost": 1.5 },
+    "era": "Era Espacial"
+  },
+  "space_ark": {
+    "root": "sociology",
+    "name": "Arca Geracional",
+    "baseCost": 800000,
+    "requires": ["space_dyson", "hibernacao_criogenica"],
+    "modifiers": {},
+    "era": "Era Espacial"
+  }
+}

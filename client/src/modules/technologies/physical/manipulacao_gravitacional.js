@@ -4,6 +4,6 @@ export default {
     root: 'physical',
     name: 'Manipulação Gravitacional',
     desc: 'Tecnologia auto-gerada.',
-    baseCost: 500,
+    baseCost: 800000,
     modifiers: {}
 };

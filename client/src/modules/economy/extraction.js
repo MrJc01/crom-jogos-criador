@@ -1,37 +1,51 @@
+import { Config } from '../../config/ConfigLoader.js';
+
 export default {
     id: 'resource_extraction',
     type: 'economy',
     applyTick(node, globalRules, engine) {
         if (!node.infected || node.demographics.total === 0) return;
         
-        const workers = Math.floor(node.demographics.total * node.demographics.dist.age.adult);
+        // 007: Apenas trabalhadores (young+adult) extraem
+        const workers = node.demographics.workingPopulation || 
+            Math.floor(node.demographics.total * (node.demographics.dist.age.adult + node.demographics.dist.age.young));
         if (workers === 0) return;
 
-        // Fator de Rendimentos Decrescentes (Task 13)
-        // Quanto mais perto do esgotamento, mais difícil extrair o recurso
-        let mineralYield = Math.max(0.05, node.resources.minerals / 50000);
+        const ecoCfg = Config.economy() || {};
+        const eroiCfg = ecoCfg.eroi?.mining || { woodCostPerMineral: 0.5 };
+        const soilCfg = ecoCfg.soilRecovery || { recoveryRatePerYear: 0.10, maxSoil: 100 };
+        const waterCfg = ecoCfg.waterStress || { maxExtractionPerTick: 500, aquiferRechargeRate: 100 };
+        const dimCfg = ecoCfg.diminishingReturns || { extractionDepthMultiplier: 1.01, maxDepthPenalty: 5.0 };
+
+        // 020. Rendimentos Decrescentes — extractionDepth aumenta custo
+        if (!node.extractionDepth) node.extractionDepth = 1.0;
+        let mineralYield = Math.max(0.05, node.resources.minerals / 50000) / node.extractionDepth;
         let woodYield = Math.max(0.05, node.resources.wood / 50000);
 
-        // Task 09: Capacidade de Carga de Solo e Pousio
-        if (node.soil === undefined) node.soil = 100;
+        // 016. Solo Logarítmico — recuperação lenta
+        if (node.soil === undefined) node.soil = soilCfg.maxSoil || 100;
         const popPressure = node.demographics.total / (node.biome.capacityBase || 50000);
         if (popPressure > 0.5) {
-            node.soil -= (popPressure * 0.1); // Agricultura intensiva degrada o solo
+            node.soil -= (popPressure * 0.1); // Agricultura intensiva degrada
         } else {
-            node.soil += 0.05; // Pousio (recuperação) se a população estiver baixa
+            // FIX BALANCE: Recovery proporcional (quanto mais degradado, mais rápido recupera)
+            const maxSoil = soilCfg.maxSoil || 100;
+            const soilGap = maxSoil - node.soil;
+            node.soil += (soilGap * 0.001); // 0.1% da distância por dia (pousio regenera)
         }
-        node.soil = Math.max(0, Math.min(100, node.soil));
+        node.soil = Math.max(0, Math.min(soilCfg.maxSoil || 100, node.soil));
         
-        // Atualiza a capacidade com base na saúde do solo
-        const techCapBoost = engine.unlockedTechs.has("tech_sanitation") ? 2 : 1;
+        // Atualiza capacidade com base no solo e techs
+        const techCapBoost = engine.unlockedTechs.has("saneamento_basico") ? 2 : 1;
         node.capacity = Math.floor((node.biome.capacityBase || 50000) * (node.soil / 100) * techCapBoost * globalRules.global_K_boost);
 
-        // 1. Extração de Minérios (Task 08: Lei de EROI)
+        // 015. Lei de EROI — mineração requer energia (madeira/petróleo)
         if (node.resources.minerals > 0) {
             let eroiPenalty = 1.0;
-            // EROI: Mineração pesada requer energia térmica/física da madeira (forjas/escoras)
+            const woodCost = eroiCfg.woodCostPerMineral || 0.5;
+            
             if (engine.inventory.wood < 500) {
-                eroiPenalty = 0.1; // Custo energético não atingido
+                eroiPenalty = 0.1; // Sem energia = quase nada extraído
             }
 
             let extractMin = Math.floor((workers * mineralYield * eroiPenalty) / 10000);
@@ -40,13 +54,15 @@ export default {
             node.resources.minerals -= extractMin;
             engine.inventory.minerals += extractMin;
             
-            // Consome energia (madeira) para sustentar a mineração pesada
+            // 015. Consome energia proporcional à extração
             if (extractMin > 0) {
-                engine.inventory.wood = Math.max(0, engine.inventory.wood - Math.floor(extractMin * 0.5));
+                engine.inventory.wood = Math.max(0, engine.inventory.wood - Math.floor(extractMin * woodCost));
+                // 020. Aumenta profundidade de extração
+                node.extractionDepth = Math.min(dimCfg.maxDepthPenalty, node.extractionDepth * dimCfg.extractionDepthMultiplier);
             }
         }
 
-        // 2. Extração de Madeira
+        // 017. Lenha como Gargalo — extração de madeira
         if (node.resources.wood > 0) {
             let extractWood = Math.floor((workers * woodYield) / 5000);
             if (extractWood < 1 && Math.random() < 0.2) extractWood = 1; 
@@ -55,33 +71,44 @@ export default {
             engine.inventory.wood += extractWood;
         }
 
-        // Transformação Biológica por Desmatamento (Task 10)
+        // Transformação Biológica por Desmatamento
         if (node.resources.wood <= 0 && node.biome) {
             if (node.biome.id === 'jungle') {
-                node.biome = { id: 'plains', name: 'Planície Desmatada' };
-                node.resources.wood = 5000; // Vira capim e arbustos
+                node.biome = { id: 'plains', name: 'Planície Desmatada', capacityBase: (node.biome.capacityBase || 100000) * 0.5 };
+                node.resources.wood = 5000;
             } else if (node.biome.id === 'plains') {
-                node.biome = { id: 'desert', name: 'Deserto Antropogênico' };
+                node.biome = { id: 'desert', name: 'Deserto Antropogênico', capacityBase: (node.biome.capacityBase || 50000) * 0.2 };
                 node.resources.wood = 0;
             }
         }
 
-        // 3. Extração de Água e Estresse Hídrico (Task 11)
-        // A natureza repõe um pouco (chuva), mas o excesso esgota o aquífero
-        node.resources.water += 5; // Chuva básica por tick
-        if (node.resources.water > 100000) node.resources.water = 100000;
+        // 018. Estresse Hídrico — cap de extração + recharge POR BIOMA
+        const biomeRecharge = {
+            'desert': 10, 'tundra': 50, 'plains': 100, 'jungle': 200
+        };
+        const recharge = biomeRecharge[node.biome?.id] || (waterCfg.aquiferRechargeRate || 100);
+        node.resources.water = Math.min(100000, (node.resources.water || 0) + Math.floor(recharge / 365));
 
         if (node.resources.water > 0) {
             let extractWater = Math.floor(workers / 2000);
-            if (extractWater < 1 && Math.random() < 0.3) extractWater = 1; 
+            if (extractWater < 1 && Math.random() < 0.3) extractWater = 1;
             
-            // Cap físico diário para extração (limite de canos/bombas tribais)
-            let dailyCap = engine.unlockedTechs.has("tech_sanitation") ? 5000 : 500;
+            // 018. Cap físico diário
+            let dailyCap = engine.unlockedTechs.has("saneamento_basico") 
+                ? (waterCfg.maxExtractionPerTick * 10 || 5000) 
+                : (waterCfg.maxExtractionPerTick || 500);
             extractWater = Math.min(extractWater, dailyCap);
-            
             extractWater = Math.min(extractWater, node.resources.water);
             node.resources.water -= extractWater;
-            engine.inventory.water += extractWater;
+            engine.inventory.water = (engine.inventory.water || 0) + extractWater;
+        }
+
+        // 019. Decaimento de Estoque (comida apodrece mais rápido sem tech)
+        const stockCfg = ecoCfg.stockDecay || {};
+        if (stockCfg.food && engine.inventory.food) {
+            const hasPreservation = engine.unlockedTechs.has("agriculture");
+            const decayRate = hasPreservation ? stockCfg.food.withPreservation : stockCfg.food.baseDecay;
+            engine.inventory.food = Math.max(0, engine.inventory.food * (1 - decayRate / 365));
         }
     }
 };

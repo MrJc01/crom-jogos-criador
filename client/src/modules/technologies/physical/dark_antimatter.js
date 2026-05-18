@@ -4,8 +4,8 @@ export default {
     root: 'physical',
     name: 'Bomba de Antimatéria',
     desc: 'O armamento supremo. Aumenta absurdamente a severidade do planeta e dizima as populações locais brutalmente.',
-    baseCost: 120000,
-    requires: [],
+    baseCost: 400000,
+    requires: ["fusao_nuclear"],
     modifiers: {
         severity_flat_increase: 100
     },

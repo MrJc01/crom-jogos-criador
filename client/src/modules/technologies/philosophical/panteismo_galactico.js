@@ -4,6 +4,6 @@ export default {
     root: 'philosophical',
     name: 'Panteísmo Galáctico',
     desc: 'Tecnologia auto-gerada.',
-    baseCost: 500,
+    baseCost: 120000,
     modifiers: {}
 };

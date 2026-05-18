@@ -4,6 +4,6 @@ export default {
     root: 'social',
     name: 'Código de Leis',
     desc: 'Tecnologia auto-gerada.',
-    baseCost: 500,
+    baseCost: 600,
     modifiers: {}
 };

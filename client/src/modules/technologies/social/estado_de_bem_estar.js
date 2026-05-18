@@ -4,6 +4,6 @@ export default {
     root: 'social',
     name: 'Estado de Bem-Estar',
     desc: 'Tecnologia auto-gerada.',
-    baseCost: 500,
+    baseCost: 30000,
     modifiers: {}
 };

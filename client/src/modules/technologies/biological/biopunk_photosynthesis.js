@@ -1,14 +1,15 @@
+// REBALANCEADO: Custo aumentado de 50k para 40k, modifier de K×5→K×2
 export default {
     id: 'biopunk_photosynthesis',
     type: 'technology',
     root: 'biological',
-    name: 'Fotossíntese Humana',
-    desc: 'Modificação genética avançada permitindo que a pele humana processe luz solar. Reduz severamente a necessidade de Solo (Fome) e aumenta o K.',
-    baseCost: 50000,
-    requires: [], // Pós-Era da Informação
+    name: 'Fotossíntese Humana (Biopunk)',
+    desc: 'Modificação genética que permite que a pele processe luz solar. Reduz necessidade de alimento.',
+    baseCost: 40000,
+    requires: ['edicao_genetica_crispr'],
     modifiers: {
-        global_K_boost: 5.0,
-        severity_flat_increase: -10 
+        global_K_boost: 2.0,
+        severity_flat_increase: -8
     },
     onUnlock: (engine) => {
         if(engine.onEvent) {

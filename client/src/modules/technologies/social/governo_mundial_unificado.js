@@ -4,6 +4,6 @@ export default {
     root: 'social',
     name: 'Governo Mundial Unificado',
     desc: 'Tecnologia auto-gerada.',
-    baseCost: 500,
+    baseCost: 200000,
     modifiers: {}
 };

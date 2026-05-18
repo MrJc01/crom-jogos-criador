@@ -4,6 +4,6 @@ export default {
     root: 'physical',
     name: 'Motor de Dobra Espacial',
     desc: 'Tecnologia auto-gerada.',
-    baseCost: 500,
+    baseCost: 1000000,
     modifiers: {}
 };

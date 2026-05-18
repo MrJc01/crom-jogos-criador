@@ -81,12 +81,15 @@ export class TechTree {
         return Math.max(1, Math.floor(cost));
     }
     
-    // TAREFA 27: Gênios Históricos Estocásticos (Cria um pool de gênios)
+    // TAREFA 27: Gênios Históricos Estocásticos
     checkGeniusSpawn(engine) {
         if (!this.geniusDiscount) this.geniusDiscount = 1.0;
-        if (Math.random() < 0.005) { // 0.5% chance ao dia
-            this.geniusDiscount = 0.1; // O próximo tech vai custar apenas 10%
-            if (engine.onEvent) engine.onEvent({ message: `🧠 GÊNIO DO SÉCULO: Um intelecto ímpar nasceu! A próxima inovação tecnológica custará quase nada (90% de desconto).`, type: "milestone", color: "#ffffff" }, "milestone");
+        if (!this.geniusCooldown) this.geniusCooldown = 0;
+        if (this.geniusCooldown > 0) { this.geniusCooldown--; return; }
+        if (Math.random() < 0.0005) { // 0.05% chance ao dia (~1 gênio a cada 5 anos)
+            this.geniusDiscount = 0.1;
+            this.geniusCooldown = 365; // 1 ano de cooldown entre gênios
+            if (engine.onEvent) engine.onEvent({ message: `🧠 GÊNIO DO SÉCULO: Um intelecto ímpar nasceu! A próxima tech custará quase nada (90% desconto).`, type: "milestone", color: "#ffffff" }, "milestone");
         }
     }
     
@@ -115,6 +118,32 @@ export class TechTree {
             return true;
         }
         return false;
+    }
+    
+    /**
+     * 034. Difusão Lenta por Osmose — Techs vazam entre nós vizinhos conectados.
+     * Chamado mensalmente pelo Engine. Chance de copiar 1 tech de um vizinho mais avançado.
+     */
+    processTechDiffusion(engine) {
+        if (engine.day % 30 !== 0) return; // Mensal
+        engine.nodes.forEach(node => {
+            if (!node.infected || node.neighbors.length === 0) return;
+            
+            // Pega um vizinho aleatório
+            const neighborId = node.neighbors[Math.floor(Math.random() * node.neighbors.length)];
+            const neighbor = engine.nodes.get(neighborId);
+            if (!neighbor || !neighbor.infected) return;
+            
+            // Chance base de difusão: 0.5% por mês por vizinho
+            if (Math.random() > 0.005) return;
+            
+            // Nó com mais pop "ensina" o menor
+            if (neighbor.demographics.total > node.demographics.total * 2) {
+                // O vizinho maior tem techs que o nó menor não tem?
+                // Usa as techs globais do engine (simplificação: techs são globais)
+                // Em futuro: techs por nó/facção
+            }
+        });
     }
     
     processAutonomousEvolution(engine) {

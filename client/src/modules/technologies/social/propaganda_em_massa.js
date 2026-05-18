@@ -4,6 +4,6 @@ export default {
     root: 'social',
     name: 'Propaganda em Massa',
     desc: 'Tecnologia auto-gerada.',
-    baseCost: 500,
+    baseCost: 12000,
     modifiers: {}
 };

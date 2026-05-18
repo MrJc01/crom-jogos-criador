@@ -4,8 +4,8 @@ export default {
     root: 'biological',
     name: 'Úteros Artificiais',
     desc: 'Remove o peso da reprodução natural. Crescimento explosivo ignorando limites de gênero.',
-    baseCost: 5000,
-    requires: ['clonagem_orgaos'],
+    baseCost: 80000,
+    requires: ["clonagem_orgaos"],
     modifiers: {
         global_r_boost: 5.0
     }

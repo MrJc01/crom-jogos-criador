@@ -4,7 +4,7 @@ export default {
     root: 'biological',
     name: 'Medicina Básica',
     desc: 'Ervas rudimentares e curativos. Aumenta a Taxa de Reprodução Global em +50%.',
-    baseCost: 50,
+    baseCost: 100,
     requires: [],
     knowledgeBonus: { botany: 0.5 }, // Botânica diminui custo em até 50%
     modifiers: {

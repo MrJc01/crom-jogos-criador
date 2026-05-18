@@ -4,6 +4,6 @@ export default {
     root: 'philosophical',
     name: 'Transcendência da Carne',
     desc: 'Tecnologia auto-gerada.',
-    baseCost: 500,
+    baseCost: 600000,
     modifiers: {}
 };

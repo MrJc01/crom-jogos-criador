@@ -4,8 +4,8 @@ export default {
     root: 'physical',
     name: 'Esfera de Dyson',
     desc: 'Envolve a estrela local para obter energia virtualmente infinita. Todos os gargalos industriais são removidos.',
-    baseCost: 200000,
-    requires: [],
+    baseCost: 500000,
+    requires: ["elevador_espacial","fusao_nuclear"],
     modifiers: {
         global_K_boost: 1000.0,
         severity_flat_increase: 20

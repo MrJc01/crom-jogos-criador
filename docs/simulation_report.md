@@ -1,437 +1,148 @@
-# Relatório de Simulação: 10.000 Anos (10 Espécies)
+# Relatório de Simulação: 200 Anos (3 Espécies)
 
-Este relatório apresenta o resultado de rodar o motor do jogo em ambiente fechado para 10 variações de facções iniciais durante 10 milênios.
+> Gerado em: 2026-05-18T19:21:49.940Z
 
-## 1. Espécie: TRIBAL
+Motor CROM v2 (pós-fix P0). 3 facções × 200 anos (73.000 ticks cada).
 
-- **População Estabilizada (10k anos):** 0
-- **DNA Acumulado:** 874.576
-- **Severidade Final:** 100%
-- **Tecnologias Alcançadas:** 49
-- **Inventário Final:**
-  - Madeira: 63841
-  - Minerais: 72643
-  - Chips: 0
-  - Computadores: 0
+## 1. Espécie: TRIBAL ✅ SOBREVIVEU
 
-**Cronologia Histórica (Amostragem de 10k anos):**
-- Ano 260: População de Marco: 10.000
-- Ano 390: População de Marco: 50.000
-- Ano 560: População de Marco: 250.000
-- Ano 700: População de Marco: 1.250.000
-- Ano 1290: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1290: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1290: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1290: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1290: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1450: Colapso Pela Poluição (Severidade > 90%)
-- Ano 10000: 🌟 Ascensão: Dogmatismo (Paz Absoluta)
-- Ano 10000: 🤖 Ascensão: Transumanismo (Imortalidade)
+| Métrica | Valor |
+|---|---|
+| População Final | 21.046 |
+| População Pico | 53.553 |
+| DNA Acumulado | 15.201 |
+| Severidade Final | 39% |
+| Tecnologias | 13 |
+| Eventos Totais | 4780 |
+| Colapsos | 0 |
+| Era Final | Idade do Bronze |
+| K-Penalty | 1.0000 |
+| Trust Global | 96 |
+| Hex Infectados | 5/5 |
+| Tempo Real | 5554ms |
 
----
+**Inventário:** 🌲0 | 🪨490 | 💻0 | 🖥️0
 
-## 2. Espécie: EXPANSIONISTAS_MILITARES
+**Techs:** agriculture, medicine, panteismo_galactico, saneamento_basico, industry_basic, antibioticos, determinismo, fissao_nuclear, metalurgia_bronze, transcendencia_da_carne, estado_de_bem_estar, metodo_cientifico, animismo
 
-- **População Estabilizada (10k anos):** 0
-- **DNA Acumulado:** 1.407.361
-- **Severidade Final:** 100%
-- **Tecnologias Alcançadas:** 49
-- **Inventário Final:**
-  - Madeira: 64119
-  - Minerais: 30162
-  - Chips: 0
-  - Computadores: 0
-
-**Cronologia Histórica (Amostragem de 10k anos):**
-- Ano 240: População de Marco: 10.000
-- Ano 460: População de Marco: 50.000
-- Ano 680: População de Marco: 250.000
-- Ano 790: População de Marco: 1.250.000
-- Ano 980: Colapso Pela Poluição (Severidade > 90%)
-- Ano 980: Colapso Pela Poluição (Severidade > 90%)
-- Ano 980: Colapso Pela Poluição (Severidade > 90%)
-- Ano 980: População de Marco: 6.250.000
-- Ano 990: Colapso Pela Poluição (Severidade > 90%)
-- Ano 990: Colapso Pela Poluição (Severidade > 90%)
-- Ano 990: Colapso Pela Poluição (Severidade > 90%)
-- Ano 990: Colapso Pela Poluição (Severidade > 90%)
-- Ano 990: Colapso Pela Poluição (Severidade > 90%)
-- Ano 990: Colapso Pela Poluição (Severidade > 90%)
-- Ano 990: Colapso Pela Poluição (Severidade > 90%)
-- Ano 990: Colapso Pela Poluição (Severidade > 90%)
-- Ano 990: Colapso Pela Poluição (Severidade > 90%)
-- Ano 990: Colapso Pela Poluição (Severidade > 90%)
-- Ano 990: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1010: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1010: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1010: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1010: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1010: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1010: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1010: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1010: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1020: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1020: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1020: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1030: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1030: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1030: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1030: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1030: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1030: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1030: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1030: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1030: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1030: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1030: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1040: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1040: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1050: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1050: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1050: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1060: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1060: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1060: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1060: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1060: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1060: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1060: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1060: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1060: Colapso Pela Poluição (Severidade > 90%)
-- Ano 10000: 🌟 Ascensão: Dogmatismo (Paz Absoluta)
-- Ano 10000: 🤖 Ascensão: Transumanismo (Imortalidade)
+**Cronologia (Últimos 20 eventos):**
+- Ano 195: 🕋 O OBELISCO: Um monólito negro surgiu em Região hex_3. A mente humana se expan
+- Ano 195: 🧬 MUTAÇÃO BENÉFICA: Crianças em Região hex_4 nasceram com extrema resistência i
+- Ano 195: 🧬 MUTAÇÃO BENÉFICA: Crianças em Região hex_4 nasceram com extrema resistência i
+- Ano 195: 🧠 GÊNIO DO SÉCULO: Um intelecto ímpar nasceu! A próxima tech custará quase nada
+- Ano 195: 🐺 RESISTÊNCIA DA FAUNA: Predadores coordenaram ataques em Região hex_1. 11 mort
+- Ano 196: 🌊 MEGATERREMOTO E TSUNAMI: Uma falha oculta sob Região hex_0 cedeu. O mar varre
+- Ano 196: ⚖️ MÁRTIR POPULAR: Uma execução pública em Região hex_2 chocou o mundo. Tensão S
+- Ano 196: 🐺 RESISTÊNCIA DA FAUNA: Predadores coordenaram ataques em Região hex_1. 11 mort
+- Ano 196: 🌋 INVERNO VULCÂNICO: Um supervulcão entrou em erupção em Região hex_4. As cinza
+- Ano 197: 🏃 PÂNICO GERAL: Boato de Praga fez 20% de Região hex_0 fugir para a selva.
+- Ano 197: ❄️ PEQUENA ERA DO GELO: Um resfriamento global anômalo cobriu o hemisfério de ne
+- Ano 197: 🐺 RESISTÊNCIA DA FAUNA: Predadores coordenaram ataques em Região hex_4. 2 morto
+- Ano 198: 🧘 SINCRONICIDADE GLOBAL: Todo o planeta sonhou junto. Todas as pressões zeradas
+- Ano 198: 🧬 MUTAÇÃO BENÉFICA: Crianças em Região hex_1 nasceram com extrema resistência i
+- Ano 199: 🐺 RESISTÊNCIA DA FAUNA: Predadores coordenaram ataques em Região hex_4. 1 morto
+- Ano 199: ❄️ PEQUENA ERA DO GELO: Um resfriamento global anômalo cobriu o hemisfério de ne
+- Ano 199: 🌋 INVERNO VULCÂNICO: Um supervulcão entrou em erupção em Região hex_0. As cinza
+- Ano 199: ☄️ IMPACTO DE METEORO: Um asteroide devastou Região hex_4 (30% mortos), mas deix
+- Ano 200: 🐺 RESISTÊNCIA DA FAUNA: Predadores coordenaram ataques em Região hex_1. 42 mort
+- Ano 200: 🔥 REVOLTA CAMPONESA: A desigualdade explodiu em Região hex_0. As elites foram d
 
 ---
 
-## 3. Espécie: TECNOCRATAS
+## 2. Espécie: TECNOCRATAS ✅ SOBREVIVEU
 
-- **População Estabilizada (10k anos):** 0
-- **DNA Acumulado:** 784.677
-- **Severidade Final:** 100%
-- **Tecnologias Alcançadas:** 49
-- **Inventário Final:**
-  - Madeira: 79169
-  - Minerais: 62112
-  - Chips: 0
-  - Computadores: 0
+| Métrica | Valor |
+|---|---|
+| População Final | 20.537 |
+| População Pico | 60.101 |
+| DNA Acumulado | 13.314 |
+| Severidade Final | 39% |
+| Tecnologias | 15 |
+| Eventos Totais | 5252 |
+| Colapsos | 0 |
+| Era Final | Idade do Bronze |
+| K-Penalty | 0.9927 |
+| Trust Global | 188 |
+| Hex Infectados | 5/5 |
+| Tempo Real | 4593ms |
 
-**Cronologia Histórica (Amostragem de 10k anos):**
-- Ano 250: População de Marco: 10.000
-- Ano 510: População de Marco: 50.000
-- Ano 960: População de Marco: 250.000
-- Ano 1010: População de Marco: 1.250.000
-- Ano 1170: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1170: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1170: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1170: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1170: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1170: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1170: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1180: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1180: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1180: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1180: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1180: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1180: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1190: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1190: População de Marco: 6.250.000
-- Ano 1190: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1200: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1200: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1200: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1200: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1200: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1200: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1210: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1210: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1210: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1210: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1210: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1210: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1210: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1210: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1210: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1210: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1210: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1210: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1210: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1210: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1210: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1210: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1210: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1220: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1220: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1230: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1230: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1230: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1230: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1230: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1230: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1230: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1230: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1230: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1230: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1230: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1230: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1240: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1240: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1240: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1240: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1240: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1240: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1240: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1240: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1240: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1240: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1260: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1260: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1260: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1260: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1260: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1260: Colapso Pela Poluição (Severidade > 90%)
-- Ano 10000: 🌟 Ascensão: Dogmatismo (Paz Absoluta)
-- Ano 10000: 🤖 Ascensão: Transumanismo (Imortalidade)
+**Inventário:** 🌲0 | 🪨202 | 💻0 | 🖥️0
+
+**Techs:** controle_populacional, medicine, agriculture, saneamento_basico, industry_basic, transcendencia_da_carne, moeda_fiduciaria, antibioticos, metodo_cientifico, dobra_espacial, fissao_nuclear, metalurgia_bronze, educacao_universal, esfera_de_dyson, niilismo_cosmico
+
+**Cronologia (Últimos 20 eventos):**
+- Ano 196: ❄️ PEQUENA ERA DO GELO: Um resfriamento global anômalo cobriu o hemisfério de ne
+- Ano 196: ✨ AURORA BOREAL GLOBAL: Uma ejeção de massa coronal pintou o céu de verde vivo. 
+- Ano 196: 🕵️ ESPIONAGEM: Espiões de Tecnocratas roubaram segredos industriais e Trust de 
+- Ano 197: ✨ AURORA BOREAL GLOBAL: Uma ejeção de massa coronal pintou o céu de verde vivo. 
+- Ano 197: 🐺 RESISTÊNCIA DA FAUNA: Predadores coordenaram ataques em Região hex_3. 238 mor
+- Ano 197: 📜 CISMA RELIGIOSO: Uma nova doutrina radical varreu Região hex_4. Guerra religi
+- Ano 197: ✨ AURORA BOREAL GLOBAL: Uma ejeção de massa coronal pintou o céu de verde vivo. 
+- Ano 197: 🧘 SINCRONICIDADE GLOBAL: Todo o planeta sonhou junto. Todas as pressões zeradas
+- Ano 197: 🌊 MEGATERREMOTO E TSUNAMI: Uma falha oculta sob Região hex_0 cedeu. O mar varre
+- Ano 198: 🧠 GÊNIO DO SÉCULO: Um intelecto ímpar nasceu! A próxima tech custará quase nada
+- Ano 198: 🌋 INVERNO VULCÂNICO: Um supervulcão entrou em erupção em Região hex_4. As cinza
+- Ano 198: 🐺 RESISTÊNCIA DA FAUNA: Predadores coordenaram ataques em Região hex_1. 215 mor
+- Ano 198: ❄️ PEQUENA ERA DO GELO: Um resfriamento global anômalo cobriu o hemisfério de ne
+- Ano 199: ✨ AURORA BOREAL GLOBAL: Uma ejeção de massa coronal pintou o céu de verde vivo. 
+- Ano 199: ☄️ IMPACTO DE METEORO: Um asteroide devastou Região hex_2 (30% mortos), mas deix
+- Ano 199: 🐺 RESISTÊNCIA DA FAUNA: Predadores coordenaram ataques em Região hex_2. 3 morto
+- Ano 200: 🌸 MILAGRE DO SOLO: Desertos em Região hex_1 desabrocharam em floresta tropical 
+- Ano 200: 🌋 INVERNO VULCÂNICO: Um supervulcão entrou em erupção em Região hex_4. As cinza
+- Ano 200: 🌪️ RAÍZ ATMOSFÉRICA (Nv 153): Região hex_1 sofreu Desertificação! Capacidade ca
+- Ano 200: 💡 UM NOVO PENSADOR: Um gênio nasceu em Região hex_2! A humanidade recebeu +50 D
 
 ---
 
-## 4. Espécie: ESPIRITUALISTAS
+## 3. Espécie: ECO_REBELDES ✅ SOBREVIVEU
 
-- **População Estabilizada (10k anos):** 0
-- **DNA Acumulado:** 837.514
-- **Severidade Final:** 100%
-- **Tecnologias Alcançadas:** 49
-- **Inventário Final:**
-  - Madeira: 72792
-  - Minerais: 42707
-  - Chips: 0
-  - Computadores: 0
+| Métrica | Valor |
+|---|---|
+| População Final | 18.581 |
+| População Pico | 74.042 |
+| DNA Acumulado | 19.736 |
+| Severidade Final | 39% |
+| Tecnologias | 15 |
+| Eventos Totais | 5203 |
+| Colapsos | 0 |
+| Era Final | Idade do Bronze |
+| K-Penalty | 1.0000 |
+| Trust Global | 5 |
+| Hex Infectados | 5/5 |
+| Tempo Real | 4610ms |
 
-**Cronologia Histórica (Amostragem de 10k anos):**
-- Ano 250: População de Marco: 10.000
-- Ano 500: População de Marco: 50.000
-- Ano 940: População de Marco: 250.000
-- Ano 980: População de Marco: 1.250.000
-- Ano 1090: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1090: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1090: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1090: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1090: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1090: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1090: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1180: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1180: População de Marco: 6.250.000
-- Ano 1230: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1230: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1230: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1230: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1230: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1240: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1240: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1240: Colapso Pela Poluição (Severidade > 90%)
-- Ano 10000: 🌟 Ascensão: Dogmatismo (Paz Absoluta)
-- Ano 10000: 🤖 Ascensão: Transumanismo (Imortalidade)
+**Inventário:** 🌲0 | 🪨299 | 💻0 | 🖥️0
 
----
+**Techs:** medicine, agriculture, transcendencia_da_carne, industry_basic, saneamento_basico, esfera_de_dyson, panteismo_galactico, antibioticos, elevador_espacial, fusao_nuclear, determinismo, ferramentas_pedra, metodo_cientifico, etica_maquinal, fissao_nuclear
 
-## 5. Espécie: CORPORATIST
-
-- **População Estabilizada (10k anos):** 0
-- **DNA Acumulado:** 912.506
-- **Severidade Final:** 100%
-- **Tecnologias Alcançadas:** 49
-- **Inventário Final:**
-  - Madeira: 46800
-  - Minerais: 58357
-  - Chips: 0
-  - Computadores: 0
-
-**Cronologia Histórica (Amostragem de 10k anos):**
-- Ano 240: População de Marco: 10.000
-- Ano 350: População de Marco: 50.000
-- Ano 490: População de Marco: 250.000
-- Ano 570: População de Marco: 1.250.000
-- Ano 940: Colapso Pela Poluição (Severidade > 90%)
-- Ano 940: Colapso Pela Poluição (Severidade > 90%)
-- Ano 940: Colapso Pela Poluição (Severidade > 90%)
-- Ano 940: Colapso Pela Poluição (Severidade > 90%)
-- Ano 940: População de Marco: 6.250.000
-- Ano 940: Colapso Pela Poluição (Severidade > 90%)
-- Ano 950: Colapso Pela Poluição (Severidade > 90%)
-- Ano 950: Colapso Pela Poluição (Severidade > 90%)
-- Ano 10000: 🌟 Ascensão: Dogmatismo (Paz Absoluta)
-- Ano 10000: 🤖 Ascensão: Transumanismo (Imortalidade)
+**Cronologia (Últimos 20 eventos):**
+- Ano 194: 🌊 MEGATERREMOTO E TSUNAMI: Uma falha oculta sob Região hex_4 cedeu. O mar varre
+- Ano 194: 🐺 RESISTÊNCIA DA FAUNA: Predadores coordenaram ataques em Região hex_3. 201 mor
+- Ano 194: 🕋 O OBELISCO: Um monólito negro surgiu em Região hex_3. A mente humana se expan
+- Ano 195: 🌊 MEGATERREMOTO E TSUNAMI: Uma falha oculta sob Região hex_2 cedeu. O mar varre
+- Ano 195: 💡 UM NOVO PENSADOR: Um gênio nasceu em Região hex_3! A humanidade recebeu +50 D
+- Ano 196: ✨ AURORA BOREAL GLOBAL: Uma ejeção de massa coronal pintou o céu de verde vivo. 
+- Ano 196: 🐺 RESISTÊNCIA DA FAUNA: Predadores coordenaram ataques em Região hex_2. 134 mor
+- Ano 196: ✨ AURORA BOREAL GLOBAL: Uma ejeção de massa coronal pintou o céu de verde vivo. 
+- Ano 196: ✨ AURORA BOREAL GLOBAL: Uma ejeção de massa coronal pintou o céu de verde vivo. 
+- Ano 197: 🔇 O SILÊNCIO TOTAL: Doença mental assombrosa se espalhou. Comércio parou, apren
+- Ano 197: 🐺 RESISTÊNCIA DA FAUNA: Predadores coordenaram ataques em Região hex_0. 186 mor
+- Ano 198: 🏃 PÂNICO GERAL: Boato de Praga fez 20% de Região hex_4 fugir para a selva.
+- Ano 198: 🌊 MEGATERREMOTO E TSUNAMI: Uma falha oculta sob Região hex_3 cedeu. O mar varre
+- Ano 198: 🐺 RESISTÊNCIA DA FAUNA: Predadores coordenaram ataques em Região hex_4. 160 mor
+- Ano 198: ❄️ PEQUENA ERA DO GELO: Um resfriamento global anômalo cobriu o hemisfério de ne
+- Ano 198: 😵 HISTERIA COLETIVA: Uma síndrome psicogênica fez parte da população de Região 
+- Ano 199: 🧬 MUTAÇÃO BENÉFICA: Crianças em Região hex_2 nasceram com extrema resistência i
+- Ano 199: 🐺 RESISTÊNCIA DA FAUNA: Predadores coordenaram ataques em Região hex_0. 279 mor
+- Ano 200: ☄️ IMPACTO DE METEORO: Um asteroide devastou Região hex_4 (30% mortos), mas deix
+- Ano 200: 🐺 RESISTÊNCIA DA FAUNA: Predadores coordenaram ataques em Região hex_4. 156 mor
 
 ---
 
-## 6. Espécie: ECO_REBELDES
+## Resumo Comparativo
 
-- **População Estabilizada (10k anos):** 0
-- **DNA Acumulado:** 1.223.996
-- **Severidade Final:** 100%
-- **Tecnologias Alcançadas:** 49
-- **Inventário Final:**
-  - Madeira: 80000
-  - Minerais: 71695
-  - Chips: 0
-  - Computadores: 0
-
-**Cronologia Histórica (Amostragem de 10k anos):**
-- Ano 240: População de Marco: 10.000
-- Ano 420: População de Marco: 50.000
-- Ano 650: População de Marco: 250.000
-- Ano 740: População de Marco: 1.250.000
-- Ano 970: Colapso Pela Poluição (Severidade > 90%)
-- Ano 970: Colapso Pela Poluição (Severidade > 90%)
-- Ano 970: População de Marco: 6.250.000
-- Ano 1020: Colapso Pela Poluição (Severidade > 90%)
-- Ano 10000: 🌟 Ascensão: Dogmatismo (Paz Absoluta)
-- Ano 10000: 🤖 Ascensão: Transumanismo (Imortalidade)
-
----
-
-## 7. Espécie: ISOLACIONISTAS
-
-- **População Estabilizada (10k anos):** 0
-- **DNA Acumulado:** 895.758
-- **Severidade Final:** 100%
-- **Tecnologias Alcançadas:** 49
-- **Inventário Final:**
-  - Madeira: 79258
-  - Minerais: 83728
-  - Chips: 0
-  - Computadores: 0
-
-**Cronologia Histórica (Amostragem de 10k anos):**
-- Ano 250: População de Marco: 10.000
-- Ano 420: População de Marco: 50.000
-- Ano 630: População de Marco: 250.000
-- Ano 730: População de Marco: 1.250.000
-- Ano 1040: População de Marco: 6.250.000
-- Ano 1050: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1050: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1050: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1050: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1050: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1050: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1050: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1050: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1050: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1050: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1050: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1050: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1050: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1050: Colapso Pela Poluição (Severidade > 90%)
-- Ano 10000: 🌟 Ascensão: Dogmatismo (Paz Absoluta)
-- Ano 10000: 🤖 Ascensão: Transumanismo (Imortalidade)
-
----
-
-## 8. Espécie: SIMBIOTICOS_MUTANTES
-
-- **População Estabilizada (10k anos):** 0
-- **DNA Acumulado:** 886.326
-- **Severidade Final:** 100%
-- **Tecnologias Alcançadas:** 49
-- **Inventário Final:**
-  - Madeira: 80000
-  - Minerais: 75071
-  - Chips: 0
-  - Computadores: 0
-
-**Cronologia Histórica (Amostragem de 10k anos):**
-- Ano 260: População de Marco: 10.000
-- Ano 490: População de Marco: 50.000
-- Ano 910: População de Marco: 250.000
-- Ano 970: População de Marco: 1.250.000
-- Ano 1210: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1210: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1210: População de Marco: 6.250.000
-- Ano 1250: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1250: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1250: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1250: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1250: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1310: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1310: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1310: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1310: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1310: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1310: Colapso Pela Poluição (Severidade > 90%)
-- Ano 10000: 🌟 Ascensão: Dogmatismo (Paz Absoluta)
-- Ano 10000: 🤖 Ascensão: Transumanismo (Imortalidade)
-
----
-
-## 9. Espécie: NEXISTAS_DIGITAIS
-
-- **População Estabilizada (10k anos):** 0
-- **DNA Acumulado:** 675.706
-- **Severidade Final:** 100%
-- **Tecnologias Alcançadas:** 49
-- **Inventário Final:**
-  - Madeira: 79955
-  - Minerais: 68415
-  - Chips: 0
-  - Computadores: 0
-
-**Cronologia Histórica (Amostragem de 10k anos):**
-- Ano 240: População de Marco: 10.000
-- Ano 540: População de Marco: 50.000
-- Ano 960: População de Marco: 250.000
-- Ano 1010: População de Marco: 1.250.000
-- Ano 1220: População de Marco: 6.250.000
-- Ano 1250: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1250: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1250: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1250: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1250: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1250: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1260: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1260: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1260: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1260: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1260: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1260: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1260: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1260: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1260: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1260: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1260: Colapso Pela Poluição (Severidade > 90%)
-- Ano 10000: 🌟 Ascensão: Dogmatismo (Paz Absoluta)
-- Ano 10000: 🤖 Ascensão: Transumanismo (Imortalidade)
-
----
-
-## 10. Espécie: HIVE_MIND
-
-- **População Estabilizada (10k anos):** 0
-- **DNA Acumulado:** 895.107
-- **Severidade Final:** 100%
-- **Tecnologias Alcançadas:** 49
-- **Inventário Final:**
-  - Madeira: 80000
-  - Minerais: 73046
-  - Chips: 0
-  - Computadores: 0
-
-**Cronologia Histórica (Amostragem de 10k anos):**
-- Ano 240: População de Marco: 10.000
-- Ano 410: População de Marco: 50.000
-- Ano 610: População de Marco: 250.000
-- Ano 710: População de Marco: 1.250.000
-- Ano 910: População de Marco: 6.250.000
-- Ano 920: Colapso Pela Poluição (Severidade > 90%)
-- Ano 920: Colapso Pela Poluição (Severidade > 90%)
-- Ano 950: Colapso Pela Poluição (Severidade > 90%)
-- Ano 950: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1020: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1020: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1020: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1020: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1020: Colapso Pela Poluição (Severidade > 90%)
-- Ano 1020: Colapso Pela Poluição (Severidade > 90%)
-- Ano 10000: 🌟 Ascensão: Dogmatismo (Paz Absoluta)
-- Ano 10000: 🤖 Ascensão: Transumanismo (Imortalidade)
-
----
-
+| Facção | Status | Pop Final | Peak | Techs | Era | Eventos | Tempo |
+|---|---|---|---|---|---|---|---|
+| tribal | ✅ SOBREVIVEU | 21.046 | 53.553 | 13 | Idade do Bronze | 4780 | 5554ms |
+| tecnocratas | ✅ SOBREVIVEU | 20.537 | 60.101 | 15 | Idade do Bronze | 5252 | 4593ms |
+| eco_rebeldes | ✅ SOBREVIVEU | 18.581 | 74.042 | 15 | Idade do Bronze | 5203 | 4610ms |

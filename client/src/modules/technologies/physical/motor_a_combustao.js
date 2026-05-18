@@ -4,6 +4,6 @@ export default {
     root: 'physical',
     name: 'Motor a Combustão',
     desc: 'Tecnologia auto-gerada.',
-    baseCost: 500,
+    baseCost: 8000,
     modifiers: {}
 };

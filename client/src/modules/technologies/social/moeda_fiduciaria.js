@@ -4,6 +4,6 @@ export default {
     root: 'social',
     name: 'Moeda Fiduciária',
     desc: 'Tecnologia auto-gerada.',
-    baseCost: 500,
+    baseCost: 8000,
     modifiers: {}
 };

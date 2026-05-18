@@ -4,8 +4,8 @@ export default {
     root: 'sociology',
     name: 'Arca Geracional',
     desc: 'O pináculo da fuga humana. Zera a população terrestre para salvar a espécie entre as estrelas.',
-    baseCost: 500000,
-    requires: ['space_dyson'],
+    baseCost: 800000,
+    requires: ["space_dyson","hibernacao_criogenica"],
     modifiers: {},
     onUnlock: (engine) => {
         if(engine.onEvent) {

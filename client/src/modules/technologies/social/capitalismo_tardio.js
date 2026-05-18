@@ -4,6 +4,6 @@ export default {
     root: 'social',
     name: 'Capitalismo Tardio',
     desc: 'Tecnologia auto-gerada.',
-    baseCost: 500,
+    baseCost: 40000,
     modifiers: {}
 };

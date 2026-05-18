@@ -1,0 +1,98 @@
+{
+  "_meta": "FactionsConfig extraído automaticamente. Affinities e traits de cada facção.",
+  "academicos": {
+    "name": "Acadêmicos e Cientistas",
+    "affinities": {
+      "biological": 1.5,
+      "physical": 1.5,
+      "social": 1.5,
+      "technological": 1.5,
+      "philosophical": 1.5,
+      "spiritual": 0.8
+    }
+  },
+  "anarco_primitivistas": {
+    "name": "Anarco-Primitivistas",
+    "affinities": {
+      "social": 0.2,
+      "technological": 0.1,
+      "philosophical": 1.5
+    }
+  },
+  "comerciantes_livres": {
+    "name": "Comerciantes Livres",
+    "affinities": {}
+  },
+  "corporatist": {
+    "name": "Corporativistas",
+    "affinities": {
+      "technological": 1.5,
+      "physical": 1.2,
+      "spiritual": 0.5
+    }
+  },
+  "culto_do_apocalipse": {
+    "name": "Culto do Apocalipse",
+    "affinities": {
+      "spiritual": 1.8,
+      "technological": 0.1,
+      "physical": 0.5
+    }
+  },
+  "eco_extremistas": {
+    "name": "Eco-Extremistas",
+    "affinities": {}
+  },
+  "expansionistas_militares": {
+    "name": "Expansionistas Militares",
+    "affinities": {
+      "social": 1.5,
+      "physical": 1.3,
+      "philosophical": 0.5
+    }
+  },
+  "feudalistas_modernos": {
+    "name": "Feudalistas Modernos",
+    "affinities": {}
+  },
+  "ia_hivemind": {
+    "name": "Hivemind de IA",
+    "affinities": {}
+  },
+  "nacionalistas_isolados": {
+    "name": "Nacionalistas Isolados",
+    "affinities": {}
+  },
+  "nomades_oceanicos": {
+    "name": "Nômades Oceânicos",
+    "affinities": {}
+  },
+  "sindicatos_operarios": {
+    "name": "Sindicatos Operários",
+    "affinities": {
+      "physical": 1.5,
+      "social": 1.5,
+      "technological": 1
+    }
+  },
+  "spiritualist": {
+    "name": "Espiritualistas",
+    "affinities": {
+      "spiritual": 1.8,
+      "philosophical": 1.5,
+      "technological": 0.8
+    }
+  },
+  "tecnocratas": {
+    "name": "Tecnocratas",
+    "affinities": {}
+  },
+  "transumanistas": {
+    "name": "Transumanistas",
+    "affinities": {
+      "biological": 1.8,
+      "technological": 1.5,
+      "social": 0.5
+    }
+  }
+}

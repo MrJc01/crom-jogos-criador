@@ -1,0 +1,188 @@
+{
+  "_meta": "CROM Humanity Simulator — Config Mestre. Edite os valores aqui para customizar toda a simulação.",
+
+  "engine": {
+    "tickRate": 2465,
+    "baseTrustDecayPerYear": 0.98,
+    "trustFloor": 5,
+    "initialTrust": 100.0,
+    "initialPopulation": 100,
+    "speciesCount": 5,
+    "tradeRouteCount": 15,
+    "bubbleSpawnChance": 0.02,
+    "bubbleCrisisThreshold": 0.8,
+    "bubbleCrisisChance": 0.7
+  },
+
+  "severity": {
+    "_comment": "FIX P0: Usar log10 em vez de linear para evitar wipe em 5M pop",
+    "formula": "logarithmic",
+    "logBase": 10,
+    "logMultiplier": 15,
+    "logOffset": -30,
+    "maxSeverity": 100,
+    "disasterThreshold": 95
+  },
+
+  "demographics": {
+    "baseGrowthRate": 0.02,
+    "migrationThreshold": 0.95,
+    "pregnancyDays": 270,
+    "initialAgeDistribution": {
+      "child": 0.20,
+      "young": 0.30,
+      "adult": 0.40,
+      "elder": 0.10
+    },
+    "initialSexDistribution": {
+      "M": 0.50,
+      "F": 0.50
+    },
+    "geneticWinter": {
+      "_comment": "FIX P0: Reduzido o penalty e adicionado recovery",
+      "popThreshold": 5000,
+      "yearThreshold": 50,
+      "dailyChance": 0.01,
+      "kPenaltyMultiplier": 0.85,
+      "kPenaltyRecoveryRate": 1.002,
+      "kPenaltyMinimum": 0.05
+    },
+    "darkAge": {
+      "peakPopThreshold": 100000,
+      "popCollapseRatio": 0.30,
+      "dailyTechLossChance": 0.05,
+      "peakResetMultiplier": 1.5
+    },
+    "megacityThreshold": 100000,
+    "megacitySoilDecay": 0.1,
+    "megacityMineralCost": 1000,
+    "megacityCapFloor": 100000
+  },
+
+  "biomes": {
+    "DESERT": { "id": "desert", "name": "Deserto", "difficulty": 1.0, "capacityBase": 10000 },
+    "TUNDRA": { "id": "tundra", "name": "Tundra", "difficulty": 0.9, "capacityBase": 20000 },
+    "PLAINS": { "id": "plains", "name": "Planície Temperada", "difficulty": 0.2, "capacityBase": 500000 },
+    "JUNGLE": { "id": "jungle", "name": "Floresta Tropical", "difficulty": 0.5, "capacityBase": 100000 }
+  },
+
+  "biomeResources": {
+    "jungle":  { "wood": 8000, "water": 6000, "mineralsMin": 1000, "mineralsMax": 6000 },
+    "plains":  { "wood": 4000, "water": 6000, "mineralsMin": 1000, "mineralsMax": 6000 },
+    "tundra":  { "wood": 1000, "water": 6000, "mineralsMin": 1000, "mineralsMax": 6000 },
+    "desert":  { "wood": 1000, "water": 500,  "mineralsMin": 1000, "mineralsMax": 6000 }
+  },
+
+  "biomeLatitudes": {
+    "jungleMaxLat": 20,
+    "tundraMinLat": 60,
+    "desertChance": 0.20
+  },
+
+  "capacityDivisor": 20,
+
+  "seasons": {
+    "winterStart": 271,
+    "summerStart": 91,
+    "summerEnd": 180,
+    "winterModifier": 0.70,
+    "summerModifier": 1.20,
+    "winterWoodBurnDivisor": 1000
+  },
+
+  "climate": {
+    "emissionThresholdMinerals": 100000,
+    "emissionThresholdWood": 50000,
+    "dailyEmissionRate": 0.001,
+    "temperatureFloor": -10.0,
+    "permafrostTriggerTemp": 5.0,
+    "permafrostTempJump": 2.0,
+    "permafrostKPenalty": 0.80,
+    "climatePenaltyMultiplier": 0.05,
+    "climatePenaltyFloor": 0.10,
+    "policyForestSeasonPenalty": 0.80,
+    "policyForestWoodGainDivisor": 5000,
+    "policyForestTempRecovery": 0.005,
+    "policyWaterSocialPressureRate": 0.01
+  },
+
+  "stockDecay": {
+    "wood": 0.999,
+    "water": 0.995,
+    "minerals": 0.9999
+  },
+
+  "eras": [
+    { "name": "Idade da Pedra",     "minTechs": 0,  "mult": 1 },
+    { "name": "Idade do Cobre",     "minTechs": 4,  "mult": 3 },
+    { "name": "Idade do Bronze",    "minTechs": 8,  "mult": 10 },
+    { "name": "Idade do Ferro",     "minTechs": 13, "mult": 50 },
+    { "name": "Era Industrial",     "minTechs": 20, "mult": 200 },
+    { "name": "Era da Informação",  "minTechs": 28, "mult": 1000 },
+    { "name": "Era Espacial",       "minTechs": 35, "mult": 5000 }
+  ],
+
+  "greatFilter": {
+    "nuclear": {
+      "techRequired": "tech_nuclear",
+      "trustThreshold": 20,
+      "socialPressureThreshold": 0.80,
+      "dailyChance": 0.005
+    },
+    "kessler": {
+      "eraMultThreshold": 5000,
+      "dailyDebrisRate": 0.01,
+      "debrisThreshold": 10.0
+    }
+  },
+
+  "pressures": {
+    "tectonic": {
+      "highMineralThreshold": 50000,
+      "highRate": 0.0001,
+      "lowRate": 0.00001
+    },
+    "climatic": {
+      "lowWoodThreshold": 100000,
+      "highRate": 0.0005,
+      "lowRate": 0.00005
+    },
+    "biological": {
+      "highPopThreshold": 1000000,
+      "highRate": 0.0002,
+      "lowRate": 0.00002
+    },
+    "social": {
+      "highPopThreshold": 500000,
+      "lowTrustThreshold": 80,
+      "highRate": 0.001,
+      "lowRate": 0.0001
+    }
+  },
+
+  "dnaGeneration": {
+    "_comment": "REBALANCEADO: 2.5× mais lento que original. 1 DNA por 250k pop/tick.",
+    "popPerPoint": 250000,
+    "computerBonusBase": 1
+  },
+
+  "disasterEngine": {
+    "_comment": "FIX P0: Big Kill reduzido de 99% para 70% com chance de recuperação",
+    "collapseKillRate": 0.70,
+    "collapseMineralBonus": 10000,
+    "traumaCooldownDays": 365,
+    "geologicalPressureRelief": 0.5,
+    "atmosphericPressureRelief": 0.5,
+    "biologicalPressureRelief": 0.5,
+    "desertificationCapMultiplier": 0.5,
+    "sentientAwakeningThreshold": 10,
+    "zoonoseBaseMortality": 0.60,
+    "zoonoseMedicineMortality": 0.15,
+    "faunaPassiveKillRate": 0.05
+  },
+
+  "warConfig": {
+    "warChance": 0.05,
+    "techCostMultiplier": 1.0
+  }
+}

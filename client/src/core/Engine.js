@@ -4,27 +4,25 @@ import { Economy } from './Economy.js';
 import { KnowledgeBase } from './KnowledgeBase.js';
 import { SpeciesGenerator } from '../modules/generation/SpeciesGenerator.js';
 import { FactionsData } from './FactionsData.js';
-export const Biomes = {
-  DESERT: { id: 'desert', name: 'Deserto', difficulty: 1.0, capacityBase: 10000 },
-  TUNDRA: { id: 'tundra', name: 'Tundra', difficulty: 0.9, capacityBase: 20000 },
-  PLAINS: { id: 'plains', name: 'Planície Temperada', difficulty: 0.2, capacityBase: 500000 },
-  JUNGLE: { id: 'jungle', name: 'Floresta Tropical', difficulty: 0.5, capacityBase: 100000 }
-};
+import { Config } from '../config/ConfigLoader.js';
+
+// Biomas carregados do GameConfig.json (Etapa 0.5: R02)
+export const Biomes = Config.get('biomes');
 
 export class GameEngine {
   constructor(customConfig = {}) {
     this.config = Object.assign({
-        warChance: 0.05,
-        disasterThreshold: 95,
-        techCostMultiplier: 1.0,
-        baseGrowth: 1.0
+        warChance: Config.get('warConfig.warChance'),
+        disasterThreshold: Config.get('severity.disasterThreshold'),
+        techCostMultiplier: Config.get('warConfig.techCostMultiplier'),
+        baseGrowth: Config.get('demographics.baseGrowthRate')
     }, customConfig);
 
     this.nodes = new Map();
     this.globalPop = 0;
     this.day = 0;
     this.year = 1;
-    this.tickRate = 2465; 
+    this.tickRate = Config.get('engine.tickRate');
     this.isRunning = false;
     this.speedMultiplier = 1;
     this.intervalId = null;
@@ -49,7 +47,7 @@ export class GameEngine {
     ];
     
     this.inventory = { wood: 0, water: 0, minerals: 0, silicon: 0, chips: 0, computers: 0 };
-    this.globalTrust = 100.0; // Confiança Global inicia em 100%
+    this.globalTrust = Config.get('engine.initialTrust');
     
     this.techTree = new TechTree();
     this.economy = new Economy();
@@ -57,6 +55,19 @@ export class GameEngine {
     
     this.onTick = null;
     this.onEvent = null; 
+    
+    // 065. Log de História Natural (Chronicle) — Timeline persistente dos eventos
+    this.chronicle = [];
+    this.chronicleMaxSize = 500;
+    
+    // 064. Cadeias de Eventos (Efeito Borboleta) — Eventos podem disparar outros
+    this.eventChains = {
+        'drought':   { triggers: 'famine',  chance: 0.3, delay: 30 },
+        'famine':    { triggers: 'revolt',   chance: 0.4, delay: 60 },
+        'earthquake': { triggers: 'tsunami', chance: 0.5, delay: 1 },
+        'volcanic':  { triggers: 'famine',   chance: 0.2, delay: 90 }
+    };
+    this.pendingChainedEvents = [];
 
     this.plugins = [];
     this.loadPlugins();
@@ -105,6 +116,27 @@ export class GameEngine {
       }
   }
 
+  /**
+   * 065. Log de História Natural — Grava evento no chronicle persistente.
+   */
+  logEvent(eventData, eventType) {
+      const entry = {
+          year: this.year,
+          day: this.day,
+          tick: (this.year * 365) + this.day,
+          type: eventType || 'unknown',
+          message: typeof eventData === 'string' ? eventData : (eventData?.message || ''),
+          pop: Math.floor(this.globalPop),
+          severity: Math.floor(this.severity)
+      };
+      this.chronicle.push(entry);
+      if (this.chronicle.length > this.chronicleMaxSize) {
+          this.chronicle.shift(); // Remove o mais antigo
+      }
+  }
+
+  getChronicle() { return this.chronicle; }
+
 
   initWorld(hexNodes) {
     // 1. Gera 5 espécies mundiais base
@@ -125,12 +157,13 @@ export class GameEngine {
       
       const biome = Biomes[biomeKey];
       // Escalar capacidade para baixo porque temos centenas de hexágonos
-      const capacity = biome.capacityBase / 20; 
+      const capacity = biome.capacityBase / Config.get('capacityDivisor');
       
+      const biomeRes = Config.get(`biomeResources.${biome.id}`) || { wood: 1000, water: 6000, mineralsMin: 1000, mineralsMax: 6000 };
       const resources = {
-          wood: biome.id === 'jungle' ? 8000 : (biome.id === 'plains' ? 4000 : 1000),
-          water: biome.id === 'desert' ? 500 : 6000,
-          minerals: Math.floor(Math.random() * 5000) + 1000
+          wood: biomeRes.wood,
+          water: biomeRes.water,
+          minerals: Math.floor(Math.random() * (biomeRes.mineralsMax - biomeRes.mineralsMin)) + biomeRes.mineralsMin
       };
       
       this.nodes.set(id, new RegionNode(id, `Região ${id}`, capacity, biome, resources, hex.neighbors));
@@ -190,14 +223,7 @@ export class GameEngine {
   }
 
   get currentEra() {
-      const size = this.unlockedTechs.size;
-      if (size < 5) return { name: 'Idade da Pedra', mult: 1 };
-      if (size < 12) return { name: 'Idade do Cobre', mult: 3 };
-      if (size < 20) return { name: 'Idade do Bronze', mult: 10 };
-      if (size < 30) return { name: 'Idade do Ferro', mult: 50 };
-      if (size < 40) return { name: 'Era Industrial', mult: 200 };
-      if (size < 50) return { name: 'Era da Informação', mult: 1000 };
-      return { name: 'Era Espacial', mult: 5000 };
+      return Config.getCurrentEra(this.unlockedTechs.size);
   }
 
   processTick() {
@@ -205,8 +231,30 @@ export class GameEngine {
     if (this.day > 365) {
         this.day = 1;
         this.year++;
-        // Tarefa 22: Trust decai 5% ao ano
-        this.globalTrust = Math.max(0, this.globalTrust * 0.95);
+        // Tarefa 22: Trust decai por ano (config) — FIX: Floor para não ficar em 0 eterno
+        const trustFloor = Config.get('engine.trustFloor', 5);
+        this.globalTrust = Math.max(trustFloor, this.globalTrust * Config.get('engine.baseTrustDecayPerYear'));
+        
+        // 007/011: Aging da pirâmide etária (1x por ano)
+        this.nodes.forEach(node => {
+            if (node.infected && node.demographics.ageOneYear) {
+                node.demographics.ageOneYear();
+            }
+            // FIX BALANCE: VeteranBuff decai — veteranos envelhecem/morrem
+            if (node.veteranBuff > 0) {
+                node.veteranBuff = Math.max(0, node.veteranBuff - 0.1); // -0.1/ano
+            }
+        });
+        
+        // FIX BALANCE: Trust regenera com estabilidade (pop crescendo = sociedade estável)
+        if (this.globalPop > 1000 && this.pressures.social < 1.0) {
+            this.globalTrust = Math.min(200, this.globalTrust + 0.5); // +0.5/ano se estável
+        }
+        
+        // FIX BALANCE: Computadores obsoletam (1 por ano)
+        if ((this.inventory.computers || 0) > 0) {
+            this.inventory.computers = Math.max(0, this.inventory.computers - 1);
+        }
     }
     
     // Multiplicador da Era Atual
@@ -226,46 +274,54 @@ export class GameEngine {
         }
     });
 
-    // Tarefa 28: Ciclo de Estações Reais
+    // FIX BALANCE: Cap global de K_boost para evitar capacidades absurdas
+    global_K_boost = Math.min(500, global_K_boost);
+
+    // Tarefa 28: Ciclo de Estações Reais (Config: seasons)
+    const seasons = Config.get('seasons');
     let seasonModifier = 1.0;
-    if (this.day >= 271) { // Inverno
-        seasonModifier = 0.7;
-        // Queima lenha extra para sobreviver ao frio
-        this.inventory.wood = Math.max(0, this.inventory.wood - Math.floor(this.globalPop / 1000));
-    } else if (this.day >= 91 && this.day <= 180) { // Verão
-        seasonModifier = 1.2; 
+    if (this.day >= seasons.winterStart) { // Inverno
+        seasonModifier = seasons.winterModifier;
+        this.inventory.wood = Math.max(0, this.inventory.wood - Math.floor(this.globalPop / seasons.winterWoodBurnDivisor));
+    } else if (this.day >= seasons.summerStart && this.day <= seasons.summerEnd) { // Verão
+        seasonModifier = seasons.summerModifier;
     }
     
     // Tarefa 30 e 31: Aquecimento Cumulativo (Estufa e Permafrost)
     if (this.globalTemperatureOffset === undefined) this.globalTemperatureOffset = 0;
-    if (this.inventory.minerals > 100000 && this.inventory.wood < 50000) {
-        this.globalTemperatureOffset += 0.001; // Emissões industriais vs sequestro de carbono baixo
+    const climate = Config.get('climate');
+    if (this.inventory.minerals > climate.emissionThresholdMinerals && this.inventory.wood < climate.emissionThresholdWood) {
+        this.globalTemperatureOffset += climate.dailyEmissionRate;
     }
-    if (this.globalTemperatureOffset > 5.0 && !this.permafrostMelted) {
+    if (this.globalTemperatureOffset > climate.permafrostTriggerTemp && !this.permafrostMelted) {
         this.permafrostMelted = true;
-        this.globalTemperatureOffset += 2.0; // Feedback loop explosivo
-        this.globalKPenalty = (this.globalKPenalty || 1.0) * 0.8;
+        this.globalTemperatureOffset += climate.permafrostTempJump;
+        this.globalKPenalty = (this.globalKPenalty || 1.0) * climate.permafrostKPenalty;
         if (this.onEvent) this.onEvent({ message: `🌡️ DERRETIMENTO DO PERMAFROST: O aquecimento global atingiu ponto crítico. O metano liberado fritou a atmosfera!`, type: "disaster", color: "#ff4400" }, "disaster");
     }
     
+    // FIX Balance: Limitar temperatura ao floor configurado (evita -74°C)
+    const tempFloor = climate.temperatureFloor || -10.0;
+    this.globalTemperatureOffset = Math.max(tempFloor, this.globalTemperatureOffset);
+    
     // Temperatura afeta brutalmente a capacidade e resiliência (se esquentar demais, a K_boost cai)
-    const climatePenalty = Math.max(0.1, 1.0 - (this.globalTemperatureOffset * 0.05));
+    const climatePenalty = Math.max(climate.climatePenaltyFloor, 1.0 - (this.globalTemperatureOffset * climate.climatePenaltyMultiplier));
     
     // TAREFA: Políticas Públicas
     if (!this.policies) this.policies = { forest: false, water: false };
     
     if (this.policies.forest) {
-        seasonModifier *= 0.8; // Atrito na mão de obra para plantar árvore em vez de comida
-        this.inventory.wood += Math.floor(this.globalPop / 5000);
-        this.globalTemperatureOffset = Math.max(0, this.globalTemperatureOffset - 0.005);
+        seasonModifier *= climate.policyForestSeasonPenalty;
+        this.inventory.wood += Math.floor(this.globalPop / climate.policyForestWoodGainDivisor);
+        this.globalTemperatureOffset = Math.max(0, this.globalTemperatureOffset - climate.policyForestTempRecovery);
     }
     if (this.policies.water) {
-        this.pressures.social = Math.min(1.0, (this.pressures.social || 0) + 0.01);
+        this.pressures.social = Math.min(1.0, (this.pressures.social || 0) + climate.policyWaterSocialPressureRate);
     }
 
     const globalRules = {
-        base_r: 0.02,
-        migrationThreshold: 0.95,
+        base_r: Config.get('demographics.baseGrowthRate'),
+        migrationThreshold: Config.get('demographics.migrationThreshold'),
         global_K_boost: global_K_boost * seasonModifier * climatePenalty,
         global_r_boost,
         globalKPenalty: this.globalKPenalty,
@@ -282,6 +338,12 @@ export class GameEngine {
                 plugin.applyTick(node, globalRules, this);
             }
         });
+        
+        // 006/009/011: Processar DTM (nascimentos, mortalidade infantil, mortes naturais)
+        if (node.demographics.processDTM) {
+            const hasSanitation = this.unlockedTechs.has('saneamento_basico');
+            node.demographics.processDTM(eraInfo.mult, hasSanitation, node.biome?.id || 'plains');
+        }
         
         // TAREFA 34 e 35: Limites Urbanos (Verticalização e Ilha de Calor)
         // Megacidades (mais de 100 mil habitantes) sofrem com atrito físico extremo
@@ -302,22 +364,40 @@ export class GameEngine {
     });
     this.globalPop = newGlobalPop;
     
-    // Tarefa 12 e 14: Decaimento de Estoque Físico e Escassez (Apodrecimento sazonal e atrito termodinâmico)
-    this.inventory.wood = Math.max(0, this.inventory.wood * 0.999);
-    this.inventory.water = Math.max(0, this.inventory.water * 0.995);
-    this.inventory.minerals = Math.max(0, this.inventory.minerals * 0.9999);
+    // Tarefa 12 e 14: Decaimento de Estoque (Config: stockDecay)
+    const decay = Config.get('stockDecay');
+    this.inventory.wood = Math.max(0, this.inventory.wood * decay.wood);
+    this.inventory.water = Math.max(0, this.inventory.water * decay.water);
+    this.inventory.minerals = Math.max(0, this.inventory.minerals * decay.minerals);
     
     // TAREFA 23: Idade das Trevas (Perda de Techs se a civilização rui)
     if (!this.peakGlobalPop) this.peakGlobalPop = 0;
     if (this.globalPop > this.peakGlobalPop) this.peakGlobalPop = this.globalPop;
     
-    if (this.peakGlobalPop > 100000 && this.globalPop < this.peakGlobalPop * 0.3) {
-        if (Math.random() < 0.05 && this.techTree.unlocked.size > 1) {
+    const darkAge = Config.get('demographics.darkAge');
+    if (this.peakGlobalPop > darkAge.peakPopThreshold && this.globalPop < this.peakGlobalPop * darkAge.popCollapseRatio) {
+        if (Math.random() < darkAge.dailyTechLossChance && this.techTree.unlocked.size > 1) {
             const unlockedArr = Array.from(this.techTree.unlocked);
             const lostTech = unlockedArr[Math.floor(Math.random() * unlockedArr.length)];
             this.techTree.unlocked.delete(lostTech);
             if (this.onEvent) this.onEvent({ message: `📜 IDADE DAS TREVAS: O apocalipse demográfico e a morte dos sábios fez a humanidade esquecer do conhecimento da tecnologia "${lostTech}"!`, type: "disaster", color: "#555555" }, "disaster");
-            this.peakGlobalPop = this.globalPop * 1.5; // Ajusta o baseline para não apagar a árvore inteira num único dia
+            this.peakGlobalPop = this.globalPop * darkAge.peakResetMultiplier;
+        }
+    }
+    
+    // 030. Custo de Manutenção de Techs (Lei de Tainter)
+    // Cada tech desbloqueada custa DNA/dia para manter. Complexidade escala quadraticamente.
+    if (this.day % 30 === 0 && this.techTree.unlocked.size > 3) { // Mensal, após 3 techs
+        const techCount = this.techTree.unlocked.size;
+        const maintenanceCost = Math.floor(techCount * techCount * 0.01); // Custo quadrático
+        if (this.adaptationPoints >= maintenanceCost) {
+            this.adaptationPoints -= maintenanceCost;
+        } else if (Math.random() < 0.1 && techCount > 5) {
+            // Sem DNA para manter → esquece uma tech aleatória
+            const arr = Array.from(this.techTree.unlocked);
+            const lost = arr[Math.floor(Math.random() * arr.length)];
+            this.techTree.unlocked.delete(lost);
+            if (this.onEvent) this.onEvent({ message: `📉 COLAPSO DE COMPLEXIDADE (Tainter): Sem recursos intelectuais para manter "${lost}". Conhecimento perdido!`, type: "warning", color: "#aa5500" }, "warning");
         }
     }
     
@@ -328,10 +408,10 @@ export class GameEngine {
     // TAREFAS 38 a 41: O GRANDE FILTRO (ENDGAME)
     // ==========================================
     
-    // TAREFA 40: Paradoxo de Fermi Silencioso (Aniquilação Nuclear)
-    // Se tem tech nuclear e o Trust Global tá muito baixo (< 20) com alta pressão social
-    if (this.techTree.unlocked.has("tech_nuclear") && this.globalTrust < 20 && this.pressures.social > 0.8) {
-        if (Math.random() < 0.005) { // 0.5% chance ao dia
+    // TAREFA 40: Paradoxo de Fermi Silencioso (Config: greatFilter.nuclear)
+    const nuke = Config.get('greatFilter.nuclear');
+    if (this.techTree.unlocked.has(nuke.techRequired) && this.globalTrust < nuke.trustThreshold && this.pressures.social > nuke.socialPressureThreshold) {
+        if (Math.random() < nuke.dailyChance) {
             this.nodes.forEach(n => { n.demographics.kill(n.demographics.total); n.soil = 0; n.resources.water = 0; });
             this.inventory.wood = 0; this.inventory.minerals = 0; this.globalPop = 0;
             if (this.onEvent) this.onEvent({ message: `☢️ O GRANDE FILTRO (PARADOXO DE FERMI): Uma Guerra Nuclear total aniquilou 100% da vida no planeta. A civilização falhou o teste da maturidade.`, type: "disaster", color: "#ff0000" }, "disaster");
@@ -339,23 +419,72 @@ export class GameEngine {
         }
     }
     
-    // TAREFA 39: Inverno Genético (Bottleneck Demográfico Crítico)
-    if (this.globalPop < 5000 && this.globalPop > 0 && this.year > 50) {
-        if (Math.random() < 0.01) {
-            this.globalKPenalty *= 0.5; // Endogamia destrói a resiliência biológica
-            if (this.onEvent) this.onEvent({ message: `🧬 INVERNO GENÉTICO: A população global é tão baixa que a endogamia causou falhas genéticas em massa. Morte iminente.`, type: "nemesis", color: "#8800ff" }, "nemesis");
+    // TAREFA 39: Inverno Genético — FIX P0: Penalidade reduzida (0.85 vs 0.5)
+    const genWinter = Config.get('demographics.geneticWinter');
+    if (this.globalPop < genWinter.popThreshold && this.globalPop > 0 && this.year > genWinter.yearThreshold) {
+        if (Math.random() < genWinter.dailyChance) {
+            this.globalKPenalty = Math.max(genWinter.kPenaltyMinimum, this.globalKPenalty * genWinter.kPenaltyMultiplier);
+            if (this.onEvent) this.onEvent({ message: `🧬 INVERNO GENÉTICO: A população global é tão baixa que a endogamia causou falhas genéticas em massa. Resiliência caiu!`, type: "nemesis", color: "#8800ff" }, "nemesis");
         }
     }
     
     // TAREFA 38 e 41: Síndrome de Kessler e Limites de Órbita
-    if (this.currentEra.mult >= 5000) { // Era Espacial
+    // TAREFA 38+41: Síndrome de Kessler (Config: greatFilter.kessler)
+    const kessler = Config.get('greatFilter.kessler');
+    if (this.currentEra.mult >= kessler.eraMultThreshold) {
         if (!this.kesslerSyndrome) this.kesslerSyndrome = 0;
-        this.kesslerSyndrome += 0.01; // Lixo espacial acumula por dia de era espacial
-        if (this.kesslerSyndrome > 10.0) {
+        this.kesslerSyndrome += kessler.dailyDebrisRate;
+        if (this.kesslerSyndrome > kessler.debrisThreshold) {
             if (this.onEvent && !this.kesslerTriggered) {
                 this.kesslerTriggered = true;
                 this.onEvent({ message: `🛰️ SÍNDROME DE KESSLER: A órbita está selada por lixo espacial. Fugas planetárias (Arca) estão permanentemente bloqueadas!`, type: "warning", color: "#ffaa00" }, "warning");
+                this.logEvent({ message: `🛰️ Kessler: órbita bloqueada` }, "kessler");
             }
+        }
+    }
+    
+    // 056. Exaustão de Metais Raros — Limite de chips quando minerais escasseiam
+    if (this.day % 90 === 0) { // Trimestral
+        let totalMinerals = 0;
+        this.nodes.forEach(n => { totalMinerals += (n.resources?.minerals || 0); });
+        if (totalMinerals < 1000 && this.currentEra.mult >= 200) {
+            // Sem metais raros, não fabrica chips
+            this.inventory.chips = Math.max(0, (this.inventory.chips || 0) - 1);
+            if (!this._rareEarthWarned && this.onEvent) {
+                this._rareEarthWarned = true;
+                this.onEvent({ message: `⛏️ EXAUSTÃO DE METAIS RAROS: Minas de lítio/silício esgotaram! Produção de chips estancou. Progresso espacial comprometido.`, type: "warning", color: "#ff8800" }, "warning");
+                this.logEvent({ message: `⛏️ Metais raros esgotados` }, "exhaustion");
+            }
+        }
+    }
+    
+    // 061. Múltiplos Grandes Filtros — Sequência: Nuclear → Kessler → Singularidade → Heat Death
+    if (this.currentEra.mult >= 1000 && this.day % 365 === 0) {
+        // Filtro: Singularidade de IA — Se computadores > pop e trust < 30
+        if ((this.inventory.computers || 0) > this.globalPop / 1000 && this.globalTrust < 30) {
+            if (Math.random() < 0.01) {
+                this.globalPop = Math.floor(this.globalPop * 0.5);
+                this.nodes.forEach(n => { if (n.infected) n.demographics.kill(Math.floor(n.demographics.total * 0.5)); });
+                if (this.onEvent) this.onEvent({ message: `🤖 SINGULARIDADE HOSTIL: A IA autônoma considerou humanos ineficientes e eliminou 50% da população. O Grande Filtro III foi disparado!`, type: "nemesis", color: "#ff00ff" }, "nemesis");
+                this.logEvent({ message: `🤖 Singularidade Hostil` }, "singularity");
+            }
+        }
+    }
+    
+    // 062. Simplificação Voluntária (Tainter) — Civilização pode regredir para sobreviver
+    if (this.day % 180 === 0 && this.techTree.unlocked.size > 15) {
+        // Se pressão social alta + recursos baixos → civilização "simplifica" automaticamente
+        if (this.pressures.social > 3.0 && this.inventory.minerals < 500 && this.inventory.wood < 500) {
+            const techsToLose = Math.min(5, Math.floor(this.techTree.unlocked.size * 0.3));
+            const arr = Array.from(this.techTree.unlocked);
+            for (let i = 0; i < techsToLose; i++) {
+                const idx = Math.floor(Math.random() * arr.length);
+                this.techTree.unlocked.delete(arr[idx]);
+                arr.splice(idx, 1);
+            }
+            this.pressures.social = Math.max(0, this.pressures.social - 2.0);
+            if (this.onEvent) this.onEvent({ message: `🏚️ SIMPLIFICAÇÃO VOLUNTÁRIA: A civilização abandonou ${techsToLose} tecnologias para reduzir complexidade e sobreviver! Pressão social aliviada.`, type: "warning", color: "#888800" }, "warning");
+            this.logEvent({ message: `🏚️ Simplificação: -${techsToLose} techs` }, "simplification");
         }
     }
     
@@ -379,26 +508,37 @@ export class GameEngine {
     this.techTree.processAutonomousEvolution(this);
 
     // Geração passiva de DNA (Adaptação) com suporte a fracionário probabilístico
-    const computerBonus = 1 + (this.inventory.computers || 0);
-    let ptsGenerated = Math.floor(this.globalPop / 100000);
-    if (Math.random() < (this.globalPop % 100000) / 100000) {
+    const dnaGen = Config.get('dnaGeneration');
+    const computerBonus = dnaGen.computerBonusBase + (this.inventory.computers || 0);
+    let ptsGenerated = Math.floor(this.globalPop / dnaGen.popPerPoint);
+    if (Math.random() < (this.globalPop % dnaGen.popPerPoint) / dnaGen.popPerPoint) {
         ptsGenerated += 1;
     }
     this.adaptationPoints += (ptsGenerated * computerBonus);
     
-    // Sistema de Pressão Estocástica e Cliodinâmica (Tarefas 52 e 56)
-    this.pressures.tectonic += (this.inventory.minerals > 50000) ? 0.0001 : 0.00001;
-    this.pressures.climatic += (this.inventory.wood < 100000) ? 0.0005 : 0.00005; 
-    this.pressures.biological += (this.globalPop > 1000000) ? 0.0002 : 0.00002;
-    this.pressures.social += (this.globalPop > 500000 && this.globalTrust < 80) ? 0.001 : 0.0001;
+    // Sistema de Pressão Estocástica (Config: pressures)
+    const pCfg = Config.get('pressures');
+    this.pressures.tectonic += (this.inventory.minerals > pCfg.tectonic.highMineralThreshold) ? pCfg.tectonic.highRate : pCfg.tectonic.lowRate;
+    this.pressures.climatic += (this.inventory.wood < pCfg.climatic.lowWoodThreshold) ? pCfg.climatic.highRate : pCfg.climatic.lowRate;
+    this.pressures.biological += (this.globalPop > pCfg.biological.highPopThreshold) ? pCfg.biological.highRate : pCfg.biological.lowRate;
+    this.pressures.social += (this.globalPop > pCfg.social.highPopThreshold && this.globalTrust < pCfg.social.lowTrustThreshold) ? pCfg.social.highRate : pCfg.social.lowRate;
 
     // Resfriamento de Cooldowns / Trauma (Tarefa 53)
     for (const key in this.cooldowns) {
         if (this.cooldowns[key] > 0) this.cooldowns[key] -= 1;
     }
     
-    // Severidade e Eventos (Legado + Modificadores)
-    this.severity = Math.min(100, Math.floor(this.globalPop / 50000) + severity_increase);
+    // FIX BALANCE: Pressões decaem naturalmente (entropia, adaptação social)
+    this.pressures.tectonic *= 0.9995;
+    this.pressures.climatic *= 0.9995;
+    this.pressures.biological *= 0.9995;
+    this.pressures.social *= 0.9990; // Social decai mais rápido (sociedades se adaptam)
+    
+    // Severidade e Eventos — FIX P0: Fórmula logarítmica em vez de linear
+    this.severity = Config.calculateSeverity(this.globalPop, severity_increase);
+    
+    // FIX P0: Recuperação gradual do globalKPenalty (evita Inverno Genético irreversível)
+    this.globalKPenalty = Config.recoverKPenalty(this.globalKPenalty);
     this.plugins.forEach(plugin => {
         if (plugin.type === 'event') {
             let shouldTrigger = false;
@@ -420,12 +560,11 @@ export class GameEngine {
 
     // Bubble Spawner (Interação do Jogador)
     // 2% de chance por dia de gerar uma bolha (Laranja de DNA ou Vermelha de Crise)
-    if (Math.random() < 0.02 && this.globalPop > 0) {
+    if (Math.random() < Config.get('engine.bubbleSpawnChance') && this.globalPop > 0) {
         const nodesArray = Array.from(this.nodes.values()).filter(n => n.infected);
         if (nodesArray.length > 0) {
             const randomNode = nodesArray[Math.floor(Math.random() * nodesArray.length)];
-            // Se o nó estiver superlotado (> 80%), grande chance de ser bolha de Crise
-            const isCrisis = (randomNode.demographics.total / randomNode.capacity) > 0.8 && Math.random() < 0.7;
+            const isCrisis = (randomNode.demographics.total / randomNode.capacity) > Config.get('engine.bubbleCrisisThreshold') && Math.random() < Config.get('engine.bubbleCrisisChance');
             const bType = isCrisis ? 'crisis' : 'dna';
             
             if (this.onEvent) {

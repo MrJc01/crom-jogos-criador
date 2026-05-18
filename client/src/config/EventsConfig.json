@@ -1,0 +1,109 @@
+{
+  "_meta": "Probabilidades, cooldowns e parâmetros de TODOS os eventos estocásticos do CROM.",
+
+  "nature": {
+    "id": "events_nature_exogenous",
+    "cooldownKey": "nature_trauma",
+    "cooldownDays": 120,
+    "baseProbability": 0.05,
+    "pressureMultiplier": 0.15,
+    "maxProbability": 0.20,
+    "events": {
+      "forestFire":       { "rollMin": 0.00, "rollMax": 0.20, "woodLossRate": 0.50, "pressureRelief": 0.20, "minWood": 10000, "biomes": ["jungle", "plains"] },
+      "solarStorm":       { "rollMin": 0.20, "rollMax": 0.35, "trustLoss": 30 },
+      "megaEarthquake":   { "rollMin": 0.35, "rollMax": 0.50, "killRate": 0.15, "mineralBonus": 5000, "pressureRelief": 0.50 },
+      "locustPlague":     { "rollMin": 0.50, "rollMax": 0.65, "woodLossRate": 0.80, "biomes": ["plains"] },
+      "solarEclipse":     { "rollMin": 0.60, "rollMax": 0.68, "kPenaltyMult": 0.80 },
+      "beneficialMutation": { "rollMin": 0.68, "rollMax": 0.75, "dnaBonus": 100 },
+      "littleIceAge":     { "rollMin": 0.75, "rollMax": 0.82, "tempOffset": -1.0 },
+      "asteroidImpact":   { "rollMin": 0.82, "rollMax": 0.90, "killRate": 0.30, "mineralBonus": 50000 },
+      "volcanicWinter":   { "rollMin": 0.90, "rollMax": 1.00, "kPenaltyMult": 0.70 }
+    }
+  },
+
+  "social": {
+    "id": "events_cliodynamics",
+    "cooldownKey": "social_trauma",
+    "cooldownDays": 180,
+    "baseProbability": 0.0,
+    "pressureMultiplier": 0.10,
+    "maxProbability": 0.20,
+    "pressureRelief": 0.30,
+    "events": {
+      "peasantRevolt":    { "rollMin": 0.00, "rollMax": 0.20, "killRate": 0.30, "trustMultiplier": 0.50, "minCapRatio": 0.90, "minTrust": 80 },
+      "famousAssassin":   { "rollMin": 0.20, "rollMax": 0.30, "killRate": 0.10, "trustLoss": 20, "minPop": 100000 },
+      "bureaucraticDecay":{ "rollMin": 0.30, "rollMax": 0.40, "resourceLossRate": 0.50, "minTechs": 20 },
+      "newPhilosopher":   { "rollMin": 0.40, "rollMax": 0.50, "dnaBonus": 50 },
+      "religiousSchism":  { "rollMin": 0.50, "rollMax": 0.60 },
+      "neoLuddite":       { "rollMin": 0.60, "rollMax": 0.70, "techLossRate": 0.20 },
+      "popularMartyr":    { "rollMin": 0.70, "rollMax": 0.80, "socialPressureBoost": 0.50 },
+      "collectiveHysteria": { "rollMin": 0.80, "rollMax": 0.90, "killRate": 0.05 },
+      "massPanic":        { "rollMin": 0.90, "rollMax": 1.00, "killRate": 0.20 }
+    }
+  },
+
+  "industry": {
+    "id": "events_industry_tech",
+    "cooldownKey": "industry_trauma",
+    "cooldownDays": 180,
+    "baseProbability": 0.05,
+    "pressureMultiplier": 0.10,
+    "maxProbability": 0.20,
+    "minMinerals": 10000,
+    "events": {
+      "stockMarketCrash": { "rollMin": 0.00, "rollMax": 0.15, "trustFloor": 50, "minTrust": 150, "socialPressureBoost": 0.50 },
+      "mineCollapse":     { "rollMin": 0.15, "rollMax": 0.30, "killRate": 0.05, "maxMineral": 5000, "pressureRelief": 0.20 },
+      "toxicSpill":       { "rollMin": 0.30, "rollMax": 0.45, "minMinerals": 50000 },
+      "nuclearMeltdown":  { "rollMin": 0.45, "rollMax": 0.55, "killRate": 0.50, "capacityMultiplier": 0.10, "minComputers": 5000 },
+      "y2kBug":           { "rollMin": 0.55, "rollMax": 0.65, "techLossRate": 0.50, "minChips": 1000 },
+      "aiRebellion":      { "rollMin": 0.65, "rollMax": 0.75, "minComputers": 10000 },
+      "corporateCartel":  { "rollMin": 0.75, "rollMax": 0.85, "kPenaltyMult": 0.90 },
+      "medicalMiracle":   { "rollMin": 0.85, "rollMax": 1.00, "capacityBoost": 1.50 }
+    }
+  },
+
+  "geopolitics": {
+    "id": "events_geopolitics",
+    "cooldownKey": "geo_trauma",
+    "cooldownDays": 150,
+    "baseProbability": 0.05,
+    "pressureMultiplier": 0.10,
+    "maxProbability": 0.20,
+    "minGlobalPop": 500000,
+    "events": {
+      "diplomaticMarriage": { "rollMin": 0.00, "rollMax": 0.15, "trustBonus": 50 },
+      "borderIncident":     { "rollMin": 0.15, "rollMax": 0.25, "trustLoss": 40 },
+      "techPiracy":         { "rollMin": 0.25, "rollMax": 0.35, "dnaBonus": 150 },
+      "goldenRefugees":     { "rollMin": 0.35, "rollMax": 0.45, "popBonus": 50000, "dnaBonus": 50 },
+      "archaeologicalFind": { "rollMin": 0.45, "rollMax": 0.55, "dnaBonus": 200 },
+      "suicideCult":        { "rollMin": 0.55, "rollMax": 0.65, "killCap": 50000 },
+      "sterilityEpidemic":  { "rollMin": 0.65, "rollMax": 0.75, "sterilityDays": 180 },
+      "christmasPeace":     { "rollMin": 0.75, "rollMax": 0.85, "trustReset": 100 },
+      "waterSabotage":      { "rollMin": 0.85, "rollMax": 1.00 }
+    }
+  },
+
+  "anomaly": {
+    "id": "events_anomaly",
+    "cooldownKey": "anomaly_trauma",
+    "cooldownDays": 730,
+    "fixedProbability": 0.005,
+    "events": {
+      "obelisk":           { "rollMin": 0.00, "rollMax": 0.15, "dnaBonus": 500, "popBonus": 10000 },
+      "totalSilence":      { "rollMin": 0.15, "rollMax": 0.30, "kPenaltyMult": 0.70, "trustLoss": 80 },
+      "globalSynchrony":   { "rollMin": 0.30, "rollMax": 0.45, "trustReset": 200 },
+      "satelliteCrash":    { "rollMin": 0.45, "rollMax": 0.60, "killRate": 0.10, "minComputers": 5000 },
+      "cryogenicAwakening": { "rollMin": 0.60, "rollMax": 0.75, "popBonus": 20000, "maxPop": 50000, "minTechs": 20 },
+      "soilMiracle":       { "rollMin": 0.75, "rollMax": 1.00, "soilReset": 100, "waterBonus": 10000, "biomes": ["desert"] }
+    }
+  },
+
+  "cosmic": {
+    "id": "events_cosmic_anomalies",
+    "fixedProbability": 0.001,
+    "events": {
+      "solarStorm":  { "rollMax": 0.20 },
+      "meteorImpact": { "rollMin": 0.20, "killRate": 0.40, "mineralBonus": 50000, "refugeeRate": 0.10, "minPop": 50000 }
+    }
+  }
+}

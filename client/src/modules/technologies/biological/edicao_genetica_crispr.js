@@ -4,8 +4,8 @@ export default {
     root: 'biological',
     name: 'Edição Genética CRISPR',
     desc: 'Permite selecionar as características do feto. Zera as falhas na fila de gestação.',
-    baseCost: 1000,
-    requires: ['antibioticos'],
+    baseCost: 10000,
+    requires: ["antibioticos","metodo_cientifico"],
     modifiers: {
         global_r_boost: 2.0
     }

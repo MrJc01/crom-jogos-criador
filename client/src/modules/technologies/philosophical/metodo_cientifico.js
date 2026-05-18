@@ -4,6 +4,6 @@ export default {
     root: 'philosophical',
     name: 'Método Científico',
     desc: 'Tecnologia auto-gerada.',
-    baseCost: 500,
+    baseCost: 3000,
     modifiers: {}
 };

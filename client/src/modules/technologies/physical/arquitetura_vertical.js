@@ -4,6 +4,6 @@ export default {
     root: 'physical',
     name: 'Arquitetura Vertical',
     desc: 'Tecnologia auto-gerada.',
-    baseCost: 500,
+    baseCost: 1500,
     modifiers: {}
 };

@@ -4,6 +4,6 @@ export default {
     root: 'social',
     name: 'Educação Universal',
     desc: 'Tecnologia auto-gerada.',
-    baseCost: 500,
+    baseCost: 3000,
     modifiers: {}
 };

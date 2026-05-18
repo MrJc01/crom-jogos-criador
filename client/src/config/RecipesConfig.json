@@ -1,0 +1,168 @@
+{
+  "_meta": "RecipesConfig extraído automaticamente. Inputs, outputs, craft times e requirements.",
+  "aco_reforcado": {
+    "name": "Aço Reforçado",
+    "inputs": {
+      "minerals": 1000
+    },
+    "outputs": {
+      "steel": 100
+    },
+    "craftTimeTicks": 10,
+    "requirements": []
+  },
+  "arca_geracional": {
+    "name": "Arca Geracional",
+    "inputs": {
+      "spaceship": 100,
+      "agi": 1
+    },
+    "outputs": {
+      "victory": 1
+    },
+    "craftTimeTicks": 10,
+    "requirements": []
+  },
+  "chips": {
+    "name": "Microchips",
+    "inputs": {
+      "silicon": 10,
+      "adaptationPoints": 20
+    },
+    "outputs": {
+      "chips": 1
+    },
+    "craftTimeTicks": 5,
+    "requirements": [
+      "industry_basic"
+    ]
+  },
+  "ia_geral": {
+    "name": "IA Geral",
+    "inputs": {
+      "server": 5,
+      "adaptationPoints": 10000
+    },
+    "outputs": {
+      "agi": 1
+    },
+    "craftTimeTicks": 10,
+    "requirements": []
+  },
+  "modulo_espacial": {
+    "name": "Módulo Espacial",
+    "inputs": {
+      "thruster": 4,
+      "steel": 100
+    },
+    "outputs": {
+      "spaceship": 1
+    },
+    "craftTimeTicks": 10,
+    "requirements": []
+  },
+  "motor_combustao": {
+    "name": "Motor a Combustão",
+    "inputs": {
+      "steel": 50
+    },
+    "outputs": {
+      "engine": 1
+    },
+    "craftTimeTicks": 10,
+    "requirements": []
+  },
+  "pedra_lascada": {
+    "name": "Pedra Lascada",
+    "inputs": {
+      "minerals": 10
+    },
+    "outputs": {
+      "tools": 1
+    },
+    "craftTimeTicks": 10,
+    "requirements": []
+  },
+  "placa_mae": {
+    "name": "Placa Mãe",
+    "inputs": {
+      "chips": 5
+    },
+    "outputs": {
+      "board": 1
+    },
+    "craftTimeTicks": 10,
+    "requirements": []
+  },
+  "propulsor_ionico": {
+    "name": "Propulsor Iônico",
+    "inputs": {
+      "steel": 50
+    },
+    "outputs": {
+      "thruster": 1
+    },
+    "craftTimeTicks": 10,
+    "requirements": []
+  },
+  "refino_bronze": {
+    "name": "Refino de Bronze",
+    "inputs": {
+      "minerals": 100
+    },
+    "outputs": {
+      "bronze": 10
+    },
+    "craftTimeTicks": 10,
+    "requirements": []
+  },
+  "servidores_em_nuvem": {
+    "name": "Servidores em Nuvem",
+    "inputs": {
+      "computers": 100
+    },
+    "outputs": {
+      "server": 1
+    },
+    "craftTimeTicks": 10,
+    "requirements": []
+  },
+  "silicon": {
+    "name": "Refino de Silício",
+    "inputs": {
+      "minerals": 100
+    },
+    "outputs": {
+      "silicon": 1
+    },
+    "craftTimeTicks": 1,
+    "requirements": [
+      "industry_basic"
+    ]
+  },
+  "supercomputer": {
+    "name": "Supercomputadores",
+    "inputs": {
+      "chips": 5,
+      "adaptationPoints": 100
+    },
+    "outputs": {
+      "computers": 1
+    },
+    "craftTimeTicks": 30,
+    "requirements": [
+      "industry_basic"
+    ]
+  },
+  "vacina_mrna": {
+    "name": "Vacina de mRNA",
+    "inputs": {
+      "adaptationPoints": 10
+    },
+    "outputs": {
+      "vaccines": 1
+    },
+    "craftTimeTicks": 10,
+    "requirements": []
+  }
+}

@@ -1,87 +1,77 @@
+import { Config } from '../../config/ConfigLoader.js';
+
+const CFG = Config.event('geopolitics') || {};
+
 export default {
-    id: 'events_geopolitics',
+    id: CFG.id || 'events_geopolitics',
     name: 'Geopolítica de Fronteiras (Geo Engine)',
     type: 'event',
     
     triggerProbability(engine) {
-        // Geopolítica tem chance base constante enquanto houver alta população global
-        if (engine.globalPop < 500000) return 0; // Apenas quando o mapa está muito povoado
-        
-        if (engine.cooldowns['geo_trauma'] && engine.cooldowns['geo_trauma'] > 0) return 0;
-        
+        if (engine.globalPop < (CFG.minGlobalPop || 500000)) return 0;
+        if (engine.cooldowns[CFG.cooldownKey] && engine.cooldowns[CFG.cooldownKey] > 0) return 0;
         const pressure = Math.max(engine.pressures.social || 0, engine.pressures.biological || 0);
-        return Math.min(0.2, 0.05 + pressure * 0.1); 
+        return Math.min(CFG.maxProbability, CFG.baseProbability + pressure * CFG.pressureMultiplier); 
     },
     
     applyEvent(engine) {
         const infectedNodes = Array.from(engine.nodes.values()).filter(n => n.infected);
-        if (infectedNodes.length < 2) return null; // Precisa de pelo menos 2 nós para geopolítica
-        
-        engine.cooldowns['geo_trauma'] = 150; // 5 meses de estabilidade diplomática base
-
+        if (infectedNodes.length < 2) return null;
+        engine.cooldowns[CFG.cooldownKey] = CFG.cooldownDays;
         const roll = Math.random();
+        const ev = CFG.events || {};
         
-        // 82. Casamento Diplomático (Unificação de Factions pacífica)
-        if (roll < 0.15) {
-            // Unir culturas não é trivial, apenas reduz a chance de guerra (aumenta Trust absurdamente)
-            engine.globalTrust += 50; 
-            const t1 = infectedNodes[Math.floor(Math.random() * infectedNodes.length)];
-            return { message: `💍 CASAMENTO DIPLOMÁTICO: Elites de ${t1.name} selaram matrimônio com nações vizinhas. A Confiança Global disparou (+50) pacificando fronteiras!`, type: "milestone", color: "#ffb6c1" };
-        }
-        
-        // 83. Incidente de Fronteira (Casus Belli Falso)
-        if (roll >= 0.15 && roll < 0.25) {
-            engine.globalTrust = Math.max(0, engine.globalTrust - 40); // Destrói o Trust instantâneo
+        if (roll < (ev.diplomaticMarriage?.rollMax || 0.15)) {
+            engine.globalTrust += (ev.diplomaticMarriage?.trustBonus || 50);
             const t = infectedNodes[Math.floor(Math.random() * infectedNodes.length)];
-            return { message: `⚔️ INCIDENTE DE FRONTEIRA: Soldados em ${t.name} atiraram por acidente contra vizinhos. O pânico de uma Guerra Mundial derrubou a Confiança Global.`, nodeId: t.id, type: "nemesis", color: "#ff0000" };
+            return { message: `💍 CASAMENTO DIPLOMÁTICO: Elites de ${t.name} selaram pacto. Confiança Global +${ev.diplomaticMarriage?.trustBonus || 50}!`, type: "milestone", color: "#ffb6c1" };
         }
         
-        // 84. Pirataria Tecnológica Massiva
-        if (roll >= 0.25 && roll < 0.35) {
-            engine.adaptationPoints += 150; // Injeta DNA "roubado" para a engine de IA usar
-            return { message: `🏴‍☠️ ESPIONAGEM TECNOLÓGICA: Uma rede de espiões roubou patentes cruciais e as vazou na Dark Web para todas as tribos! (+150 DNA Global)`, type: "warning", color: "#55aaff" };
-        }
-        
-        // 85. O Boom dos Refugiados de Ouro
-        if (roll >= 0.35 && roll < 0.45) {
+        if (roll >= (ev.borderIncident?.rollMin || 0.15) && roll < (ev.borderIncident?.rollMax || 0.25)) {
+            engine.globalTrust = Math.max(0, engine.globalTrust - (ev.borderIncident?.trustLoss || 40));
             const t = infectedNodes[Math.floor(Math.random() * infectedNodes.length)];
-            t.demographics.total += 50000; // Imigração massiva
-            engine.adaptationPoints += 50; // Trazem intelecto
-            return { message: `🛳️ REFUGIADOS DE OURO: Um influxo massivo de imigrantes intelectuais chegou em ${t.name}, turbinando a pesquisa (+50 DNA) e a população local!`, nodeId: t.id, type: "milestone", color: "#ffff00" };
+            return { message: `⚔️ INCIDENTE DE FRONTEIRA: Soldados em ${t.name} atiraram contra vizinhos. Trust despencou!`, nodeId: t.id, type: "nemesis", color: "#ff0000" };
         }
         
-        // 86. Descoberta Arqueológica
-        if (roll >= 0.45 && roll < 0.55) {
+        if (roll >= (ev.techPiracy?.rollMin || 0.25) && roll < (ev.techPiracy?.rollMax || 0.35)) {
+            engine.adaptationPoints += (ev.techPiracy?.dnaBonus || 150);
+            return { message: `🏴‍☠️ ESPIONAGEM TECNOLÓGICA: Patentes vazaram na Dark Web! (+${ev.techPiracy?.dnaBonus || 150} DNA Global)`, type: "warning", color: "#55aaff" };
+        }
+        
+        if (roll >= (ev.goldenRefugees?.rollMin || 0.35) && roll < (ev.goldenRefugees?.rollMax || 0.45)) {
             const t = infectedNodes[Math.floor(Math.random() * infectedNodes.length)];
-            engine.adaptationPoints += 200;
-            return { message: `🏺 DESCOBERTA ARQUEOLÓGICA: Escavações em ${t.name} revelaram relíquias avançadas! O salto científico foi estrondoso (+200 DNA).`, nodeId: t.id, type: "milestone", color: "#ffcc00" };
+            t.demographics.total += (ev.goldenRefugees?.popBonus || 50000);
+            engine.adaptationPoints += (ev.goldenRefugees?.dnaBonus || 50);
+            return { message: `🛳️ REFUGIADOS DE OURO: Imigrantes intelectuais chegaram em ${t.name}! (+${ev.goldenRefugees?.dnaBonus || 50} DNA)`, nodeId: t.id, type: "milestone", color: "#ffff00" };
         }
         
-        // 87. Seita Suicida
-        if (roll >= 0.55 && roll < 0.65) {
+        if (roll >= (ev.archaeologicalFind?.rollMin || 0.45) && roll < (ev.archaeologicalFind?.rollMax || 0.55)) {
             const t = infectedNodes[Math.floor(Math.random() * infectedNodes.length)];
-            t.demographics.kill(Math.min(t.demographics.total, 50000));
-            return { message: `💀 CULTO APOCALÍPTICO: Uma seita extremista isolacionista induziu o auto-sacrifício de até 50.000 pessoas em ${t.name}.`, nodeId: t.id, type: "disaster", color: "#550055" };
+            engine.adaptationPoints += (ev.archaeologicalFind?.dnaBonus || 200);
+            return { message: `🏺 DESCOBERTA ARQUEOLÓGICA: Relíquias avançadas em ${t.name}! (+${ev.archaeologicalFind?.dnaBonus || 200} DNA)`, nodeId: t.id, type: "milestone", color: "#ffcc00" };
         }
         
-        // 88. Epidemia de Esterilidade Randômica
-        if (roll >= 0.65 && roll < 0.75) {
+        if (roll >= (ev.suicideCult?.rollMin || 0.55) && roll < (ev.suicideCult?.rollMax || 0.65)) {
             const t = infectedNodes[Math.floor(Math.random() * infectedNodes.length)];
-            t.sterilityTimer = 180; // flag para gestation
-            return { message: `🚼 ESTERILIDADE MISTERIOSA: Fatores ambientais severos travaram os nascimentos em ${t.name}. Ninguém nascerá na região pelos próximos 6 meses!`, nodeId: t.id, type: "warning", color: "#aaffaa" };
+            t.demographics.kill(Math.min(t.demographics.total, ev.suicideCult?.killCap || 50000));
+            return { message: `💀 CULTO APOCALÍPTICO: Seita extremista induziu o auto-sacrifício em ${t.name}.`, nodeId: t.id, type: "disaster", color: "#550055" };
         }
         
-        // 89. A Paz de Natal (Trégua de Inverno)
-        if (roll >= 0.75 && roll < 0.85) {
-            engine.globalTrust = 100; // Reseta confiança ao topo
-            return { message: `🕊️ A PAZ DE NATAL: Em um raro momento de humanidade sistêmica, as frentes abaixaram as armas. A Confiança Global foi plenamente restaurada (100%).`, type: "milestone", color: "#ffffff" };
+        if (roll >= (ev.sterilityEpidemic?.rollMin || 0.65) && roll < (ev.sterilityEpidemic?.rollMax || 0.75)) {
+            const t = infectedNodes[Math.floor(Math.random() * infectedNodes.length)];
+            t.sterilityTimer = ev.sterilityEpidemic?.sterilityDays || 180;
+            return { message: `🚼 ESTERILIDADE MISTERIOSA: Nascimentos travados em ${t.name} por 6 meses!`, nodeId: t.id, type: "warning", color: "#aaffaa" };
         }
         
-        // 90. Sabotagem de Infraestrutura de Água
-        if (roll >= 0.85) {
+        if (roll >= (ev.christmasPeace?.rollMin || 0.75) && roll < (ev.christmasPeace?.rollMax || 0.85)) {
+            engine.globalTrust = ev.christmasPeace?.trustReset || 100;
+            return { message: `🕊️ A PAZ DE NATAL: Confiança Global restaurada a ${ev.christmasPeace?.trustReset || 100}%!`, type: "milestone", color: "#ffffff" };
+        }
+        
+        if (roll >= (ev.waterSabotage?.rollMin || 0.85)) {
             const t = infectedNodes[Math.floor(Math.random() * infectedNodes.length)];
             t.resources.water = 0;
-            return { message: `🧪 SABOTAGEM DE AQUÍFEROS: Terroristas infiltrados envenenaram as reservas hídricas centrais de ${t.name}. A sede vai assolar a região!`, nodeId: t.id, type: "disaster", color: "#0055ff" };
+            return { message: `🧪 SABOTAGEM DE AQUÍFEROS: Terroristas envenenaram as reservas de ${t.name}!`, nodeId: t.id, type: "disaster", color: "#0055ff" };
         }
         
         return null;

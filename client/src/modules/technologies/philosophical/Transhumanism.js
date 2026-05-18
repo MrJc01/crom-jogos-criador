@@ -3,8 +3,8 @@ export default {
     name: 'Transumanismo e Imortalidade',
     type: 'technology',
     root: 'philosophical', // Pertence ao ramo Filosófico
-    baseCost: 20000, // Custo brutal
-    requires: [], 
+    baseCost: 50000, // Custo brutal
+    requires: ["niilismo_cosmico","edicao_genetica_crispr"], 
     
     onUnlock(engine) {
         // Reduz o limiar de desastre quase a zero impacto (A severidade não importa mais)

@@ -1,0 +1,66 @@
+{
+  "_meta": "Configuração econômica: EROI, custos de extração, receitas, comércio.",
+
+  "eroi": {
+    "_comment": "Energy Return On Investment (015). Para extrair, precisa gastar energia.",
+    "mining": {
+      "woodCostPerMineral": 0.5,
+      "oilCostPerMineral": 0.1,
+      "collapseThreshold": 1.0
+    },
+    "farming": {
+      "waterCostPerFood": 0.3,
+      "woodCostPerFood": 0.1
+    }
+  },
+
+  "soilRecovery": {
+    "_comment": "Solo logarítmico (016). Recuperação lenta.",
+    "recoveryRatePerYear": 0.10,
+    "maxSoil": 100,
+    "superExploitationYearsToRecover": 10
+  },
+
+  "woodConsumption": {
+    "_comment": "Lenha como gargalo do Bronze/Ferro (017)",
+    "smeltingCostPerMineral": 2.0,
+    "charcoalEfficiency": 0.5
+  },
+
+  "waterStress": {
+    "_comment": "Estresse hídrico (018). Cap de extração por tick.",
+    "maxExtractionPerTick": 500,
+    "aquiferRechargeRate": 100,
+    "collapseThreshold": 0
+  },
+
+  "stockDecay": {
+    "_comment": "Decaimento de estoque (019). Comida apodrece sem tech.",
+    "food": { "baseDecay": 0.30, "withPreservation": 0.05 },
+    "wood": { "baseDecay": 0.001 },
+    "minerals": { "baseDecay": 0.0001 },
+    "water": { "baseDecay": 0.005 }
+  },
+
+  "diminishingReturns": {
+    "_comment": "Rendimentos decrescentes (020). Cada extração aumenta custo.",
+    "extractionDepthMultiplier": 1.01,
+    "maxDepthPenalty": 5.0
+  },
+
+  "rareEarths": {
+    "_comment": "Terras raras (021). Chips exigem recursos concentrados.",
+    "chipRequirements": {
+      "lithium": 100,
+      "silicon": 200,
+      "rareEarthHexProbability": 0.05
+    }
+  },
+
+  "trade": {
+    "_comment": "Comércio e logística (023, 029, 031).",
+    "frictionPerDistance": 0.02,
+    "piracyChance": 0.05,
+    "priceElasticity": 0.1
+  }
+}

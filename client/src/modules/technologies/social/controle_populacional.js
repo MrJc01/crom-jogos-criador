@@ -4,6 +4,6 @@ export default {
     root: 'social',
     name: 'Controle Populacional',
     desc: 'Tecnologia auto-gerada.',
-    baseCost: 500,
+    baseCost: 15000,
     modifiers: {}
 };

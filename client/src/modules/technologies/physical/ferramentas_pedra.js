@@ -4,6 +4,6 @@ export default {
     root: 'physical',
     name: 'Ferramentas de Pedra',
     desc: 'Tecnologia auto-gerada.',
-    baseCost: 500,
+    baseCost: 50,
     modifiers: {}
 };

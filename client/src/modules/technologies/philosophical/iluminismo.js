@@ -4,6 +4,6 @@ export default {
     root: 'philosophical',
     name: 'Iluminismo',
     desc: 'Tecnologia auto-gerada.',
-    baseCost: 500,
+    baseCost: 2500,
     modifiers: {}
 };

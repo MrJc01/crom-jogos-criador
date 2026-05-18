@@ -4,6 +4,6 @@ export default {
     root: 'physical',
     name: 'Elevador Espacial',
     desc: 'Tecnologia auto-gerada.',
-    baseCost: 500,
+    baseCost: 250000,
     modifiers: {}
 };

@@ -4,8 +4,8 @@ export default {
     root: 'technological',
     name: 'Revolução Industrial',
     desc: 'Lança as bases da manufatura de chips e recursos avançados. Causa impacto ambiental.',
-    baseCost: 200,
-    requires: ['agriculture'],
+    baseCost: 5000,
+    requires: ["metalurgia_bronze","educacao_universal"],
     modifiers: {
         global_r_boost: 1.2,
         severity_flat_increase: 10 // Aumenta a severidade base do planeta

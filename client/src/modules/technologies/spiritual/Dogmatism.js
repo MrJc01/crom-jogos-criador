@@ -3,8 +3,8 @@ export default {
     name: 'Dogmatismo e Cultos Unificados',
     type: 'technology',
     root: 'spiritual', // Pertence ao ramo Espiritual
-    baseCost: 2000,
-    requires: [], // Pode ser a primeira espiritual
+    baseCost: 6000,
+    requires: ["codigo_de_leis"], // Pode ser a primeira espiritual
     
     onUnlock(engine) {
         // Reduz a agressividade base global em troca de submissão

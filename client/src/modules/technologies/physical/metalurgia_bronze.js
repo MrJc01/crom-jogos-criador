@@ -4,6 +4,6 @@ export default {
     root: 'physical',
     name: 'Metalurgia do Bronze',
     desc: 'Tecnologia auto-gerada.',
-    baseCost: 500,
+    baseCost: 400,
     modifiers: {}
 };

@@ -4,8 +4,8 @@ export default {
     root: 'technological',
     name: 'Matriz de Simulação',
     desc: 'Uma prisão de paraíso virtual perfeita. Gera paz e estabilidade inabaláveis (+50 Trust passivamente).',
-    baseCost: 150000,
-    requires: ['cyberpunk_upload'],
+    baseCost: 400000,
+    requires: ["cyberpunk_upload"],
     modifiers: {
         severity_flat_increase: -50
     },

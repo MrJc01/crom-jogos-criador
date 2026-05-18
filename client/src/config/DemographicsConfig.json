@@ -1,0 +1,59 @@
+{
+  "_meta": "Configuração demográfica do CROM. DTM (Transição Demográfica), pirâmide etária, metabolismo.",
+
+  "dtm": {
+    "_comment": "5 estágios da Transição Demográfica (006-013)",
+    "stages": [
+      { "name": "Pré-Industrial",   "minEra": 1,    "birthRate": 0.045, "deathRate": 0.040, "infantMortality": 0.30 },
+      { "name": "Transição Inicial", "minEra": 3,    "birthRate": 0.045, "deathRate": 0.025, "infantMortality": 0.20 },
+      { "name": "Transição Tardia",  "minEra": 10,   "birthRate": 0.030, "deathRate": 0.015, "infantMortality": 0.10 },
+      { "name": "Industrial",        "minEra": 50,   "birthRate": 0.015, "deathRate": 0.010, "infantMortality": 0.03 },
+      { "name": "Pós-Industrial",    "minEra": 200,  "birthRate": 0.010, "deathRate": 0.009, "infantMortality": 0.01 }
+    ]
+  },
+
+  "ageDistribution": {
+    "child":  { "ratio": 0.20, "canWork": false, "canMigrate": false, "canFight": false, "consumptionRate": 0.5 },
+    "young":  { "ratio": 0.30, "canWork": true,  "canMigrate": true,  "canFight": true,  "consumptionRate": 1.0 },
+    "adult":  { "ratio": 0.40, "canWork": true,  "canMigrate": true,  "canFight": true,  "consumptionRate": 1.0 },
+    "elder":  { "ratio": 0.10, "canWork": false, "canMigrate": false, "canFight": false, "consumptionRate": 0.7 }
+  },
+
+  "sexDistribution": {
+    "M": 0.50,
+    "F": 0.50
+  },
+
+  "pregnancyDays": 270,
+
+  "metabolismByBiome": {
+    "_comment": "Multiplicador de consumo de recursos por bioma (012)",
+    "jungle":  { "food": 1.0, "wood": 0.8, "water": 1.2 },
+    "plains":  { "food": 1.0, "wood": 1.0, "water": 1.0 },
+    "tundra":  { "food": 1.2, "wood": 1.5, "water": 0.8 },
+    "desert":  { "food": 1.0, "wood": 0.5, "water": 2.0 }
+  },
+
+  "lifespanByBiome": {
+    "_comment": "Expectativa de vida base em anos (008)",
+    "jungle":  55,
+    "plains":  65,
+    "tundra":  50,
+    "desert":  45
+  },
+
+  "sanitationImpact": {
+    "_comment": "Sem saneamento, mortalidade basal multiplica (009)",
+    "noSanitationMortalityMultiplier": 3.0,
+    "sanitationTech": "saneamento_basico"
+  },
+
+  "zoonosis": {
+    "_comment": "Risco de spillover (010, 013)",
+    "crowdingThreshold": 0.80,
+    "deforestationThreshold": 5000,
+    "baseSpilloverChance": 0.001,
+    "sirRecoveryRate": 0.05,
+    "sirTransmissionRate": 0.15
+  }
+}

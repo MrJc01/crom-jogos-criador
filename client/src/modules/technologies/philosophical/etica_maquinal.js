@@ -4,6 +4,6 @@ export default {
     root: 'philosophical',
     name: 'Ética Maquinal',
     desc: 'Tecnologia auto-gerada.',
-    baseCost: 500,
+    baseCost: 10000,
     modifiers: {}
 };

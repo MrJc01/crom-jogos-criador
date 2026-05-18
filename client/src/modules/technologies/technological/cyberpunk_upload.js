@@ -4,8 +4,8 @@ export default {
     root: 'technological',
     name: 'Mind Uploading',
     desc: 'Digitalização completa das mentes humanas. A morte biológica cessa (Mortalidade = 0), mas a natalidade também. K torna-se essencialmente infinito nos servidores.',
-    baseCost: 100000,
-    requires: [],
+    baseCost: 150000,
+    requires: ["fusao_nuclear","tech_transhumanism"],
     modifiers: {
         global_K_boost: 100.0,
         global_r_boost: 0.001, // Quase cessa a reprodução biológica
