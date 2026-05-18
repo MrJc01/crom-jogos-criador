@@ -64,3 +64,10 @@
 23:35:00 [vite] page reload index.html
 23:39:32 [vite] page reload src/modules/events/DisasterEngine.js
 23:39:51 [vite] page reload src/index.js
+23:42:41 [vite] page reload src/modules/economy/extraction.js
+23:42:41 [vite] page reload src/modules/economy/mining.js
+23:42:47 [vite] page reload src/core/Engine.js
+23:43:29 [vite] page reload src/core/Engine.js
+23:43:46 [vite] page reload src/modules/economy/extraction.js
+23:44:12 [vite] page reload src/core/RegionNode.js
+23:44:51 [vite] page reload src/modules/biology/gestation.js

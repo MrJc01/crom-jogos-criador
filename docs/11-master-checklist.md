@@ -26,9 +26,9 @@ Este é o Roadmap Definitivo contendo mais de 50 tarefas para implementar todas 
 - [ ] **17.** Criar especialização de Facções.
 - [ ] **18.** Lógica de Logística: O item só é criado se conectado por rota.
 - [ ] **19.** Mecânica de Aquisição (Monopólio): Facções compram facções.
-- [ ] **20.** Adicionar o recurso `Água`.
-- [ ] **21.** Adicionar o recurso `Solo (Fertilidade)`.
-- [ ] **22.** Degradação de Confiança (Trust decai 5% ao ano).
+- [x] **20.** Adicionar o recurso `Água`.
+- [x] **21.** Adicionar o recurso `Solo (Fertilidade)`.
+- [x] **22.** Degradação de Confiança (Trust decai 5% ao ano).
 
 ### IV. Propagação, Relevo e Demografia Avançada
 - [ ] **23.** Adicionar atrito de terreno para montanhas.

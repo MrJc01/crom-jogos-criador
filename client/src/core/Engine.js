@@ -43,7 +43,8 @@ export class GameEngine {
       { sourceId: 'CN', targetId: 'JP', type: 'sea' }
     ];
     
-    this.inventory = { minerals: 0, silicon: 0, chips: 0, computers: 0 };
+    this.inventory = { wood: 0, water: 0, minerals: 0, silicon: 0, chips: 0, computers: 0 };
+    this.globalTrust = 100.0; // Confiança Global inicia em 100%
     
     this.techTree = new TechTree();
     this.economy = new Economy();
@@ -199,6 +200,8 @@ export class GameEngine {
     if (this.day > 365) {
         this.day = 1;
         this.year++;
+        // Tarefa 22: Trust decai 5% ao ano
+        this.globalTrust = Math.max(0, this.globalTrust * 0.95);
     }
     
     // Multiplicador da Era Atual

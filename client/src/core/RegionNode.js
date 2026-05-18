@@ -9,6 +9,7 @@ export class RegionNode {
         this.resources = resources;
         this.neighbors = neighbors;
         
+        this.soil = 100.0; // Fertilidade inicial (%)
         this.infected = false;
         this.demographics = new Demographics(0);
     }
