@@ -246,8 +246,12 @@ export class GameEngine {
         });
         newGlobalPop += node.demographics.total;
     });
-    
     this.globalPop = newGlobalPop;
+    
+    // Tarefa 12 e 14: Decaimento de Estoque Físico e Escassez (Apodrecimento sazonal e atrito termodinâmico)
+    this.inventory.wood = Math.max(0, this.inventory.wood * 0.999);
+    this.inventory.water = Math.max(0, this.inventory.water * 0.995);
+    this.inventory.minerals = Math.max(0, this.inventory.minerals * 0.9999);
     
     // Agregação demográfica global (para a UI de Facções)
     this.globalDemographics = { factions: {} };

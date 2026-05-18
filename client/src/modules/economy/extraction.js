@@ -12,13 +12,38 @@ export default {
         let mineralYield = Math.max(0.05, node.resources.minerals / 50000);
         let woodYield = Math.max(0.05, node.resources.wood / 50000);
 
-        // 1. Extração de Minérios
+        // Task 09: Capacidade de Carga de Solo e Pousio
+        if (node.soil === undefined) node.soil = 100;
+        const popPressure = node.demographics.total / (node.biome.capacityBase || 50000);
+        if (popPressure > 0.5) {
+            node.soil -= (popPressure * 0.1); // Agricultura intensiva degrada o solo
+        } else {
+            node.soil += 0.05; // Pousio (recuperação) se a população estiver baixa
+        }
+        node.soil = Math.max(0, Math.min(100, node.soil));
+        
+        // Atualiza a capacidade com base na saúde do solo
+        const techCapBoost = engine.unlockedTechs.has("tech_sanitation") ? 2 : 1;
+        node.capacity = Math.floor((node.biome.capacityBase || 50000) * (node.soil / 100) * techCapBoost * globalRules.global_K_boost);
+
+        // 1. Extração de Minérios (Task 08: Lei de EROI)
         if (node.resources.minerals > 0) {
-            let extractMin = Math.floor((workers * mineralYield) / 10000);
-            if (extractMin < 1 && Math.random() < 0.1) extractMin = 1; 
+            let eroiPenalty = 1.0;
+            // EROI: Mineração pesada requer energia térmica/física da madeira (forjas/escoras)
+            if (engine.inventory.wood < 500) {
+                eroiPenalty = 0.1; // Custo energético não atingido
+            }
+
+            let extractMin = Math.floor((workers * mineralYield * eroiPenalty) / 10000);
+            if (extractMin < 1 && Math.random() < 0.1 * eroiPenalty) extractMin = 1; 
             extractMin = Math.min(extractMin, node.resources.minerals);
             node.resources.minerals -= extractMin;
             engine.inventory.minerals += extractMin;
+            
+            // Consome energia (madeira) para sustentar a mineração pesada
+            if (extractMin > 0) {
+                engine.inventory.wood = Math.max(0, engine.inventory.wood - Math.floor(extractMin * 0.5));
+            }
         }
 
         // 2. Extração de Madeira
