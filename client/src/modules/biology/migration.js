@@ -81,6 +81,15 @@ export default {
                         target.infect(0); 
                         target.demographics.addBirths(survivors); 
                         
+                        // Tarefa 37: Refugiados como Arma (Atrito logístico de vizinho)
+                        // A imigração repentina de famintos destrói parte da infraestrutura/solo do vizinho
+                        if (survivors > 1000) {
+                            const refugeePressure = survivors / Math.max(1, target.capacity);
+                            if (refugeePressure > 0.1) {
+                                target.soil = Math.max(0, target.soil - (refugeePressure * 5));
+                            }
+                        }
+                        
                         // Emite evento visual para rotas modais (não terrestres simples)
                         if (choice.type !== 'land' && engine.onEvent) {
                             engine.onEvent({ sourceId: node.id, targetId: choice.id, type: choice.type }, 'migration_event');

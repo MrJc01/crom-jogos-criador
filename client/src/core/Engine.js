@@ -269,6 +269,22 @@ export class GameEngine {
                 plugin.applyTick(node, globalRules, this);
             }
         });
+        
+        // TAREFA 34 e 35: Limites Urbanos (Verticalização e Ilha de Calor)
+        // Megacidades (mais de 100 mil habitantes) sofrem com atrito físico extremo
+        if (node.demographics.total > 100000) {
+            // TAREFA 35: Ilha de Calor (Asfalto/concreto destrói o solo permanentemente e eleva temperatura local)
+            node.soil = Math.max(0, (node.soil || 0) - 0.1);
+            
+            // TAREFA 34: Verticalização de Espaço
+            // Para manter prédios funcionando é preciso minérios (Aço/Concreto). Se não houver, o Cap colapsa.
+            if (this.inventory.minerals < 1000) {
+                node.capacity = Math.min(node.capacity, 100000); // Teto de vidro, forçando migração
+            } else {
+                this.inventory.minerals -= 1; // Custo de manutenção invisível da malha urbana
+            }
+        }
+        
         newGlobalPop += node.demographics.total;
     });
     this.globalPop = newGlobalPop;
