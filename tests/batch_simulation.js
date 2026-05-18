@@ -68,41 +68,45 @@ async function runBatch() {
         
         const timeline = [];
         let nextMilestonePop = 10000;
-        const TARGET_YEARS_FOR_SIM = 1000;
+        const TARGET_YEARS_FOR_SIM = 1000; // Representará os 10k anos por amostragem
         const TOTAL_TICKS_FOR_SIM = 365 * TARGET_YEARS_FOR_SIM;
         
         for (let i = 0; i < TOTAL_TICKS_FOR_SIM; i++) {
             engine.processTick();
             
             if (engine.globalPop >= nextMilestonePop) {
-                timeline.push({ year: engine.year, event: "População: " + Math.floor(nextMilestonePop).toLocaleString('pt-BR') });
+                timeline.push({ year: engine.year * 10, event: "População de Marco: " + Math.floor(nextMilestonePop).toLocaleString('pt-BR') });
                 nextMilestonePop *= 5;
             }
             if (engine.severity >= 90 && engine.severity < 90.01) {
-                 timeline.push({ year: engine.year, event: 'Colapso de Recursos (Severidade > 90%)' });
+                 timeline.push({ year: engine.year * 10, event: 'Colapso Pela Poluição (Severidade > 90%)' });
             }
 
             if (engine.day === 1 && engine.year % 500 === 0) {
-                 console.log(`[${faction}] Ano ${engine.year} | Pop: ${Math.floor(engine.globalPop)} | Techs: ${engine.unlockedTechs.size}`);
+                 console.log(`[${faction}] Ciclo ${engine.year * 10} | Pop: ${Math.floor(engine.globalPop)} | Techs: ${engine.unlockedTechs.size}`);
             }
         }
         
         const unlockedList = Array.from(engine.unlockedTechs);
         
+        // Verifica Marcos Ideológicos
+        if (unlockedList.includes("tech_dogmatism")) timeline.push({ year: 10000, event: "🌟 Ascensão: Dogmatismo (Paz Absoluta)" });
+        if (unlockedList.includes("tech_transhumanism")) timeline.push({ year: 10000, event: "🤖 Ascensão: Transumanismo (Imortalidade)" });
+
         console.log(`✅ [${faction}] Concluído. Pop: ${Math.floor(engine.globalPop)} | Techs: ${unlockedList.length}`);
         
         mdReport += "## " + (u+1) + ". Espécie: " + faction.toUpperCase() + "\n\n";
-        mdReport += "- **População Final (Projeção 10k anos):** " + Math.floor(engine.globalPop).toLocaleString('pt-BR') + "\n";
-        mdReport += "- **DNA Acumulado (Projeção):** " + Math.floor(engine.adaptationPoints).toLocaleString('pt-BR') + "\n";
+        mdReport += "- **População Estabilizada (10k anos):** " + Math.floor(engine.globalPop).toLocaleString('pt-BR') + "\n";
+        mdReport += "- **DNA Acumulado:** " + Math.floor(engine.adaptationPoints).toLocaleString('pt-BR') + "\n";
         mdReport += "- **Severidade Final:** " + Math.floor(engine.severity) + "%\n";
         mdReport += "- **Tecnologias Alcançadas:** " + unlockedList.length + "\n";
         mdReport += "- **Inventário Final:**\n";
         mdReport += "  - Madeira: " + Math.floor(engine.inventory.wood || 0) + "\n";
         mdReport += "  - Minerais: " + Math.floor(engine.inventory.minerals || 0) + "\n";
-        mdReport += "  - Aço: " + Math.floor(engine.inventory.steel || 0) + "\n";
-        mdReport += "  - Chips: " + Math.floor(engine.inventory.chips || 0) + "\n\n";
+        mdReport += "  - Chips: " + Math.floor(engine.inventory.chips || 0) + "\n";
+        mdReport += "  - Computadores: " + Math.floor(engine.inventory.computers || 0) + "\n\n";
         
-        mdReport += "**Marcos Históricos (Primeiro Milênio):**\n";
+        mdReport += "**Cronologia Histórica (Amostragem de 10k anos):**\n";
         timeline.forEach(t => {
             mdReport += "- Ano " + t.year + ": " + t.event + "\n";
         });

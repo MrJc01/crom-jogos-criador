@@ -69,24 +69,24 @@
         <!-- Canvas do Mapa (SVG Sobreposto) -->
         <div id="worldCanvas" style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 2;"></div>
 
-        <!-- HUD Global de Inventário (Esquerda) -->
-        <div id="inventory-panel" class="stone-panel hud-box" style="left: 20px; right: auto;">
-            <div class="hud-item" style="color: #6ab04c;"><span class="icon" title="Madeira Bruta">🌲</span> <span id="inv-wood">0</span></div>
-            <div class="hud-item" style="color: #e3c16f;"><span class="icon" title="Minérios Brutos">🪨</span> <span id="inv-minerals">0</span></div>
-            <div class="hud-item" style="color: #aaa;"><span class="icon" title="Aço Refinado">⛓️</span> <span id="inv-steel">0</span></div>
-            <div class="hud-item" style="color: #6a8b8c;"><span class="icon" title="Silício Bruto">💎</span> <span id="inv-silicon">0</span></div>
-            <div class="hud-item" style="color: #00ddff;"><span class="icon" title="Microchips">💻</span> <span id="inv-chips">0</span></div>
-            <div class="hud-item" style="color: #e0d0a0;"><span class="icon" title="Computadores/Servidores">🖥️</span> <span id="inv-computers">0</span></div>
+        <!-- HUD Global Compacto (Topo Direita) -->
+        <div id="global-hud" class="stone-panel hud-box" style="top: 10px; right: 10px; left: auto; flex-direction: row; flex-wrap: wrap; width: 450px; justify-content: space-between; font-size: 16px; padding: 5px 10px;">
+            <div class="hud-item" style="width: 45%;"><span class="icon" title="Data do Jogo">📅</span> <span id="game-date">Ano 1, Mês 1</span></div>
+            <div class="hud-item" style="width: 45%;"><span class="icon" title="População Mundial">👥</span> <span id="global-pop">0</span></div>
+            <div class="hud-item" style="width: 45%;"><span class="icon" title="Severidade Planetária">⚠️</span> <span id="global-severity" style="color:#ff4444;">0%</span></div>
+            <div class="hud-item" style="width: 45%;"><span class="icon" title="Pontos de DNA">🧬</span> <span id="global-dna" style="color:#f1c40f;">0</span></div>
+            <div class="hud-item" style="width: 100%; text-align: center; border-top: 1px solid #333; margin-top: 5px; padding-top: 5px;">
+                <span class="icon" title="Era Tecnológica">⏳</span> <span id="game-era" style="color:#00ddff; font-weight:bold;">Idade da Pedra</span> | 
+                <span class="icon" title="Facção Dominante">👑</span> <span id="dominant-faction">-</span>
+            </div>
         </div>
 
-        <!-- HUD Minimalista Direito -->
-        <div id="hud-panel" class="stone-panel hud-box">
-            <div class="hud-item"><span class="icon" title="Era Tecnológica">⏳</span> <span id="game-era" style="color:#00ddff; font-weight:bold;">Idade da Pedra</span></div>
-            <div class="hud-item"><span class="icon" title="População Mundial">👥</span> <span id="global-pop">0</span></div>
-            <div class="hud-item"><span class="icon" title="Severidade do Vírus">⚠️</span> <span id="global-severity">0%</span></div>
-            <div class="hud-item"><span class="icon" title="Pontos de Adaptação (DNA)">🧬</span> <span id="global-dna">0</span></div>
-            <div class="hud-item"><span class="icon" title="Facção Dominante">🎭</span> <span id="dominant-faction">-</span></div>
-            <div class="hud-item"><span class="icon" title="Data do Jogo">📅</span> <span id="game-date">Ano 1, Mês 1, Dia 1</span></div>
+        <!-- Recursos Globais (Topo Esquerda) -->
+        <div id="inventory-hud" class="stone-panel hud-box" style="top: 10px; left: 10px; right: auto; flex-direction: row; gap: 15px; padding: 5px 10px; font-size: 18px;">
+            <div class="hud-item" style="color: #6ab04c;"><span class="icon" title="Madeira">🌲</span> <span id="inv-wood">0</span></div>
+            <div class="hud-item" style="color: #e3c16f;"><span class="icon" title="Minérios">🪨</span> <span id="inv-minerals">0</span></div>
+            <div class="hud-item" style="color: #aaa;"><span class="icon" title="Aço">⛓️</span> <span id="inv-steel">0</span></div>
+            <div class="hud-item" style="color: #00ddff;"><span class="icon" title="Chips">💻</span> <span id="inv-chips">0</span></div>
         </div>
 
         <!-- Log de Eventos / Feed de Notícias -->
@@ -95,16 +95,32 @@
             <div id="news-feed-list" style="font-size: 14px; display: flex; flex-direction: column; gap: 5px; line-height: 1.2;"></div>
         </div>
 
-        <!-- Painel de Camadas de Visão (Filtros do Mapa) -->
-        <div id="layers-panel" class="stone-panel hud-box" style="top: 250px;">
-            <div style="font-size: 14px; color: #00ddff; text-align: center; margin-bottom: 10px; border-bottom: 1px solid #333; padding-bottom: 5px;">LENTES DO MAPA</div>
-            <button class="layer-btn active" data-layer="populacional" style="width: 100%; text-align: left; background: #111; color: #fff; border: 1px solid #333; padding: 5px; cursor: pointer; margin-bottom: 5px;">👥 Demografia</button>
-            <button class="layer-btn" data-layer="normal" style="width: 100%; text-align: left; background: #111; color: #fff; border: 1px solid #333; padding: 5px; cursor: pointer; margin-bottom: 5px;">🌍 Biomas Físicos</button>
-            <button class="layer-btn" data-layer="recursos" style="width: 100%; text-align: left; background: #111; color: #fff; border: 1px solid #333; padding: 5px; cursor: pointer; margin-bottom: 5px;">🌲 Recursos Naturais</button>
-            <button class="layer-btn" data-layer="desastres" style="width: 100%; text-align: left; background: #111; color: #fff; border: 1px solid #333; padding: 5px; cursor: pointer;">🔥 Fúria e Desastres</button>
+        <!-- Modal de Ecologia / Mundo -->
+        <div id="world-modal" class="stone-panel modal hidden" style="left: auto; right: 20px; top: auto; bottom: 100px; transform: none; width: 300px;">
+            <div class="modal-header">
+                <h2>🌍 Ecologia e Lentes</h2>
+                <button class="close-btn" onclick="document.getElementById('world-modal').classList.add('hidden')">✖</button>
+            </div>
+            <div class="list-container">
+                <button class="layer-btn active" data-layer="populacional" style="width: 100%; text-align: left; background: #111; color: #fff; border: 1px solid #333; padding: 5px; cursor: pointer; margin-bottom: 5px;">👥 Demografia</button>
+                <button class="layer-btn" data-layer="normal" style="width: 100%; text-align: left; background: #111; color: #fff; border: 1px solid #333; padding: 5px; cursor: pointer; margin-bottom: 5px;">🌍 Biomas Físicos</button>
+                <button class="layer-btn" data-layer="recursos" style="width: 100%; text-align: left; background: #111; color: #fff; border: 1px solid #333; padding: 5px; cursor: pointer; margin-bottom: 5px;">🌲 Recursos Naturais</button>
+                <button class="layer-btn" data-layer="desastres" style="width: 100%; text-align: left; background: #111; color: #fff; border: 1px solid #333; padding: 5px; cursor: pointer;">🔥 Fúria e Desastres</button>
+            </div>
         </div>
 
         <!-- Modais de Interface -->
+        <div id="disasters-modal" class="stone-panel modal hidden" style="left: auto; right: 20px; top: auto; bottom: 100px; transform: none; width: 300px;">
+            <div class="modal-header">
+                <h2>🔥 Menu da Destruição</h2>
+                <button class="close-btn" onclick="document.getElementById('disasters-modal').classList.add('hidden')">✖</button>
+            </div>
+            <div class="list-container" style="text-align: center; color: #aaa; padding: 15px;">
+                <p>Nenhuma anomalia manual desbloqueada ainda. (A Fúria do Planeta age autonomamente).</p>
+                <button class="item-action-btn" style="width: 100%; border-color: #801a15; background: #c4302b;" onclick="alert('Destruição manual em breve!')">☄️ Lançar Meteoro Aleatório</button>
+            </div>
+        </div>
+
         <div id="tech-modal" class="stone-panel modal hidden">
             <div class="modal-header">
                 <h2>🧬 Árvore da Sabedoria</h2>
@@ -194,11 +210,11 @@
                 <button class="speed-btn" data-speed="5">5x</button>
             </div>
             <div style="width: 2px; background: #222; margin: 0 5px;"></div>
-            <button class="tool-btn" id="btn-world" title="Mundo">🌍</button>
+            <button class="tool-btn" id="btn-world" title="Mundo" onclick="document.getElementById('world-modal').classList.toggle('hidden')">🌍</button>
             <button class="tool-btn" id="btn-factions" title="Facções" onclick="document.getElementById('factions-modal').classList.toggle('hidden')">🎭</button>
             <button class="tool-btn" id="btn-wisdom" title="Sabedoria" onclick="document.getElementById('tech-modal').classList.toggle('hidden')">🧬</button>
             <button class="tool-btn" id="btn-industry" title="Indústria" onclick="document.getElementById('industry-modal').classList.toggle('hidden')">⚙️</button>
-            <button class="tool-btn" id="btn-disasters" title="Destruição">🔥</button>
+            <button class="tool-btn" id="btn-disasters" title="Destruição" onclick="document.getElementById('disasters-modal').classList.toggle('hidden')">🔥</button>
         </div>
         
         <!-- Tooltip -->
