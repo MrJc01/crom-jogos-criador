@@ -35,7 +35,7 @@ async function loadPlugins(engine) {
 // Pega argumentos do CLI
 const args = process.argv.slice(2);
 let targetYears = 1000;
-let logInterval = 100;
+let logInterval = 10;
 let selectedFaction = 'sino_tibetanos';
 
 args.forEach(arg => {
@@ -48,7 +48,7 @@ Uso: node simulate.mjs [opções]
 
 Opções:
   --years=N       Total de anos para simular (padrão: 1000)
-  --interval=N    De quantos em quantos anos mostrar o log (padrão: 100)
+  --interval=N    De quantos em quantos anos mostrar o log (padrão: 10, década)
   --faction=ID    Facção inicial (ex: sino_tibetanos, indo_europeus) (padrão: sino_tibetanos)
   --help, -h      Mostra esta ajuda
         `);
@@ -115,8 +115,8 @@ async function run() {
         // Previne spam idêntico no mesmo ano
         if (lastYearEvents.has(msgStr)) return;
         
-        // Reduz o spam de eventos contínuos a apenas 1 vez por milênio ou século (ex: Saber Médico e Inverno Genético)
-        if ((msgStr.includes("SABER MÉDICO") || msgStr.includes("INVERNO GENÉTICO")) && engine.year % 1000 !== 0) {
+        // Reduz o spam de eventos contínuos a apenas 1 vez por milênio ou século
+        if ((msgStr.includes("SABER MÉDICO") || msgStr.includes("INVERNO GENÉTICO")) && engine.year % 100 !== 0) {
             return;
         }
 
@@ -164,8 +164,8 @@ async function run() {
             console.log(`🗺️ Culturas Vivas: ${factionCount} -> ${factionList || 'Nenhuma'}`);
             console.log(`🧬 Tecnologias Desbloqueadas: ${engine.unlockedTechs?.size || 0}`);
             
-            // Grava os dados detalhados no Relatório por Século / Intervalo
-            reportData.push(`\n### 📊 Registro do Ano ${engine.year} (Século ${Math.floor(engine.year / 100)})`);
+            // Grava os dados detalhados no Relatório por Década / Intervalo
+            reportData.push(`\n### 📊 Registro do Ano ${engine.year} (Década ${Math.floor(engine.year / 10)})`);
             reportData.push(`- **População Global**: ${Math.floor(engine.globalPop).toLocaleString('pt-BR')}`);
             reportData.push(`- **Facções Vivas**: ${factionCount} detalhadas: *${factionList || 'Nenhuma'}*`);
             reportData.push(`- **Clima Atual**: ${clima}`);

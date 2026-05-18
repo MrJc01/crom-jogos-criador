@@ -298,6 +298,9 @@ export class GameEngine {
 
   processTick(daysToProcess) {
     const eraInfo = this.currentEra;
+    // Fallback SRE para simulações Headless/CLI que não usam GameLoop por frame
+    if (daysToProcess === undefined) daysToProcess = eraInfo.timeDilation || 1;
+    
     this.deltaDays = 1; // FIX SRE: Força matemática estrita de 1 dia
     
     for (let step = 0; step < daysToProcess; step++) {

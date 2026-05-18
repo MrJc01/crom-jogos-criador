@@ -11,15 +11,15 @@
  * Nenhuma probabilidade, %, ou threshold deve ser hardcoded nos scripts.
  */
 
-import GameConfigData from './GameConfig.json' assert { type: 'json' };
-import EventsConfigData from './EventsConfig.json' assert { type: 'json' };
+import GameConfigData from './GameConfig.json' with { type: 'json' };
+import EventsConfigData from './EventsConfig.json' with { type: 'json' };
 
 // Tenta importar as outras (como já existem, a importação estática funciona)
-import TechTreeConfigData from './TechTreeConfig.json' assert { type: 'json' };
-import FactionsConfigData from './FactionsConfig.json' assert { type: 'json' };
-import RecipesConfigData from './RecipesConfig.json' assert { type: 'json' };
-import DemographicsConfigData from './DemographicsConfig.json' assert { type: 'json' };
-import EconomyConfigData from './EconomyConfig.json' assert { type: 'json' };
+import TechTreeConfigData from './TechTreeConfig.json' with { type: 'json' };
+import FactionsConfigData from './FactionsConfig.json' with { type: 'json' };
+import RecipesConfigData from './RecipesConfig.json' with { type: 'json' };
+import DemographicsConfigData from './DemographicsConfig.json' with { type: 'json' };
+import EconomyConfigData from './EconomyConfig.json' with { type: 'json' };
 
 let GameConfig = GameConfigData;
 let EventsConfig = EventsConfigData;
