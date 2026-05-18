@@ -5,8 +5,20 @@ export default {
     
     triggerProbability(engine) {
         if (engine.severity >= engine.config.disasterThreshold) return 1.0;
-        if (engine.severity < 20) return 0;
-        return (engine.severity / 100) * 0.1; // Máximo de 10% chance ao dia de o planeta contra-atacar
+        
+        // Tarefa 53: Cooldowns Dinâmicos (Trauma)
+        if (engine.cooldowns['disaster_trauma'] && engine.cooldowns['disaster_trauma'] > 0) return 0;
+        
+        // Tarefa 51 e 56: Gatilho Poisson Baseado em Pressão Desacoplada
+        const maxPressure = Math.max(
+            engine.pressures.tectonic, 
+            engine.pressures.climatic, 
+            engine.pressures.biological, 
+            engine.pressures.social
+        );
+        
+        // Pressão de 1.0 = 10% de chance ao dia
+        return Math.min(0.1, maxPressure * 0.1);
     },
     
     applyEvent(engine) {
@@ -38,11 +50,18 @@ export default {
         const infectedNodes = Array.from(engine.nodes.values()).filter(n => n.infected);
         if (infectedNodes.length === 0) return null;
 
-        // O Planeta escolhe como atacar baseado no "Level" de defesa
-        const roll = Math.random();
+        // Determina a raiz do desastre pela maior pressão atual
+        const p = engine.pressures;
+        let activeDisaster = 'geological';
+        if (p.climatic > p.tectonic && p.climatic > p.biological) activeDisaster = 'atmospheric';
+        else if (p.biological > p.tectonic && p.biological > p.climatic) activeDisaster = 'biological';
         
+        // Aplica Trauma (Cooldown de 365 ticks = 1 ano sem grandes desastres mundiais)
+        engine.cooldowns['disaster_trauma'] = 365;
+
         // 1. Raiz Geológica (Terremotos em Minas)
-        if (roll < 0.33) {
+        if (activeDisaster === 'geological') {
+            engine.pressures.tectonic = Math.max(0, engine.pressures.tectonic - 0.5); // Alivia a pressão
             engine.nemesis.geological++;
             // Foca nos nós onde estão minerando muito (Alto nível de minérios extraídos = População alta + Madeira Baixa)
             const miningTargets = infectedNodes.filter(n => n.resources.minerals < 5000);
@@ -55,7 +74,8 @@ export default {
         }
         
         // 2. Raiz Atmosférica (Seca e Desertificação)
-        else if (roll < 0.66) {
+        else if (activeDisaster === 'atmospheric') {
+            engine.pressures.climatic = Math.max(0, engine.pressures.climatic - 0.5); // Alivia a pressão
             engine.nemesis.atmospheric++;
             // Aumenta o GlobalKPenalty, dificultando a vida de todos
             engine.globalKPenalty = (engine.globalKPenalty || 1.0) * 0.95;
@@ -71,7 +91,8 @@ export default {
         }
         
         // 3. Raiz Biológica (Pandemias de Super Fungos e Sencientes)
-        else {
+        else if (activeDisaster === 'biological') {
+            engine.pressures.biological = Math.max(0, engine.pressures.biological - 0.5); // Alivia a pressão
             engine.nemesis.biological++;
             
             // Se passar do nível 10, desperta espécies sencientes nativas

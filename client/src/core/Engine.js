@@ -31,6 +31,11 @@ export class GameEngine {
     
     this.adaptationPoints = 0;
     this.severity = 0; 
+    
+    // Sistema de Cliodinâmica e Estocástica (Tarefas 52 e 53)
+    this.pressures = { social: 0.0, climatic: 0.0, tectonic: 0.0, biological: 0.0 };
+    this.cooldowns = {};
+    
     this.globalKPenalty = 1.0;
     this.tradeRoutes = [
       { sourceId: 'BR', targetId: 'AO', type: 'sea' },
@@ -271,9 +276,19 @@ export class GameEngine {
     }
     this.adaptationPoints += (ptsGenerated * computerBonus);
     
-    // Severidade e Eventos (Anticorpos)
-    this.severity = Math.min(100, Math.floor(this.globalPop / 50000) + severity_increase);
+    // Sistema de Pressão Estocástica e Cliodinâmica (Tarefas 52 e 56)
+    this.pressures.tectonic += (this.inventory.minerals > 50000) ? 0.0001 : 0.00001;
+    this.pressures.climatic += (this.inventory.wood < 100000) ? 0.0005 : 0.00005; 
+    this.pressures.biological += (this.globalPop > 1000000) ? 0.0002 : 0.00002;
+    this.pressures.social += (this.globalPop > 500000 && this.globalTrust < 80) ? 0.001 : 0.0001;
+
+    // Resfriamento de Cooldowns / Trauma (Tarefa 53)
+    for (const key in this.cooldowns) {
+        if (this.cooldowns[key] > 0) this.cooldowns[key] -= 1;
+    }
     
+    // Severidade e Eventos (Legado + Modificadores)
+    this.severity = Math.min(100, Math.floor(this.globalPop / 50000) + severity_increase);
     this.plugins.forEach(plugin => {
         if (plugin.type === 'event') {
             let shouldTrigger = false;
