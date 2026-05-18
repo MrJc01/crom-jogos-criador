@@ -6,9 +6,25 @@ export default {
         
         const K = Math.floor(node.capacity * globalRules.global_K_boost * globalRules.globalKPenalty);
         
-        // Se a população estourar o limite de estresse (ex: 95%)
+        let willMigrate = false;
+        let bandwidthMult = 1.0;
+
+        // Gatilho 1: Superlotação
         if (node.demographics.total > K * globalRules.migrationThreshold) {
-            
+            willMigrate = true;
+        } 
+        // Gatilho 2: Fome Forçada (Fuga para sobrevivência)
+        else if ((node.food || 0) <= 0 && (node.famineDays || 0) > 30) {
+            willMigrate = true;
+            bandwidthMult = 2.0; // Desespero dobra a quantidade de migrantes
+        }
+        // Gatilho 3: Nomadismo Natural / Expansão Cultural
+        else if (node.demographics.total > 20 && Math.random() < 0.05 * globalRules.deltaDays) {
+            willMigrate = true;
+            bandwidthMult = 0.2; // Apenas um pequeno grupo (banda) se desgarra
+        }
+        
+        if (willMigrate) {
             // Apenas Jovens e Adultos têm força para cruzar fronteiras
             const mobilePop = node.demographics.total * (node.demographics.dist.age.young + node.demographics.dist.age.adult);
             
@@ -60,9 +76,9 @@ export default {
                     }
                 }
                 
-                const migrators = Math.floor(mobilePop * choice.bandwidth);
+                const migrators = Math.max(1, Math.floor(mobilePop * choice.bandwidth * bandwidthMult));
                 
-                if (migrators > 0) {
+                if (migrators > 0 && node.demographics.total > migrators) {
                     const target = engine.nodes.get(choice.id);
                     if (target) {
                         node.demographics.kill(migrators);

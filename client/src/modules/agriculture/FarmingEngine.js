@@ -42,7 +42,8 @@ export default {
             node.wildGame = Math.min(100, node.wildGame + 0.5 * deltaDays);
         } else {
             // B. Agricultura
-            const farmWorkers = Math.floor(workers * 0.4); // 40% dos workers são farmers
+            // FIX: Populações muito pequenas devem priorizar sobrevivência (todos que podem, plantam)
+            const farmWorkers = pop < 10 ? Math.max(1, workers) : Math.max(1, Math.floor(workers * 0.4));
             
             // Detecta season
             const day = engine.day || 0;
