@@ -60,22 +60,56 @@ export class TechTree {
         // Aplica desconto da Rede Neural (Conhecimento Passivo)
         if (tech.knowledgeBonus && engine.knowledge) {
             for (const [kId, discountMax] of Object.entries(tech.knowledgeBonus)) {
-                const mastery = engine.knowledge.getMastery(kId); // 0.0 a 1.0
-                // Exemplo: discountMax de 0.5 significa que 100% de maestria reduz o custo pela metade
+                const mastery = engine.knowledge.getMastery(kId); 
                 cost = cost * (1 - (mastery * discountMax));
             }
         }
         
+        // TAREFA 26: A Singularidade é Exponencial
+        // Na Era da Informação/Espacial (mult > 500), computadores reduzem o custo massivamente
+        if (engine.currentEra.mult >= 1000) {
+            const compDiscount = Math.min(0.9, engine.inventory.computers / 100000); // Até 90% mais barato
+            cost *= (1.0 - compDiscount);
+        }
+        
+        // TAREFA 22: Gargalo de Inovação de Excedente
+        // Se a humanidade está colapsando (Trust < 30) ou se a pressão biológica (fome/doença) está alta, P&D custa muito mais
+        if (engine.globalTrust < 30 || (engine.pressures && engine.pressures.biological > 0.8)) {
+            cost *= 3.0; // Pânico atrasa inovação
+        }
+        
         return Math.max(1, Math.floor(cost));
+    }
+    
+    // TAREFA 27: Gênios Históricos Estocásticos (Cria um pool de gênios)
+    checkGeniusSpawn(engine) {
+        if (!this.geniusDiscount) this.geniusDiscount = 1.0;
+        if (Math.random() < 0.005) { // 0.5% chance ao dia
+            this.geniusDiscount = 0.1; // O próximo tech vai custar apenas 10%
+            if (engine.onEvent) engine.onEvent({ message: `🧠 GÊNIO DO SÉCULO: Um intelecto ímpar nasceu! A próxima inovação tecnológica custará quase nada (90% de desconto).`, type: "milestone", color: "#ffffff" }, "milestone");
+        }
     }
     
     buy(techId, engine) {
         const tech = this.technologies.get(techId);
         if (!tech) return false;
         
-        const cost = this.getModifiedCost(tech, engine);
+        let cost = this.getModifiedCost(tech, engine);
+        
+        // Aplica o desconto de Gênio, se houver
+        if (this.geniusDiscount && this.geniusDiscount < 1.0) {
+            cost = Math.max(1, Math.floor(cost * this.geniusDiscount));
+            this.geniusDiscount = 1.0; // Gênio morre/é consumido
+        }
+        
+        // TAREFA 25: Condição Física para Pesquisa (Queimar itens baseados na era)
+        // Idade do Bronze pra cima exige minerais para avançar
+        if (engine.currentEra.mult >= 10 && engine.inventory.minerals < 500) return false; // Faltam componentes físicos
+        
         if (engine.adaptationPoints >= cost) {
             engine.adaptationPoints -= cost;
+            if (engine.currentEra.mult >= 10) engine.inventory.minerals -= 500; // Paga o custo físico
+            
             this.unlocked.add(techId);
             if (tech.onUnlock) tech.onUnlock(engine);
             return true;

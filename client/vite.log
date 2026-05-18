@@ -146,3 +146,5 @@
 01:00:39 [vite] page reload src/modules/economy/extraction.js
 01:02:46 [vite] page reload src/modules/biology/migration.js
 01:03:11 [vite] page reload src/modules/economy/bureaucracy.js
+01:05:16 [vite] page reload src/core/TechTree.js
+01:05:42 [vite] page reload src/core/Engine.js

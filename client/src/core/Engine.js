@@ -253,6 +253,23 @@ export class GameEngine {
     this.inventory.water = Math.max(0, this.inventory.water * 0.995);
     this.inventory.minerals = Math.max(0, this.inventory.minerals * 0.9999);
     
+    // TAREFA 23: Idade das Trevas (Perda de Techs se a civilização rui)
+    if (!this.peakGlobalPop) this.peakGlobalPop = 0;
+    if (this.globalPop > this.peakGlobalPop) this.peakGlobalPop = this.globalPop;
+    
+    if (this.peakGlobalPop > 100000 && this.globalPop < this.peakGlobalPop * 0.3) {
+        if (Math.random() < 0.05 && this.techTree.unlocked.size > 1) {
+            const unlockedArr = Array.from(this.techTree.unlocked);
+            const lostTech = unlockedArr[Math.floor(Math.random() * unlockedArr.length)];
+            this.techTree.unlocked.delete(lostTech);
+            if (this.onEvent) this.onEvent({ message: `📜 IDADE DAS TREVAS: O apocalipse demográfico e a morte dos sábios fez a humanidade esquecer do conhecimento da tecnologia "${lostTech}"!`, type: "disaster", color: "#555555" }, "disaster");
+            this.peakGlobalPop = this.globalPop * 1.5; // Ajusta o baseline para não apagar a árvore inteira num único dia
+        }
+    }
+    
+    // TAREFA 27: Gênios Históricos
+    this.techTree.checkGeniusSpawn(this);
+    
     // Agregação demográfica global (para a UI de Facções)
     this.globalDemographics = { factions: {} };
     this.nodes.forEach(node => {
