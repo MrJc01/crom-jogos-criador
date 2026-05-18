@@ -18,19 +18,46 @@ export default {
         demo.shiftDistribution('age', 'adult', 'young', youngToAdult);
         demo.shiftDistribution('age', 'elder', 'adult', adultToElder);
         
-        // 2. MORTALIDADE NATURAL DIÁRIA
-        const elderDeathRate = 0.0005; // 0.05% dos idosos morrem por dia
-        const adultDeathRate = 0.00001; // Adultos morrem bem menos
+        // 2. MORTALIDADE NATURAL DIÁRIA (Tarefas 01, 03, 04)
         
+        // Fator de Mortalidade Infantil atrelado à água (Task 01)
+        let childDeathRate = 0.001; // Alta mortalidade pré-medicina
+        if (node.resources && node.resources.water <= 0) {
+            childDeathRate = 0.005; // 5x mais letal sem água potável
+        }
+        
+        // Impacto Logarítmico do Saneamento Básico (Task 04)
+        let sanitationPenalty = 1.0;
+        if (demo.total > 50000 && !engine.unlockedTechs.has('tech_sanitation')) {
+            // Em metrópoles precárias, a densidade mata (cólera, febre tifoide)
+            sanitationPenalty = Math.max(1, Math.log10(demo.total) / 3); 
+        } else if (engine.unlockedTechs.has('tech_sanitation')) {
+            childDeathRate *= 0.2; // Esgoto reduz a mortalidade infantil em 80%
+        }
+        
+        // Expectativa de Vida Baseada em Bioma (Task 03)
+        let biomeElderPenalty = 1.0;
+        if (node.biome) {
+            if (node.biome.id === 'tundra' && (!engine.inventory.wood || engine.inventory.wood <= 0)) {
+                biomeElderPenalty = 3.0; // Sem lenha no frio, idosos morrem de hipotermia
+            }
+            if (node.biome.id === 'jungle' && !engine.unlockedTechs.has('tech_medicine')) {
+                biomeElderPenalty = 2.0; // Selvas matam via doenças tropicais (malária)
+            }
+        }
+        
+        const elderDeathRate = 0.0005 * sanitationPenalty * biomeElderPenalty;
+        const adultDeathRate = 0.00001 * sanitationPenalty;
+        
+        const childDeaths = demo.total * demo.dist.age.child * childDeathRate;
         const elderDeaths = demo.total * demo.dist.age.elder * elderDeathRate;
         const adultDeaths = demo.total * demo.dist.age.adult * adultDeathRate;
         
-        const totalDeaths = Math.floor(elderDeaths + adultDeaths);
+        const totalDeaths = Math.floor(childDeaths + elderDeaths + adultDeaths);
         
         if (totalDeaths > 0) {
             demo.kill(totalDeaths);
-            // Reduzir puramente da coorte de idosos faria a matriz perder o 100%, 
-            // precisaria rebalancear. No MVP matricial, kill abaixa o total absoluto.
+            // Reajusta a distribuição para não distorcer muito a longo prazo se só crianças morrerem (abstração)
         }
         
         // 3. MORTE POR CAPACIDADE (Inanição / Overpopulation)

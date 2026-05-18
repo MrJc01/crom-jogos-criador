@@ -33,6 +33,12 @@ export default {
         // A capacidade K é multiplicada pela fertilidade do solo (0 a 1)
         K = Math.floor(K * (Math.max(10, node.soil) / 100)); // Mínimo de 10% para nunca zerar totalmente
 
+        // Task 07: Calorias e Metabolismo Corporal
+        // Tundras consomem mais energia/comida por humano, reduzindo a capacidade real
+        if (node.biome && node.biome.id === 'tundra') {
+            K = Math.floor(K * 0.7); 
+        }
+
         // Fator logístico de espaço (reprodução cessa se lotado)
         let spaceFactor = 1 - (P / K);
         if (spaceFactor < 0) {
@@ -41,7 +47,15 @@ export default {
             demo.kill(Math.floor(P * 0.001)); 
         }
         
-        const r = globalRules.base_r * globalRules.global_r_boost;
+        let r = globalRules.base_r * globalRules.global_r_boost;
+        
+        // Task 06: Desaceleração de Natalidade (Transição Demográfica)
+        // Sociedades avançadas reduzem sua taxa de fertilidade
+        if (engine.unlockedTechs.has("tech_cyberpunk")) {
+            r *= 0.1; // População estagna
+        } else if (engine.unlockedTechs.has("tech_information")) {
+            r *= 0.5; // Redução drástica na modernidade
+        }
         
         // Número de novas gravidezes no tick
         let newPregnancies = Math.floor(fertileFemales * r * spaceFactor);

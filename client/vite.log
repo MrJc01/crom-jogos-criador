@@ -125,3 +125,7 @@
 00:00:26 [vite] page reload src/index.js
 00:01:41 [vite] page reload src/ui/MapRenderer.js
 00:02:10 [vite] page reload src/index.js
+00:26:30 [vite] page reload src/modules/biology/aging.js
+00:26:55 [vite] page reload src/modules/biology/gestation.js
+00:28:13 [vite] page reload src/modules/economy/extraction.js
+00:29:34 [vite] page reload src/modules/events/DisasterEngine.js

@@ -80,13 +80,14 @@ export default {
                 return { message: `👽 DESPERTAR NATIVO: A Biosfera reagiu. Espécies Sencientes das Profundezas começaram a coordenar a caça aos humanos em todos os oceanos!`, type: "disaster", color: "#ff00ff" };
             }
 
-            // Pandemia foca nos nós superlotados
-            const crowdedNodes = infectedNodes.filter(n => (n.demographics.total / n.capacity) > 0.8);
+            // Tarefa 05: Zoonoses de Povoamento e Desmatamento
+            // Pandemia foca em nós superlotados E severamente desmatados (contato com fauna)
+            const crowdedNodes = infectedNodes.filter(n => (n.demographics.total / n.capacity) > 0.8 && (n.resources.wood || 0) < 5000);
             if (crowdedNodes.length > 0) {
                 const target = crowdedNodes[Math.floor(Math.random() * crowdedNodes.length)];
-                const killRate = 0.5; // 50% wipe
+                const killRate = engine.unlockedTechs.has("tech_medicine") ? 0.15 : 0.60; // 60% wipe sem medicina
                 target.demographics.kill(Math.floor(target.demographics.total * killRate));
-                return { message: `🦠 RAÍZ BIOLÓGICA (Nv ${engine.nemesis.biological}): Um Super Fungo sofreu mutação no planeta e exterminou 50% de ${target.name}!`, nodeId: target.id, type: "disaster" };
+                return { message: `🦠 ZOONOSE VIRAL (Nv ${engine.nemesis.biological}): O desmatamento forçou contato direto humano/fauna em ${target.name}. Uma nova pandemia exterminou ${killRate*100}% da população local!`, nodeId: target.id, type: "disaster" };
             }
         }
 
