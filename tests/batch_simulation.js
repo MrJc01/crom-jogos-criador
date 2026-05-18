@@ -53,18 +53,17 @@ async function runBatch() {
         const engine = new GameEngine();
         await loadPluginsForNode(engine);
         
-        // Carrega um mundo maior mockado
-        const mockHexes = [];
-        for(let x=0; x<10; x++) {
-            mockHexes.push({ id: "hex_" + x + "_0", col: x, row: 0, lat: 10, neighbors: ["hex_" + (x+1) + "_0"] });
-        }
-        engine.initWorld(mockHexes);
+        // Carrega o mapa real
+        const mapPath = path.join(__dirname, '../client/public/hex_map.json');
+        const hexMap = JSON.parse(fs.readFileSync(mapPath, 'utf8'));
+        engine.initWorld(hexMap);
         
-        // Semeia a infecção e altera a facção raiz
-        engine.startInfection('hex_0_0'); 
-        const cradle = engine.nodes.get('hex_0_0');
-        cradle.demographics.dist.factions = {};
-        cradle.demographics.dist.factions[faction] = 1.0;
+        // Semeia a infecção no primeiro nodo disponível
+        const startNode = Array.from(engine.nodes.values())[0];
+        engine.startInfection(startNode.id);
+        
+        startNode.demographics.dist.factions = {};
+        startNode.demographics.dist.factions[faction] = 1.0;
         
         const timeline = [];
         let nextMilestonePop = 10000;
