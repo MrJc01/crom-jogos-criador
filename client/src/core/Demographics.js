@@ -153,10 +153,7 @@ export class Demographics {
             this.yearlyDeaths += naturalDeaths;
         }
         
-        // DEBUG LOG PARA ACHAR O BUG DO POP DROP
-        if (this.total < 100 && this.total > 0 && Math.random() < 0.05) {
-            console.log(`[DEBUG DTM] Era: ${eraMult}, Pop: ${this.total}, Births: ${totalBirths}, Surviving: ${survivingBabies}, NatDeaths: ${naturalDeaths}`);
-        }
+        // O debug do DTM foi removido para não poluir o terminal.
         
         return { births: survivingBabies, deaths: naturalDeaths + infantDeaths, infantDeaths };
     }
