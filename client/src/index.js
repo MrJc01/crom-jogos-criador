@@ -2,6 +2,10 @@ import { GameEngine } from './core/Engine.js';
 import { MapRenderer } from './ui/MapRenderer.js';
 import { FactionsData } from './core/FactionsData.js';
 import { ResourceDictionary } from './core/ResourceDictionary.js';
+import { UIManager } from './ui/UIManager.js';
+
+// Injeta o HTML estrutural no DOM antes de referenciar os elementos
+UIManager.injectCoreUI();
 
 const engine = new GameEngine();
 const numFormat = new Intl.NumberFormat('pt-BR');
@@ -298,7 +302,8 @@ renderer.init().then(() => {
           engine.pause();
           showFloatText("EXTINÇÃO TOTAL. Jogo Pausado.", "#ff0000");
           // UI update manual para refletir o pause
-          document.getElementById('btn-play').innerHTML = '▶️';
+          const playBtn = document.getElementById('btn-play-pause');
+          if (playBtn) playBtn.innerHTML = '▶️';
           
           // TAREFA 48: Som Dielétrico do Fim
           const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
