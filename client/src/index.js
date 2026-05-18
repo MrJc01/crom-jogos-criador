@@ -373,11 +373,12 @@ renderer.init().then(() => {
         }
         
         // Atualiza inventário global
-        uiInvMinerals.textContent = numFormat.format(Math.floor(engine.inventory.minerals || 0));
-        uiInvSilicon.textContent = numFormat.format(Math.floor(engine.inventory.silicon || 0));
-        uiInvChips.textContent = numFormat.format(Math.floor(engine.inventory.chips || 0));
-        uiInvComputers.textContent = numFormat.format(Math.floor(engine.inventory.computers || 0));
-        uiInvWood.textContent = numFormat.format(Math.floor(engine.inventory.wood || 0));
+        if (uiInvMinerals) uiInvMinerals.textContent = numFormat.format(Math.floor(engine.inventory.minerals || 0));
+        if (uiInvSilicon) uiInvSilicon.textContent = numFormat.format(Math.floor(engine.inventory.silicon || 0));
+        if (uiInvChips) uiInvChips.textContent = numFormat.format(Math.floor(engine.inventory.chips || 0));
+        if (uiInvComputers) uiInvComputers.textContent = numFormat.format(Math.floor(engine.inventory.computers || 0));
+        if (uiInvWood) uiInvWood.textContent = numFormat.format(Math.floor(engine.inventory.wood || 0));
+        if (uiInvSteel) uiInvSteel.textContent = numFormat.format(Math.floor(engine.inventory.steel || 0));
       
       // Atualiza modais se estiverem abertos
       if (!document.getElementById('tech-modal').classList.contains('hidden')) renderTechList();
@@ -417,7 +418,11 @@ speedBtns.forEach(btn => {
 });
 
 // UI Modals
-document.getElementById('btn-tech').addEventListener('click', () => {
+// UI Modals
+document.getElementById('btn-world').addEventListener('click', () => {
+    document.getElementById('world-modal').classList.toggle('hidden');
+});
+document.getElementById('btn-wisdom').addEventListener('click', () => {
     document.getElementById('tech-modal').classList.toggle('hidden');
     renderTechList();
 });
@@ -428,6 +433,9 @@ document.getElementById('btn-industry').addEventListener('click', () => {
 document.getElementById('btn-factions').addEventListener('click', () => {
     document.getElementById('factions-modal').classList.toggle('hidden');
     renderFactionsList();
+});
+document.getElementById('btn-disasters').addEventListener('click', () => {
+    document.getElementById('disasters-modal').classList.toggle('hidden');
 });
 document.getElementById('btn-policies').addEventListener('click', () => {
     document.getElementById('policies-modal').classList.toggle('hidden');
@@ -453,9 +461,9 @@ const layerBtns = [
 ];
 layerBtns.forEach(btn => {
     btn.addEventListener('click', (e) => {
-        layerBtns.forEach(b => b.style.background = 'transparent');
-        e.target.style.background = '#444';
-        renderer.activeLayer = e.target.id.split('-')[2]; // 'base', 'water', 'climate'
+        layerBtns.forEach(b => b.style.background = '#111');
+        e.currentTarget.style.background = '#444';
+        renderer.activeLayer = e.currentTarget.id.split('-')[2]; // 'base', 'water', 'climate'
         renderer.update();
     });
 });

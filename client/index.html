@@ -108,10 +108,9 @@
                 <button class="close-btn" onclick="document.getElementById('world-modal').classList.add('hidden')">✖</button>
             </div>
             <div class="list-container">
-                <button class="layer-btn active" data-layer="populacional" style="width: 100%; text-align: left; background: #111; color: #fff; border: 1px solid #333; padding: 5px; cursor: pointer; margin-bottom: 5px;">👥 Demografia</button>
-                <button class="layer-btn" data-layer="normal" style="width: 100%; text-align: left; background: #111; color: #fff; border: 1px solid #333; padding: 5px; cursor: pointer; margin-bottom: 5px;">🌍 Biomas Físicos</button>
-                <button class="layer-btn" data-layer="recursos" style="width: 100%; text-align: left; background: #111; color: #fff; border: 1px solid #333; padding: 5px; cursor: pointer; margin-bottom: 5px;">🌲 Recursos Naturais</button>
-                <button class="layer-btn" data-layer="desastres" style="width: 100%; text-align: left; background: #111; color: #fff; border: 1px solid #333; padding: 5px; cursor: pointer;">🔥 Fúria e Desastres</button>
+                <button id="btn-layer-base" class="layer-btn active" style="width: 100%; text-align: left; background: #444; color: #fff; border: 1px solid #333; padding: 5px; cursor: pointer; margin-bottom: 5px;">🌍 Biomas Base</button>
+                <button id="btn-layer-water" class="layer-btn" style="width: 100%; text-align: left; background: #111; color: #fff; border: 1px solid #333; padding: 5px; cursor: pointer; margin-bottom: 5px;">💧 Aquífero (Água)</button>
+                <button id="btn-layer-climate" class="layer-btn" style="width: 100%; text-align: left; background: #111; color: #fff; border: 1px solid #333; padding: 5px; cursor: pointer; margin-bottom: 5px;">🌡️ Clima (Emissões)</button>
             </div>
         </div>
 
@@ -171,22 +170,6 @@
                     </div>
                     <button id="btn-policy-water" class="item-action-btn" style="width: 80px;">Ativar</button>
                 </div>
-            </div>
-        </div>
-        
-        <!-- Controles Inferiores (Esquerda) -->
-        <div id="controls-hud" class="stone-panel hud-box" style="top: auto; bottom: 10px; left: 10px; flex-direction: row; gap: 10px; height: 50px;">
-            <button id="btn-play" class="control-btn" style="width: 40px;">⏸️</button>
-            <button id="btn-speed" class="control-btn" style="width: 50px;">1x</button>
-            <button id="btn-tech" class="control-btn" style="width: 140px; background: #1a4a6e; border-color: #00ddff;">🧬 Árvore (DNA)</button>
-            <button id="btn-industry" class="control-btn" style="width: 140px; background: #3d3b2c; border-color: #f1c40f;">⚙️ Indústria</button>
-            <button id="btn-factions" class="control-btn" style="width: 120px; background: #2c1e3d; border-color: #9b59b6;">👁️ Facções</button>
-            <button id="btn-policies" class="control-btn" style="width: 120px; background: #1b3d22; border-color: #2ecc71;">📜 Políticas</button>
-            
-            <div style="border-left: 1px solid #555; padding-left: 10px; display: flex; gap: 5px;">
-                <button id="btn-layer-base" class="control-btn" style="background: #444;" title="Mapa Base">🌍</button>
-                <button id="btn-layer-water" class="control-btn" title="Camada de Aquífero (Água)">💧</button>
-                <button id="btn-layer-climate" class="control-btn" title="Camada Climática (Emissões)">🌡️</button>
             </div>
         </div>
         
@@ -258,11 +241,12 @@
                 <button class="speed-btn" data-speed="5">5x</button>
             </div>
             <div style="width: 2px; background: #222; margin: 0 5px;"></div>
-            <button class="tool-btn" id="btn-world" title="Mundo" onclick="document.getElementById('world-modal').classList.toggle('hidden')">🌍</button>
-            <button class="tool-btn" id="btn-factions" title="Facções" onclick="document.getElementById('factions-modal').classList.toggle('hidden')">🎭</button>
-            <button class="tool-btn" id="btn-wisdom" title="Sabedoria" onclick="document.getElementById('tech-modal').classList.toggle('hidden')">🧬</button>
-            <button class="tool-btn" id="btn-industry" title="Indústria" onclick="document.getElementById('industry-modal').classList.toggle('hidden')">⚙️</button>
-            <button class="tool-btn" id="btn-disasters" title="Destruição" onclick="document.getElementById('disasters-modal').classList.toggle('hidden')">🔥</button>
+            <button class="tool-btn" id="btn-world" title="Mundo">🌍</button>
+            <button class="tool-btn" id="btn-factions" title="Facções">🎭</button>
+            <button class="tool-btn" id="btn-wisdom" title="Sabedoria">🧬</button>
+            <button class="tool-btn" id="btn-industry" title="Indústria">⚙️</button>
+            <button class="tool-btn" id="btn-disasters" title="Destruição">🔥</button>
+            <button class="tool-btn" id="btn-policies" title="Políticas">📜</button>
         </div>
         
         <!-- Tooltip -->
