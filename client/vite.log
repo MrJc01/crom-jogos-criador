@@ -30,3 +30,25 @@
 23:02:28 [vite] page reload src/core/Economy.js
 23:02:47 [vite] page reload src/modules/sociology/CombatEngine.js
 23:03:02 [vite] page reload src/index.js
+23:13:43 [vite] page reload src/core/Engine.js
+23:13:43 [vite] Pre-transform error: Failed to parse source for import analysis because the content contains invalid JS syntax. If you are using JSX, make sure to name the file with the .jsx or .tsx extension.
+23:13:44 [vite] Internal server error: Failed to parse source for import analysis because the content contains invalid JS syntax. If you are using JSX, make sure to name the file with the .jsx or .tsx extension.
+  Plugin: vite:import-analysis
+  File: /home/j/Documentos/GitHub/crom-jogos/crom-jogos-criador/client/src/core/Engine.js:292:5
+  291|      if (this.onTick) this.onTick(this);
+  292|    }
+  293|  }
+     |  ^
+  294|  
+      at TransformPluginContext._formatError (file:///home/j/Documentos/GitHub/crom-jogos/crom-jogos-criador/client/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49258:41)
+      at TransformPluginContext.error (file:///home/j/Documentos/GitHub/crom-jogos/crom-jogos-criador/client/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49253:16)
+      at TransformPluginContext.transform (file:///home/j/Documentos/GitHub/crom-jogos/crom-jogos-criador/client/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64259:14)
+      at async PluginContainer.transform (file:///home/j/Documentos/GitHub/crom-jogos/crom-jogos-criador/client/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49099:18)
+      at async loadAndTransform (file:///home/j/Documentos/GitHub/crom-jogos/crom-jogos-criador/client/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:51978:27)
+      at async viteTransformMiddleware (file:///home/j/Documentos/GitHub/crom-jogos/crom-jogos-criador/client/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:62106:24)
+23:14:06 [vite] page reload src/core/Engine.js
+23:14:26 [vite] page reload src/core/Engine.js
+23:15:15 [vite] page reload src/modules/sociology/CombatEngine.js
+23:15:25 [vite] page reload src/modules/events/DisasterEngine.js
+23:15:48 [vite] page reload index.html
+23:16:14 [vite] page reload src/index.js

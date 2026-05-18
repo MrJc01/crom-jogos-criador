@@ -6,7 +6,7 @@ export default {
     // Condição: Auditar se deve gerar um desastre
     triggerProbability(engine) {
         // Se a severidade for absurda, aciona 100% (Reset Global)
-        if (engine.severity >= 95) return 1.0;
+        if (engine.severity >= engine.config.disasterThreshold) return 1.0;
         
         // Só começa a engatilhar desastres punitivos locais se severidade > 30%
         if (engine.severity < 30) return 0;
@@ -15,7 +15,7 @@ export default {
     
     applyEvent(engine) {
         // --- O CICLO INFINITO (GREAT FILTER) ---
-        if (engine.severity >= 95) {
+        if (engine.severity >= engine.config.disasterThreshold) {
             engine.nodes.forEach(n => {
                 if (!n.infected) return;
                 // Extermina 99% da população

@@ -35,8 +35,8 @@ export default {
                     continue; // Pula o combate por causa do comércio
                 }
                 
-                // Rola 5% de chance da guerra realmente estourar naquele mês
-                if (Math.random() < 0.05) {
+                // Rola chance da guerra realmente estourar naquele mês
+                if (Math.random() < engine.config.warChance) {
                     // CÁLCULO DE PODER MILITAR
                     // 1. Baseado nas tecnologias atuais
                     const techBonus = 1 + (engine.techTree.unlocked.size * 0.1); 

@@ -12,7 +12,14 @@ export const Biomes = {
 };
 
 export class GameEngine {
-  constructor() {
+  constructor(customConfig = {}) {
+    this.config = Object.assign({
+        warChance: 0.05,
+        disasterThreshold: 95,
+        techCostMultiplier: 1.0,
+        baseGrowth: 1.0
+    }, customConfig);
+
     this.nodes = new Map();
     this.globalPop = 0;
     this.day = 0;

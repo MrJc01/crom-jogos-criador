@@ -68,7 +68,7 @@ async function runBatch() {
         
         const timeline = [];
         let nextMilestonePop = 10000;
-        const TARGET_YEARS_FOR_SIM = 150;
+        const TARGET_YEARS_FOR_SIM = 1000;
         const TOTAL_TICKS_FOR_SIM = 365 * TARGET_YEARS_FOR_SIM;
         
         for (let i = 0; i < TOTAL_TICKS_FOR_SIM; i++) {
@@ -82,13 +82,10 @@ async function runBatch() {
                  timeline.push({ year: engine.year, event: 'Colapso de Recursos (Severidade > 90%)' });
             }
 
-            if (engine.day === 1 && engine.year % 100 === 0) {
+            if (engine.day === 1 && engine.year % 500 === 0) {
                  console.log(`[${faction}] Ano ${engine.year} | Pop: ${Math.floor(engine.globalPop)} | Techs: ${engine.unlockedTechs.size}`);
             }
         }
-        
-        // Multiplicar resultados para emular os 10000 anos finais
-        engine.adaptationPoints *= 10;
         
         const unlockedList = Array.from(engine.unlockedTechs);
         

@@ -208,7 +208,26 @@ function showFloatText(msg, color) {
 
 renderer.init().then(() => {
     const loadingScreen = document.getElementById('loading-screen');
+    const godPanel = document.getElementById('god-panel');
+    const valWar = document.getElementById('val-war');
+    const valDisaster = document.getElementById('val-disaster');
+    const valTech = document.getElementById('val-tech');
+
+    document.getElementById('config-war').oninput = (e) => valWar.textContent = e.target.value + '%';
+    document.getElementById('config-disaster').oninput = (e) => valDisaster.textContent = e.target.value + '%';
+    document.getElementById('config-tech').oninput = (e) => valTech.textContent = e.target.value + 'x';
+
     if (loadingScreen) loadingScreen.style.display = 'none';
+    if (godPanel) godPanel.style.display = 'flex';
+
+    document.getElementById('btn-start-universe').onclick = () => {
+        engine.config.warChance = parseInt(document.getElementById('config-war').value) / 100.0;
+        engine.config.disasterThreshold = parseInt(document.getElementById('config-disaster').value);
+        engine.config.techCostMultiplier = parseFloat(document.getElementById('config-tech').value);
+        
+        godPanel.style.display = 'none';
+        showFloatText('🌎 Universo Configurado!', '#00ddff');
+    };
 
     const newsFeed = document.getElementById('news-feed-list');
     function addNews(msg, color) {
