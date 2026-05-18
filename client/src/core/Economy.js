@@ -67,9 +67,12 @@ export class Economy {
             else engine.inventory[res] -= amount;
         }
         
+        // Tarefa 16: O crafting agora passa por 4 etapas
         this.activeCrafts.push({
             recipeId,
-            ticksRemaining: recipe.craftTimeTicks
+            ticksRemaining: recipe.craftTimeTicks,
+            totalTicks: recipe.craftTimeTicks,
+            stage: 'design' // design -> extraction -> fabrication -> assembly
         });
         
         return true;
@@ -78,8 +81,25 @@ export class Economy {
     processTick(engine) {
         for (let i = this.activeCrafts.length - 1; i >= 0; i--) {
             const craft = this.activeCrafts[i];
-            craft.ticksRemaining--;
             
+            // Logística de Especialização (Tarefas 16 e 18 simplificadas)
+            // Se as facções possuírem a especialização necessária para a etapa atual, o tempo corre normal. Senão, fica mais lento.
+            let hasSpecialist = false;
+            if (this.specializations) {
+                for (const spec of Object.values(this.specializations)) {
+                    if (spec === craft.stage) hasSpecialist = true;
+                }
+            }
+            
+            // Deduz o tempo (penalidade se não houver especialista)
+            craft.ticksRemaining -= hasSpecialist ? 1 : 0.5;
+            
+            // Avança o estágio
+            const pct = craft.ticksRemaining / craft.totalTicks;
+            if (pct <= 0.75 && craft.stage === 'design') craft.stage = 'extraction';
+            else if (pct <= 0.5 && craft.stage === 'extraction') craft.stage = 'fabrication';
+            else if (pct <= 0.25 && craft.stage === 'fabrication') craft.stage = 'assembly';
+
             if (craft.ticksRemaining <= 0) {
                 const recipe = this.recipes.get(craft.recipeId);
                 for (const [res, amount] of Object.entries(recipe.outputs)) {
@@ -100,36 +120,109 @@ export class Economy {
                 }
             });
             
+            // Especialização de Facções (Tarefa 17)
+            if (!this.specializations) this.specializations = {};
+            const roles = ['extraction', 'design', 'fabrication', 'assembly'];
+
             for (const [fac, pop] of Object.entries(factionPops)) {
                 if (pop < 10) continue; 
                 
                 const data = FactionsData.getFaction(fac);
+
+                // Atribui uma especialização se não tiver
+                if (!this.specializations[fac]) {
+                    this.specializations[fac] = roles[Math.floor(Math.random() * roles.length)];
+                }
+
                 let trustYield = 1.0; // Ganho base
                 
-                // Modificadores de Alinhamento
                 if (data.traits.includes("spiritual")) trustYield += 3.0;
                 if (data.traits.includes("pacifist")) trustYield += 2.0;
                 if (data.traits.includes("ecological")) trustYield += 1.0;
                 if (data.traits.includes("militarist")) trustYield -= 1.5;
                 if (data.traits.includes("expansionist")) trustYield -= 0.5;
                 
-                // A severidade global corrói a geração de confiança (desespero global)
                 if (engine.severity > 50) trustYield -= (engine.severity - 50) * 0.05;
 
-                // Gera baseado no tamanho da população vs rendimento (mínimo de 1)
                 const generated = Math.floor((pop / 10000) * trustYield) + Math.max(0, Math.floor(trustYield));
                 
                 if (generated > 0) {
                     this.addTrust(fac, generated);
                 } else if (generated < 0) {
-                    // Queima de confiança por má conduta
                     this.trustWallet[fac] = Math.max(0, this.getTrust(fac) + generated);
+                }
+            }
+
+            // --- Monopólios e Aquisições (Tarefa 19) ---
+            const activeFactions = Object.keys(factionPops);
+            if (activeFactions.length > 1) {
+                // Ordena por riqueza
+                activeFactions.sort((a,b) => this.getTrust(b) - this.getTrust(a));
+                const richest = activeFactions[0];
+                const poorest = activeFactions[activeFactions.length - 1];
+                
+                // Se a mais rica tiver 10x mais trust que a mais pobre, ela compra (hostile takeover)
+                if (this.getTrust(richest) > 5000 && this.getTrust(richest) > this.getTrust(poorest) * 10) {
+                    // Assimilação econômica
+                    this.spendTrust(richest, this.getTrust(poorest) * 2); // Custa o dobro da riqueza do pobre para comprar
+                    
+                    if (engine.onEvent) {
+                        const rData = FactionsData.getFaction(richest);
+                        const pData = FactionsData.getFaction(poorest);
+                        engine.onEvent({ message: `📉 MONOPÓLIO: ${rData.name} realizou uma aquisição corporativa hostil de ${pData.name}.`, color: '#ffaa00' }, "milestone");
+                    }
+                    
+                    // Transfere população lentamente no mundo
+                    engine.nodes.forEach(node => {
+                        if (!node.infected) return;
+                        const dist = node.demographics.dist.factions;
+                        if (dist[poorest]) {
+                            dist[richest] = (dist[richest] || 0) + dist[poorest];
+                            delete dist[poorest];
+                        }
+                    });
+                } else if (this.relations && this.relations[`${richest}-${poorest}`] > 500) {
+                    // Tarefa 27: Assimilação Pacífica
+                    // Se as relações comerciais forem absurdamente altas, unem-se voluntariamente
+                    if (engine.onEvent) {
+                        const rData = FactionsData.getFaction(richest);
+                        const pData = FactionsData.getFaction(poorest);
+                        engine.onEvent({ message: `🕊️ ASSIMILAÇÃO PACÍFICA: A população de ${pData.name} abraçou os costumes de ${rData.name} após séculos de comércio e paz.`, color: '#00ff88' }, "milestone");
+                    }
+                    
+                    engine.nodes.forEach(node => {
+                        if (!node.infected) return;
+                        const dist = node.demographics.dist.factions;
+                        if (dist[poorest]) {
+                            dist[richest] = (dist[richest] || 0) + dist[poorest];
+                            delete dist[poorest];
+                        }
+                    });
+                    
+                    // Zera a relação para não trigar infinitamente
+                    this.relations[`${richest}-${poorest}`] = 0;
+                }
+            }
+
+            // --- Tarefa 28: Espionagem Industrial ---
+            // Facções menores roubam Trust das maiores passivamente
+            if (activeFactions.length > 1) {
+                const richest = activeFactions[0]; // array já tá ordenado por riqueza acima
+                for (let i = 1; i < activeFactions.length; i++) {
+                    const spyFac = activeFactions[i];
+                    const spyData = FactionsData.getFaction(spyFac);
+                    // Facções não-pacifistas têm chance de espionar
+                    if (!spyData.traits.includes("pacifist") && Math.random() < 0.1) {
+                        const stolen = this.stealTrust(richest, spyFac, 0.05); // Rouba 5% do Trust do mais rico
+                        if (stolen > 0 && engine.onEvent && Math.random() < 0.3) {
+                            engine.onEvent({ message: `🕵️ ESPIONAGEM: Espiões de ${spyData.name} roubaram segredos industriais e Trust de ${FactionsData.getFaction(richest).name}!`, color: '#e74c3c' }, "trade");
+                        }
+                    }
                 }
             }
         }
 
         // --- Mercado Global Autônomo ---
-        // Roda exportação/importação 2 vezes ao ano
         if (engine.day === 100 || engine.day === 250) {
             this.processTradeRoutes(engine);
         }

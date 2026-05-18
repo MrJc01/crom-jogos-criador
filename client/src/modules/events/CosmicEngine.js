@@ -41,12 +41,28 @@ export default {
             const victims = Math.floor(targetNode.demographics.total * 0.4); // 40% de mortalidade
             targetNode.demographics.kill(victims);
             
+            // Tarefa 29: Refugiados (10% dos sobreviventes fogem)
+            const survivors = targetNode.demographics.total;
+            const refugees = Math.floor(survivors * 0.1);
+            let refugeeMsg = "";
+            
+            if (refugees > 0 && targetNode.neighbors.length > 0) {
+                targetNode.demographics.kill(refugees);
+                const neighborId = targetNode.neighbors[Math.floor(Math.random() * targetNode.neighbors.length)];
+                const nNode = engine.nodes.get(neighborId);
+                if (nNode) {
+                    nNode.infect(0);
+                    nNode.demographics.addBirths(refugees);
+                    refugeeMsg = ` Cerca de ${refugees.toLocaleString('pt-BR')} refugiados fugiram para ${nNode.name}.`;
+                }
+            }
+
             // A bênção: 50.000 Minérios injetados na cratera
             if (!targetNode.resources.minerals) targetNode.resources.minerals = 0;
             targetNode.resources.minerals += 50000;
             
             return { 
-                message: `☄️ IMPACTO DE METEORO em ${targetNode.name}! A cratera dizimou ${victims.toLocaleString('pt-BR')} seres, mas expôs um veio massivo de 50.000 Minérios exóticos no subsolo!`,
+                message: `☄️ IMPACTO DE METEORO em ${targetNode.name}! A cratera dizimou ${victims.toLocaleString('pt-BR')} seres, mas expôs um veio massivo de 50.000 Minérios no subsolo!${refugeeMsg}`,
                 nodeId: targetNode.id,
                 type: 'cosmic',
                 color: '#9b59b6' // Roxo

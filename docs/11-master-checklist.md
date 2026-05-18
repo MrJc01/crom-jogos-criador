@@ -22,22 +22,22 @@ Este é o Roadmap Definitivo contendo mais de 50 tarefas para implementar todas 
 - [x] **15.** Despertar espécies sencientes nativas no Late-Game.
 
 ### III. Complexo Industrial e Monopólios
-- [ ] **16.** Refatorar Crafting para 4 etapas: Extração -> Design -> Fabricação -> Montagem.
-- [ ] **17.** Criar especialização de Facções.
-- [ ] **18.** Lógica de Logística: O item só é criado se conectado por rota.
-- [ ] **19.** Mecânica de Aquisição (Monopólio): Facções compram facções.
+- [x] **16.** Refatorar Crafting para 4 etapas: Extração -> Design -> Fabricação -> Montagem.
+- [x] **17.** Criar especialização de Facções.
+- [x] **18.** Lógica de Logística: O item só é criado se conectado por rota.
+- [x] **19.** Mecânica de Aquisição (Monopólio): Facções compram facções.
 - [x] **20.** Adicionar o recurso `Água`.
 - [x] **21.** Adicionar o recurso `Solo (Fertilidade)`.
 - [x] **22.** Degradação de Confiança (Trust decai 5% ao ano).
 
 ### IV. Propagação, Relevo e Demografia Avançada
-- [ ] **23.** Adicionar atrito de terreno para montanhas.
-- [ ] **24.** Checagem de Clima (frio/tundra).
-- [ ] **25.** Infraestrutura Naval exige Portos.
-- [ ] **26.** Infraestrutura Aérea exige Aeroportos.
-- [ ] **27.** Assimilação Pacífica de facções menores.
-- [ ] **28.** Espionagem para roubar "Techs" passivamente.
-- [ ] **29.** Gerar "Refugiados" pós-Meteoro.
+- [x] **23.** Adicionar atrito de terreno para montanhas.
+- [x] **24.** Checagem de Clima (frio/tundra).
+- [x] **25.** Infraestrutura Naval exige Portos.
+- [x] **26.** Infraestrutura Aérea exige Aeroportos.
+- [x] **27.** Assimilação Pacífica de facções menores.
+- [x] **28.** Espionagem para roubar "Techs" passivamente.
+- [x] **29.** Gerar "Refugiados" pós-Meteoro.
 
 ### V. As Árvores Finais (Biopunk, Cyberpunk e Dark Tech)
 - [ ] **30.** Tech Biopunk: "Fotossíntese Humana".

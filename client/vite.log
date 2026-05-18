@@ -71,3 +71,24 @@
 23:43:46 [vite] page reload src/modules/economy/extraction.js
 23:44:12 [vite] page reload src/core/RegionNode.js
 23:44:51 [vite] page reload src/modules/biology/gestation.js
+23:47:52 [vite] page reload src/core/Economy.js
+23:48:07 [vite] page reload src/core/Economy.js
+23:48:39 [vite] page reload src/modules/biology/migration.js
+23:48:39 [vite] Pre-transform error: Failed to parse source for import analysis because the content contains invalid JS syntax. If you are using JSX, make sure to name the file with the .jsx or .tsx extension.
+23:48:39 [vite] Internal server error: Failed to parse source for import analysis because the content contains invalid JS syntax. If you are using JSX, make sure to name the file with the .jsx or .tsx extension.
+  Plugin: vite:import-analysis
+  File: /home/j/Documentos/GitHub/crom-jogos/crom-jogos-criador/client/src/modules/biology/migration.js:1:1
+  1  |  export default {
+     |  ^
+  2  |      id: 'migration',
+  3  |      type: 'biology',
+      at TransformPluginContext._formatError (file:///home/j/Documentos/GitHub/crom-jogos/crom-jogos-criador/client/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49258:41)
+      at TransformPluginContext.error (file:///home/j/Documentos/GitHub/crom-jogos/crom-jogos-criador/client/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49253:16)
+      at TransformPluginContext.transform (file:///home/j/Documentos/GitHub/crom-jogos/crom-jogos-criador/client/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64259:14)
+      at async PluginContainer.transform (file:///home/j/Documentos/GitHub/crom-jogos/crom-jogos-criador/client/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49099:18)
+      at async loadAndTransform (file:///home/j/Documentos/GitHub/crom-jogos/crom-jogos-criador/client/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:51978:27)
+      at async viteTransformMiddleware (file:///home/j/Documentos/GitHub/crom-jogos/crom-jogos-criador/client/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:62106:24)
+23:49:04 [vite] page reload src/modules/biology/migration.js
+23:49:31 [vite] page reload src/core/Economy.js
+23:49:59 [vite] page reload src/modules/events/CosmicEngine.js
+23:50:24 [vite] page reload src/core/Economy.js

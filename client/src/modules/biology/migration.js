@@ -24,12 +24,21 @@ export default {
                         let bandwidth = 0;
                         let unlocked = false;
                         
-                        // Bronze Age (mult >= 10) desbloqueia Mar (15%)
-                        if (r.type === 'sea' && engine.currentEra.mult >= 10) { unlocked = true; bandwidth = 0.15; }
+                        // Tarefa 25: Infraestrutura Naval (Exige 5 Madeira ou Aço)
+                        if (r.type === 'sea' && engine.currentEra.mult >= 10) {
+                            if (engine.inventory.wood > 5 || engine.inventory.steel > 1) {
+                                engine.inventory.wood -= Math.min(5, engine.inventory.wood); // Frotas de Madeira
+                                unlocked = true; bandwidth = 0.15; 
+                            }
+                        }
                         // Era Industrial (mult >= 200) desbloqueia Trem (30%)
                         if (r.type === 'rail' && engine.currentEra.mult >= 200) { unlocked = true; bandwidth = 0.30; }
-                        // Era Informação (mult >= 1000) desbloqueia Ar (60%)
-                        if (r.type === 'air' && engine.currentEra.mult >= 1000) { unlocked = true; bandwidth = 0.60; }
+                        // Tarefa 26: Infraestrutura Aérea (Exige 5 Aço e Chips)
+                        if (r.type === 'air' && engine.currentEra.mult >= 1000) {
+                            if (engine.inventory.steel > 5 && engine.inventory.chips > 1) {
+                                unlocked = true; bandwidth = 0.60;
+                            }
+                        }
                         
                         if (unlocked) options.push({ id: dest, bandwidth, type: r.type });
                     }
@@ -38,6 +47,19 @@ export default {
             
             if (options.length > 0) {
                 const choice = options[Math.floor(Math.random() * options.length)];
+                let target = engine.nodes.get(choice.id);
+                
+                // Tarefa 23 e 24: Checagem de Clima e Atrito
+                if (target && target.biome) {
+                    if (target.biome.id === 'tundra' && engine.currentEra.mult < 10) {
+                        // Tundra fria impede migração massiva sem roupas da era de Bronze
+                        choice.bandwidth *= 0.1;
+                    } else if (target.biome.id === 'desert') {
+                        // Atrito geográfico no deserto
+                        choice.bandwidth *= 0.5;
+                    }
+                }
+                
                 const migrators = Math.floor(mobilePop * choice.bandwidth);
                 
                 if (migrators > 0) {
