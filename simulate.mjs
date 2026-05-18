@@ -132,35 +132,12 @@ async function run() {
 
     console.log("🚀 Iniciando o fluxo do tempo...\n");
 
-    let lastStatusStr = "";
-    let repeatCount = 0;
-
     // Loop de simulação
     while (engine.year < targetYears) {
         engine.processTick(1); // Força avanço estrito de 1 dia na CLI
 
-        const pop = Math.floor(engine.globalPop);
-        const techs = engine.unlockedTechs?.size || 0;
-        const currentStatusStr = `População Global: ${pop} | Tecnologias: ${techs}`;
-
-        if (currentStatusStr === lastStatusStr) {
-            repeatCount++;
-        } else {
-            if (lastStatusStr !== "") {
-                if (repeatCount > 0) process.stdout.write(` [${repeatCount}x vezes repetido]\n`);
-                else process.stdout.write(`\n`);
-            }
-            process.stdout.write(`[Ano ${engine.year} Dia ${String(engine.day).padStart(3, '0')}] ${currentStatusStr}`);
-            lastStatusStr = currentStatusStr;
-            repeatCount = 0;
-        }
-
         // Se todo mundo morrer, termina cedo
         if (engine.globalPop <= 0) {
-            if (lastStatusStr !== "") {
-                if (repeatCount > 0) process.stdout.write(` [${repeatCount}x vezes repetido]\n`);
-                else process.stdout.write(`\n`);
-            }
             console.log(`\n💀 EXTINÇÃO TOTAL NO ANO ${engine.year}. A vida sucumbiu à natureza.`);
             break;
         }
@@ -201,14 +178,6 @@ async function run() {
             }
             
             nextLogYear += logInterval;
-            
-            // Força a quebra de linha após o resumo para o agregador continuar limpo
-            if (lastStatusStr !== "") {
-                if (repeatCount > 0) process.stdout.write(` [${repeatCount}x vezes repetido]\n`);
-                else process.stdout.write(`\n`);
-            }
-            lastStatusStr = "";
-            repeatCount = 0;
         }
     }
 
