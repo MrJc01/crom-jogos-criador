@@ -40,14 +40,14 @@ Este é o Roadmap Definitivo contendo mais de 50 tarefas para implementar todas 
 - [x] **29.** Gerar "Refugiados" pós-Meteoro.
 
 ### V. As Árvores Finais (Biopunk, Cyberpunk e Dark Tech)
-- [ ] **30.** Tech Biopunk: "Fotossíntese Humana".
-- [ ] **31.** Tech Biopunk: "Pulmões de Metano".
-- [ ] **32.** Tech Cyberpunk: "Upload de Consciência".
-- [ ] **33.** Dark Tech: "Armas Biológicas".
-- [ ] **34.** Dark Tech: "Eugenia Forçada".
-- [ ] **35.** Dark Tech: "Exaustão do Núcleo".
-- [ ] **36.** Megaprojeto: Elevador Espacial.
-- [ ] **37.** Megaprojeto: Nave Geracional.
+- [x] **30.** Tech Biopunk: "Fotossíntese Humana".
+- [x] **31.** Tech Biopunk: "Gestação Artificial" (Remove necessidade de fêmeas).
+- [x] **32.** Tech Cyberpunk: "Upload de Consciência" (Zera mortalidade e natalidade, K = Infinito).
+- [x] **33.** Tech Cyberpunk: "Matriz de Simulação" (Gera 50 Trust por tick passivamente).
+- [x] **34.** Tech Dark Tech: "Bomba de Antimatéria" (Destrói um node vizinho e seus recursos).
+- [x] **35.** Tech Dark Tech: "Eugenia Algorítmica" (Purga facções minoritárias).
+- [x] **36.** Tech Space: "Esfera de Dyson" (Energia infinita, multiplica produção).
+- [x] **37.** Tech Space: "Arca Geracional" (Zera a população mundial mas garante a "Vitória").
 
 ### VI. Zero-Player Dinâmico (Bolhas Interativas)
 - [ ] **38.** Sistema Estocástico LLM para tech.
