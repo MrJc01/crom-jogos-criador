@@ -1,0 +1,107 @@
+[
+  {
+    "universo": 1,
+    "anosSimulados": 10000,
+    "populacaoFinal": 33467,
+    "dnaAcumulado": 0,
+    "severidadeFinal": 0,
+    "techsDesbloqueadas": 0,
+    "techsAmostra": [],
+    "inventario": {
+      "minerals": 16027,
+      "silicon": 0,
+      "chips": 0,
+      "computers": 0
+    },
+    "timeline": [
+      {
+        "year": 33,
+        "event": "População atingiu 10.000"
+      }
+    ]
+  },
+  {
+    "universo": 2,
+    "anosSimulados": 10000,
+    "populacaoFinal": 10096,
+    "dnaAcumulado": 0,
+    "severidadeFinal": 0,
+    "techsDesbloqueadas": 0,
+    "techsAmostra": [],
+    "inventario": {
+      "minerals": 10692,
+      "silicon": 0,
+      "chips": 0,
+      "computers": 0
+    },
+    "timeline": [
+      {
+        "year": 35,
+        "event": "População atingiu 10.000"
+      }
+    ]
+  },
+  {
+    "universo": 3,
+    "anosSimulados": 10000,
+    "populacaoFinal": 9998,
+    "dnaAcumulado": 0,
+    "severidadeFinal": 0,
+    "techsDesbloqueadas": 0,
+    "techsAmostra": [],
+    "inventario": {
+      "minerals": 7358,
+      "silicon": 0,
+      "chips": 0,
+      "computers": 0
+    },
+    "timeline": [
+      {
+        "year": 35,
+        "event": "População atingiu 10.000"
+      }
+    ]
+  },
+  {
+    "universo": 4,
+    "anosSimulados": 10000,
+    "populacaoFinal": 10019,
+    "dnaAcumulado": 0,
+    "severidadeFinal": 0,
+    "techsDesbloqueadas": 0,
+    "techsAmostra": [],
+    "inventario": {
+      "minerals": 15150,
+      "silicon": 0,
+      "chips": 0,
+      "computers": 0
+    },
+    "timeline": [
+      {
+        "year": 37,
+        "event": "População atingiu 10.000"
+      }
+    ]
+  },
+  {
+    "universo": 5,
+    "anosSimulados": 10000,
+    "populacaoFinal": 33459,
+    "dnaAcumulado": 0,
+    "severidadeFinal": 0,
+    "techsDesbloqueadas": 0,
+    "techsAmostra": [],
+    "inventario": {
+      "minerals": 6798,
+      "silicon": 0,
+      "chips": 0,
+      "computers": 0
+    },
+    "timeline": [
+      {
+        "year": 33,
+        "event": "População atingiu 10.000"
+      }
+    ]
+  }
+]

@@ -1,0 +1,234 @@
+:root {
+    --stone-bg: #404040;
+    --stone-border-light: #5a5a5a;
+    --stone-border-dark: #2a2a2a;
+    --wood-bg: #5c4033;
+    --wood-border: #3b281f;
+    --text-color: #f0e6d2;
+    --accent-red: #c4302b;
+}
+
+body, html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #1a4a6e; /* Cor de fundo oceano/azul plano */
+    color: var(--text-color);
+    font-family: 'VT323', monospace; /* Fonte pixelada/RPG */
+    overflow: hidden;
+    font-size: 20px;
+    transition: background-color 2s ease-in-out;
+}
+
+body.game-running {
+    animation: oceanPulse 8s infinite alternate ease-in-out;
+}
+
+@keyframes oceanPulse {
+    0% { background-color: #1a4a6e; }
+    100% { background-color: #163d5c; }
+}
+
+#game-container {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+}
+
+canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+/* Molduras de Pedra (Stone UI) */
+.stone-panel {
+    background-color: var(--stone-bg);
+    border: 4px solid var(--stone-border-dark);
+    border-top-color: var(--stone-border-light);
+    border-left-color: var(--stone-border-light);
+    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.6);
+    image-rendering: pixelated;
+}
+
+/* HUD Lateral Direito Minimalista */
+.hud-box {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    padding: 10px 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    font-size: 22px;
+    z-index: 10;
+}
+
+.hud-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.hud-item .icon {
+    font-size: 24px;
+}
+
+/* Modal (Janelas) */
+.modal {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 400px;
+    max-height: 70vh;
+    display: flex;
+    flex-direction: column;
+    z-index: 100;
+}
+
+.modal-header {
+    background-color: var(--stone-border-dark);
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #111;
+}
+
+.modal-header h2 {
+    margin: 0;
+    font-size: 24px;
+    color: #e0d0a0;
+}
+
+.close-btn {
+    background: var(--accent-red);
+    border: 2px solid #801a15;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 16px;
+    width: 30px;
+    height: 30px;
+}
+
+.close-btn:hover {
+    background: #e63931;
+}
+
+/* Botões da UI baseados em Madeira/Pedra */
+.tool-btn {
+    background: var(--wood-bg);
+    border: 3px solid var(--wood-border);
+    border-top-color: #825a47;
+    border-left-color: #825a47;
+    color: #fff;
+    font-size: 32px;
+    width: 60px;
+    height: 60px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: transform 0.1s;
+}
+
+.tool-btn:active {
+    transform: scale(0.95);
+    border-color: var(--wood-border);
+}
+
+.speed-btn {
+    background: #2a2a2a;
+    border: 1px solid #111;
+    color: #fff;
+    font-family: 'VT323', monospace;
+    font-size: 14px;
+    cursor: pointer;
+}
+.speed-btn.active {
+    background: #00ddff;
+    color: #000;
+    font-weight: bold;
+}
+
+/* Bottom Toolbar (Caixa de Ferramentas) */
+#bottom-toolbar {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 5px;
+    padding: 8px;
+    z-index: 50;
+}
+
+/* Grid Interno (Densidade de Ícones) */
+.grid-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    padding: 10px;
+    overflow-y: auto;
+    max-height: 60vh;
+}
+
+.item-card {
+    background: #2a2a2a;
+    border: 2px solid #111;
+    border-radius: 4px;
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 18px;
+}
+
+.item-card h3 {
+    margin: 0;
+    font-size: 20px;
+    color: #fff;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.item-stat {
+    display: flex;
+    justify-content: space-between;
+    color: #aaa;
+}
+
+.item-action-btn {
+    margin-top: 5px;
+    padding: 5px;
+    background: #3a5a3a;
+    border: 2px solid #1a3a1a;
+    color: white;
+    cursor: pointer;
+    font-family: 'VT323', monospace;
+    font-size: 18px;
+}
+.item-action-btn:hover { background: #4a6a4a; }
+
+.hidden {
+    display: none !important;
+}
+
+/* Listas Verticais (Facções) */
+.list-container {
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.faction-row {
+    background: #333;
+    padding: 8px;
+    border: 2px solid #111;
+    display: flex;
+    justify-content: space-between;
+}

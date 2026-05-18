@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CROM - Simulador God Game</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+    <style>
+        body { margin: 0; overflow: hidden; background-color: #0b1d2e; font-family: 'Courier New', Courier, monospace; color: white; user-select: none; }
+        #map-container { width: 100vw; height: 100vh; }
+        
+        /* Loading Screen */
+        #loading-screen {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background-color: #0b1d2e; z-index: 9999;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+        }
+        .spinner {
+            width: 50px; height: 50px; border: 5px solid #1a4a6e;
+            border-top: 5px solid #00ddff; border-radius: 50%;
+            animation: spin 1s linear infinite; margin-bottom: 20px;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        .hud-panel { position: absolute; background: rgba(10, 20, 35, 0.85); border: 2px solid #222; border-radius: 4px; padding: 15px; }
+    </style>
+</head>
+<body>
+    <!-- Tela de Carregamento -->
+    <div id="loading-screen">
+        <div class="spinner"></div>
+        <h1 style="color: #00ddff; letter-spacing: 2px;">CROM: Inicializando Matriz</h1>
+        <p style="color: #aaa; margin-top: 10px;">Gerando centenas de milhares de hexágonos celulares...</p>
+    </div>
+
+    <div id="game-container">
+        <!-- Canvas de Alta Performance (Fundo) -->
+        <canvas id="map-canvas" style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1;"></canvas>
+
+        <!-- Canvas do Mapa (SVG Sobreposto) -->
+        <div id="worldCanvas" style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 2;"></div>
+
+        <!-- HUD Global de Inventário (Esquerda) -->
+        <div id="inventory-panel" class="stone-panel hud-box" style="left: 20px; right: auto;">
+            <div class="hud-item" style="color: #6ab04c;"><span class="icon" title="Madeira Bruta">🌲</span> <span id="inv-wood">0</span></div>
+            <div class="hud-item" style="color: #e3c16f;"><span class="icon" title="Minérios Brutos">🪨</span> <span id="inv-minerals">0</span></div>
+            <div class="hud-item" style="color: #aaa;"><span class="icon" title="Aço Refinado">⛓️</span> <span id="inv-steel">0</span></div>
+            <div class="hud-item" style="color: #6a8b8c;"><span class="icon" title="Silício Bruto">💎</span> <span id="inv-silicon">0</span></div>
+            <div class="hud-item" style="color: #00ddff;"><span class="icon" title="Microchips">💻</span> <span id="inv-chips">0</span></div>
+            <div class="hud-item" style="color: #e0d0a0;"><span class="icon" title="Computadores/Servidores">🖥️</span> <span id="inv-computers">0</span></div>
+        </div>
+
+        <!-- HUD Minimalista Direito -->
+        <div id="hud-panel" class="stone-panel hud-box">
+            <div class="hud-item"><span class="icon" title="Era Tecnológica">⏳</span> <span id="game-era" style="color:#00ddff; font-weight:bold;">Idade da Pedra</span></div>
+            <div class="hud-item"><span class="icon" title="População Mundial">👥</span> <span id="global-pop">0</span></div>
+            <div class="hud-item"><span class="icon" title="Severidade do Vírus">⚠️</span> <span id="global-severity">0%</span></div>
+            <div class="hud-item"><span class="icon" title="Pontos de Adaptação (DNA)">🧬</span> <span id="global-dna">0</span></div>
+            <div class="hud-item"><span class="icon" title="Facção Dominante">🎭</span> <span id="dominant-faction">-</span></div>
+            <div class="hud-item"><span class="icon" title="Data do Jogo">📅</span> <span id="game-date">Ano 1, Mês 1, Dia 1</span></div>
+        </div>
+
+        <!-- Painel de Camadas de Visão (Filtros do Mapa) -->
+        <div id="layers-panel" class="stone-panel hud-box" style="top: 250px;">
+            <div style="font-size: 14px; color: #00ddff; text-align: center; margin-bottom: 10px; border-bottom: 1px solid #333; padding-bottom: 5px;">LENTES DO MAPA</div>
+            <button class="layer-btn active" data-layer="populacional" style="width: 100%; text-align: left; background: #111; color: #fff; border: 1px solid #333; padding: 5px; cursor: pointer; margin-bottom: 5px;">👥 Demografia</button>
+            <button class="layer-btn" data-layer="normal" style="width: 100%; text-align: left; background: #111; color: #fff; border: 1px solid #333; padding: 5px; cursor: pointer; margin-bottom: 5px;">🌍 Biomas Físicos</button>
+            <button class="layer-btn" data-layer="recursos" style="width: 100%; text-align: left; background: #111; color: #fff; border: 1px solid #333; padding: 5px; cursor: pointer; margin-bottom: 5px;">🌲 Recursos Naturais</button>
+            <button class="layer-btn" data-layer="desastres" style="width: 100%; text-align: left; background: #111; color: #fff; border: 1px solid #333; padding: 5px; cursor: pointer;">🔥 Fúria e Desastres</button>
+        </div>
+
+        <!-- Modais de Interface -->
+        <div id="tech-modal" class="stone-panel modal hidden">
+            <div class="modal-header">
+                <h2>🧬 Árvore da Sabedoria</h2>
+                <button class="close-btn" onclick="document.getElementById('tech-modal').classList.add('hidden')">✖</button>
+            </div>
+            <div id="tech-list" class="grid-list"></div>
+        </div>
+
+        <div id="industry-modal" class="stone-panel modal hidden">
+            <div class="modal-header">
+                <h2>⚙️ Complexo Industrial</h2>
+                <button class="close-btn" onclick="document.getElementById('industry-modal').classList.add('hidden')">✖</button>
+            </div>
+            <div id="recipe-list" class="grid-list"></div>
+        </div>
+
+        <div id="factions-modal" class="stone-panel modal hidden">
+            <div class="modal-header">
+                <h2>🎭 Tensões e Facções</h2>
+                <button class="close-btn" onclick="document.getElementById('factions-modal').classList.add('hidden')">✖</button>
+            </div>
+            <div id="factions-list" class="list-container"></div>
+        </div>
+        
+        <!-- Info Local (Lupa de Inspeção) -->
+        <div id="country-info" class="stone-panel modal hidden" style="left: 250px; top: 300px; width: 380px;">
+            <div class="modal-header">
+                <h2 id="info-name" style="font-size: 26px;">Local</h2>
+                <button class="close-btn" onclick="document.getElementById('country-info').classList.add('hidden')">✖</button>
+            </div>
+            
+            <div style="padding: 10px; border-bottom: 2px solid #222;">
+                <h2 id="info-name" style="color:#00ddff; font-size:24px; margin-bottom:10px;">Região</h2>
+                <div style="font-size: 14px; line-height: 1.6;">
+                    <div><strong>Bioma:</strong> <span id="info-biome">-</span></div>
+                    <span id="info-status">Vazio</span>
+                </div>
+                
+                <div style="display: flex; justify-content: space-between; font-size: 18px; color: #aaa;">
+                    <span>Capacidade:</span>
+                    <span>👥 <span id="info-pop">0</span> / <span id="info-cap">0</span></span>
+                </div>
+                <!-- Barra de Superlotação -->
+                <div style="width: 100%; height: 8px; background: #222; border: 1px solid #111; margin-top: 5px;">
+                    <div id="info-pop-bar" style="height: 100%; width: 0%; background: #00ff88; transition: width 0.3s, background 0.3s;"></div>
+                </div>
+            </div>
+
+            <div class="grid-list" style="max-height: 150px; border-bottom: 2px solid #222;">
+                <div class="item-card" style="border-color: #2a2a2a; padding: 4px;">
+                    <small style="color: #6ab04c;">🌲 Madeira Nativa</small>
+                    <div id="info-wood" style="font-size: 18px; text-align: right;">0</div>
+                </div>
+                <div class="item-card" style="border-color: #2a2a2a; padding: 4px;">
+                    <small style="color: #00ddff;">💧 Água Doce</small>
+                    <div id="info-water" style="font-size: 18px; text-align: right;">0</div>
+                </div>
+                <div class="item-card" style="border-color: #2a2a2a; padding: 4px;">
+                    <small style="color: #e3c16f;">🪨 Minérios (Subsolo)</small>
+                    <div id="info-minerals" style="font-size: 18px; text-align: right;">0</div>
+                </div>
+            </div>
+            
+            <div style="padding: 5px 10px; background: #222;">
+                <span style="font-size: 16px; color: #888;">TENSÕES LOCAIS (FACÇÕES)</span>
+            </div>
+            <div id="info-factions-list" class="list-container" style="max-height: 200px; overflow-y: auto;">
+                <!-- Preenchido via JS -->
+            </div>
+        </div>
+
+        <!-- Instruções Iniciais -->
+        <div id="instructions" class="stone-panel" style="position: absolute; top: 20px; left: 50%; transform: translateX(-50%); width: 450px; text-align: center; padding: 10px; z-index: 100; pointer-events: none;">
+            <h2 style="color: #e0d0a0; margin: 0;">CROM: A Semente</h2>
+            <p style="margin: 5px 0; font-size: 20px;">Clique em qualquer região continental no mapa para depositar a Tribo Primordial.</p>
+        </div>
+
+        <!-- Toasts -->
+        <div id="toast-container" style="position: absolute; top: 100px; left: 50%; transform: translateX(-50%); z-index: 1000; text-align: center;"></div>
+
+        <!-- Caixa de Ferramentas Base (Bottom Toolbar) -->
+        <div id="bottom-toolbar" class="stone-panel">
+            <button class="tool-btn" id="btn-play-pause" title="Play/Pause" style="background: #6b2e2e;">⏸️</button>
+            <div style="display: flex; flex-direction: column; justify-content: center; gap: 2px; padding: 0 5px;">
+                <button class="speed-btn active" data-speed="1">1x</button>
+                <button class="speed-btn" data-speed="3">3x</button>
+                <button class="speed-btn" data-speed="5">5x</button>
+            </div>
+            <div style="width: 2px; background: #222; margin: 0 5px;"></div>
+            <button class="tool-btn" id="btn-world" title="Mundo">🌍</button>
+            <button class="tool-btn" id="btn-factions" title="Facções" onclick="document.getElementById('factions-modal').classList.toggle('hidden')">🎭</button>
+            <button class="tool-btn" id="btn-wisdom" title="Sabedoria" onclick="document.getElementById('tech-modal').classList.toggle('hidden')">🧬</button>
+            <button class="tool-btn" id="btn-industry" title="Indústria" onclick="document.getElementById('industry-modal').classList.toggle('hidden')">⚙️</button>
+            <button class="tool-btn" id="btn-disasters" title="Destruição">🔥</button>
+        </div>
+        
+        <!-- Tooltip -->
+        <div id="tooltip" class="stone-panel hidden" style="position: absolute; pointer-events: none; z-index: 999; padding: 5px; font-size: 16px;"></div>
+    </div>
+
+    <script type="module" src="./src/index.js"></script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+
+> crom-jogos-criador@0.0.0 dev
+> vite
+
+
+  VITE v5.4.21  ready in 354 ms
+
+  ➜  Local:   http://localhost:5173/
+  ➜  Network: use --host to expose
+22:06:39 [vite] page reload src/ui/MapRenderer.js
+22:24:56 [vite] page reload src/core/Demographics.js
+22:26:44 [vite] page reload src/modules/sociology/FactionEvolution.js
+22:27:21 [vite] page reload src/core/Economy.js
+22:27:49 [vite] page reload src/core/Engine.js
