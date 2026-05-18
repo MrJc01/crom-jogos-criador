@@ -286,6 +286,21 @@ renderer.init().then(() => {
     };
 
     engine.onTick = () => {
+      // TAREFA 46: Filtro Sepia para Idade das Trevas
+      if (engine.peakGlobalPop > 100000 && engine.globalPop < engine.peakGlobalPop * 0.3) {
+          document.body.classList.add('dark-age-filter');
+      } else {
+          document.body.classList.remove('dark-age-filter');
+      }
+      
+      // TAREFA 49: Pause Automático por Extinção Total
+      if (engine.globalPop === 0 && engine.year > 1 && engine.isRunning) {
+          engine.pause();
+          showFloatText("EXTINÇÃO TOTAL. Jogo Pausado.", "#ff0000");
+          // UI update manual para refletir o pause
+          document.getElementById('btn-play').innerHTML = '▶️';
+      }
+
       uiGlobalPop.textContent = numFormat.format(engine.globalPop);
       
       const month = Math.floor(engine.day / 30) + 1;
