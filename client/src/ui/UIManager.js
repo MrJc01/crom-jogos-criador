@@ -154,6 +154,7 @@ export class UIManager {
                     <div><span id="label-minerals">🪨 Minérios</span>: <span id="info-minerals" style="color:#ffaa00;">0</span></div>
                     <div><span id="label-soil">🌱 Solo</span>: <span id="info-soil" style="color:#2ecc71;">100%</span></div>
                 </div>
+            </div>
             <div style="padding: 10px; background: #1a1a1a;">
                 <h3 style="font-size: 16px; color: #ffaa00; margin-bottom: 5px;">Fatores de Risco Sistêmicos (Globais)</h3>
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 5px; font-size: 14px;">
