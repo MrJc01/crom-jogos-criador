@@ -67,16 +67,38 @@ export default {
         }
         
         // 61. Eclipse Solar Prolongado
-        if (roll >= 0.65 && roll < 0.80) {
+        if (roll >= 0.60 && roll < 0.68) {
             engine.globalKPenalty = (engine.globalKPenalty || 1.0) * 0.8;
             return { message: `🌘 ECLIPSE SOMBRIO: O Sol escureceu de forma anormal por semanas. As temperaturas despencaram e o terror místico assolou as tribos.`, type: "warning", color: "#555555" };
         }
         
         // 62. Mutação Gênica Aleatória
-        if (roll >= 0.80) {
+        if (roll >= 0.68 && roll < 0.75) {
             const t = infectedNodes[Math.floor(Math.random() * infectedNodes.length)];
             engine.adaptationPoints += 100;
             return { message: `🧬 MUTAÇÃO BENÉFICA: Crianças em ${t.name} nasceram com extrema resistência imunológica, fornecendo um salto evolutivo global (+100 DNA).`, nodeId: t.id, type: "milestone", color: "#00ff88" };
+        }
+        
+        // Tarefa 29: Pequena Era do Gelo
+        if (roll >= 0.75 && roll < 0.82) {
+            engine.globalTemperatureOffset -= 2.0; // Resfria o planeta
+            return { message: `❄️ PEQUENA ERA DO GELO: Um resfriamento global anômalo cobriu o hemisfério de neve. As colheitas vão falhar severamente este ano!`, type: "disaster", color: "#00ffff" };
+        }
+        
+        // Tarefa 32: Impacto de Asteroide
+        if (roll >= 0.82 && roll < 0.90) {
+            const t = infectedNodes[Math.floor(Math.random() * infectedNodes.length)];
+            t.demographics.kill(Math.floor(t.demographics.total * 0.3));
+            t.resources.minerals += 50000; // Depósito massivo extraterrestre
+            return { message: `☄️ IMPACTO DE METEORO: Um asteroide devastou ${t.name} (30% mortos), mas deixou uma cratera transbordando em Metais Raros!`, nodeId: t.id, type: "disaster", color: "#ff8800" };
+        }
+        
+        // Tarefa 33: Inverno Vulcânico
+        if (roll >= 0.90) {
+            const t = infectedNodes[Math.floor(Math.random() * infectedNodes.length)];
+            t.soil = 0; // Solo morto por cinzas
+            engine.globalKPenalty = (engine.globalKPenalty || 1.0) * 0.7; // Fome global
+            return { message: `🌋 INVERNO VULCÂNICO: Um supervulcão entrou em erupção em ${t.name}. As cinzas bloquearam o Sol globalmente, travando a agricultura (Solo 0%).`, nodeId: t.id, type: "disaster", color: "#ff4444" };
         }
         
         return null;

@@ -226,10 +226,35 @@ export class GameEngine {
         }
     });
 
+    // Tarefa 28: Ciclo de Estações Reais
+    let seasonModifier = 1.0;
+    if (this.day >= 271) { // Inverno
+        seasonModifier = 0.7;
+        // Queima lenha extra para sobreviver ao frio
+        this.inventory.wood = Math.max(0, this.inventory.wood - Math.floor(this.globalPop / 1000));
+    } else if (this.day >= 91 && this.day <= 180) { // Verão
+        seasonModifier = 1.2; 
+    }
+    
+    // Tarefa 30 e 31: Aquecimento Cumulativo (Estufa e Permafrost)
+    if (this.globalTemperatureOffset === undefined) this.globalTemperatureOffset = 0;
+    if (this.inventory.minerals > 100000 && this.inventory.wood < 50000) {
+        this.globalTemperatureOffset += 0.001; // Emissões industriais vs sequestro de carbono baixo
+    }
+    if (this.globalTemperatureOffset > 5.0 && !this.permafrostMelted) {
+        this.permafrostMelted = true;
+        this.globalTemperatureOffset += 2.0; // Feedback loop explosivo
+        this.globalKPenalty = (this.globalKPenalty || 1.0) * 0.8;
+        if (this.onEvent) this.onEvent({ message: `🌡️ DERRETIMENTO DO PERMAFROST: O aquecimento global atingiu ponto crítico. O metano liberado fritou a atmosfera!`, type: "disaster", color: "#ff4400" }, "disaster");
+    }
+    
+    // Temperatura afeta brutalmente a capacidade e resiliência (se esquentar demais, a K_boost cai)
+    const climatePenalty = Math.max(0.1, 1.0 - (this.globalTemperatureOffset * 0.05));
+
     const globalRules = {
         base_r: 0.02,
         migrationThreshold: 0.95,
-        global_K_boost,
+        global_K_boost: global_K_boost * seasonModifier * climatePenalty,
         global_r_boost,
         globalKPenalty: this.globalKPenalty
     };
