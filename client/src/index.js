@@ -252,8 +252,12 @@ renderer.init().then(() => {
             showFloatText("🚢 COMÉRCIO", '#f1c40f');
             if (data.sourceId) renderer.animateBlink(data.sourceId, '#f1c40f');
             if (data.targetId) renderer.animateBlink(data.targetId, '#f1c40f');
-            // Animar o pacote voando
             renderer.animateMigration(data);
+        } else if (type === "cosmic" || type === "milestone") {
+            const color = data.color || '#9b59b6';
+            addNews(data.message || data, color);
+            showFloatText(type === "cosmic" ? "☄️ EVENTO CÓSMICO" : "👁️ ASCENSÃO", color);
+            if (data.nodeId) renderer.animateBlink(data.nodeId, color);
         } else if (type === "tech_auto") {
             showFloatText(`💡 Evolução: ${data}`, '#00ddff');
             if (!document.getElementById('tech-modal').classList.contains('hidden')) renderTechList();

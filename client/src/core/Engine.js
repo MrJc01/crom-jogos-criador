@@ -283,8 +283,8 @@ export class GameEngine {
             if (shouldTrigger) {
                 const result = plugin.applyEvent(this);
                 if (result && this.onEvent) {
-                    // result é agora um objeto { message, nodeId }
-                    this.onEvent(result, "disaster");
+                    // result é agora um objeto { message, nodeId, type, color }
+                    this.onEvent(result, result.type || "disaster");
                 }
             }
         }
