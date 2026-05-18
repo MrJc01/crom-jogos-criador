@@ -10,3 +10,5 @@
 20:11:40 [vite] page reload src/config/ConfigLoader.js
 20:12:31 [vite] page reload src/core/Engine.js
 20:12:48 [vite] page reload src/core/Demographics.js
+20:14:50 [vite] page reload index.html
+20:14:58 [vite] hmr update /style.css?direct

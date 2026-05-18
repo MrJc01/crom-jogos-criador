@@ -84,7 +84,7 @@ canvas {
     max-height: 70vh;
     display: flex;
     flex-direction: column;
-    z-index: 100;
+    z-index: 1000;
 }
 
 .modal-header {
@@ -180,7 +180,7 @@ canvas {
     display: flex;
     gap: 5px;
     padding: 8px;
-    z-index: 50;
+    z-index: 40;
 }
 
 /* Grid Interno (Densidade de Ícones) */

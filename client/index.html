@@ -75,7 +75,7 @@
         <div id="worldCanvas" style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 2;"></div>
 
         <!-- HUD Global Compacto (Topo Direita) -->
-        <div id="global-hud" class="stone-panel hud-box" style="top: 10px; right: 10px; left: auto; flex-direction: row; flex-wrap: wrap; width: 450px; justify-content: space-between; font-size: 16px; padding: 5px 10px;">
+        <div id="global-hud" class="stone-panel hud-box" style="top: 10px; right: 10px; left: auto; flex-direction: row; flex-wrap: wrap; width: 350px; max-width: 45%; justify-content: space-between; font-size: 14px; padding: 5px 10px; z-index: 90;">
             <div class="hud-item" style="width: 45%;"><span class="icon" title="Data do Jogo">📅</span> <span id="game-date">Ano 1, Mês 1</span></div>
             <div class="hud-item" style="width: 45%;"><span class="icon" title="População Mundial">👥</span> <span id="global-pop">0</span></div>
             <div class="hud-item" style="width: 45%;"><span class="icon" title="Severidade Planetária">⚠️</span> <span id="global-severity" style="color:#ff4444;">0%</span></div>
@@ -87,7 +87,7 @@
         </div>
 
         <!-- Recursos Globais (Topo Esquerda) -->
-        <div id="inventory-hud" class="stone-panel hud-box" style="top: 10px; left: 10px; right: auto; flex-direction: row; gap: 15px; padding: 5px 10px; font-size: 18px;">
+        <div id="inventory-hud" class="stone-panel hud-box" style="top: 10px; left: 10px; right: auto; flex-direction: row; flex-wrap: wrap; max-width: 50%; gap: 10px; padding: 5px 10px; font-size: 16px; z-index: 90;">
             <div class="hud-item" style="color: #6ab04c;"><span class="icon" title="Madeira">🌲</span> <span id="inv-wood">0</span></div>
             <div class="hud-item" style="color: #e3c16f;"><span class="icon" title="Minérios">🪨</span> <span id="inv-minerals">0</span></div>
             <div class="hud-item" style="color: #aaa;"><span class="icon" title="Aço">⛓️</span> <span id="inv-steel">0</span></div>
@@ -174,7 +174,7 @@
         </div>
         
         <!-- Info Local (Lupa de Inspeção) -->
-        <div id="country-info" class="stone-panel modal hidden" style="left: 250px; top: 300px; width: 380px;">
+        <div id="country-info" class="stone-panel modal hidden" style="width: 380px;">
             <div class="modal-header">
                 <h2 id="info-name" style="font-size: 26px;">Local</h2>
                 <button class="close-btn" onclick="document.getElementById('country-info').classList.add('hidden')">✖</button>
