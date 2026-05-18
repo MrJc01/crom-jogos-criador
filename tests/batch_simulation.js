@@ -67,7 +67,7 @@ async function runBatch() {
         
         const timeline = [];
         let nextMilestonePop = 10000;
-        const TARGET_YEARS_FOR_SIM = 1000; // Representará os 10k anos por amostragem
+        const TARGET_YEARS_FOR_SIM = 100; // Amostragem otimizada para o relatório em tempo real (100 anos intensos = 36.500 ticks por facção)
         const TOTAL_TICKS_FOR_SIM = 365 * TARGET_YEARS_FOR_SIM;
         
         for (let i = 0; i < TOTAL_TICKS_FOR_SIM; i++) {
