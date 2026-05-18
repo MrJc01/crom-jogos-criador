@@ -311,6 +311,41 @@ export class GameEngine {
     // TAREFA 27: Gênios Históricos
     this.techTree.checkGeniusSpawn(this);
     
+    // ==========================================
+    // TAREFAS 38 a 41: O GRANDE FILTRO (ENDGAME)
+    // ==========================================
+    
+    // TAREFA 40: Paradoxo de Fermi Silencioso (Aniquilação Nuclear)
+    // Se tem tech nuclear e o Trust Global tá muito baixo (< 20) com alta pressão social
+    if (this.techTree.unlocked.has("tech_nuclear") && this.globalTrust < 20 && this.pressures.social > 0.8) {
+        if (Math.random() < 0.005) { // 0.5% chance ao dia
+            this.nodes.forEach(n => { n.demographics.kill(n.demographics.total); n.soil = 0; n.resources.water = 0; });
+            this.inventory.wood = 0; this.inventory.minerals = 0; this.globalPop = 0;
+            if (this.onEvent) this.onEvent({ message: `☢️ O GRANDE FILTRO (PARADOXO DE FERMI): Uma Guerra Nuclear total aniquilou 100% da vida no planeta. A civilização falhou o teste da maturidade.`, type: "disaster", color: "#ff0000" }, "disaster");
+            this.pause();
+        }
+    }
+    
+    // TAREFA 39: Inverno Genético (Bottleneck Demográfico Crítico)
+    if (this.globalPop < 5000 && this.globalPop > 0 && this.year > 50) {
+        if (Math.random() < 0.01) {
+            this.globalKPenalty *= 0.5; // Endogamia destrói a resiliência biológica
+            if (this.onEvent) this.onEvent({ message: `🧬 INVERNO GENÉTICO: A população global é tão baixa que a endogamia causou falhas genéticas em massa. Morte iminente.`, type: "nemesis", color: "#8800ff" }, "nemesis");
+        }
+    }
+    
+    // TAREFA 38 e 41: Síndrome de Kessler e Limites de Órbita
+    if (this.currentEra.mult >= 5000) { // Era Espacial
+        if (!this.kesslerSyndrome) this.kesslerSyndrome = 0;
+        this.kesslerSyndrome += 0.01; // Lixo espacial acumula por dia de era espacial
+        if (this.kesslerSyndrome > 10.0) {
+            if (this.onEvent && !this.kesslerTriggered) {
+                this.kesslerTriggered = true;
+                this.onEvent({ message: `🛰️ SÍNDROME DE KESSLER: A órbita está selada por lixo espacial. Fugas planetárias (Arca) estão permanentemente bloqueadas!`, type: "warning", color: "#ffaa00" }, "warning");
+            }
+        }
+    }
+    
     // Agregação demográfica global (para a UI de Facções)
     this.globalDemographics = { factions: {} };
     this.nodes.forEach(node => {
