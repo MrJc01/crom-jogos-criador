@@ -250,13 +250,26 @@ export class GameEngine {
     
     // Temperatura afeta brutalmente a capacidade e resiliência (se esquentar demais, a K_boost cai)
     const climatePenalty = Math.max(0.1, 1.0 - (this.globalTemperatureOffset * 0.05));
+    
+    // TAREFA: Políticas Públicas
+    if (!this.policies) this.policies = { forest: false, water: false };
+    
+    if (this.policies.forest) {
+        seasonModifier *= 0.8; // Atrito na mão de obra para plantar árvore em vez de comida
+        this.inventory.wood += Math.floor(this.globalPop / 5000);
+        this.globalTemperatureOffset = Math.max(0, this.globalTemperatureOffset - 0.005);
+    }
+    if (this.policies.water) {
+        this.pressures.social = Math.min(1.0, (this.pressures.social || 0) + 0.01);
+    }
 
     const globalRules = {
         base_r: 0.02,
         migrationThreshold: 0.95,
         global_K_boost: global_K_boost * seasonModifier * climatePenalty,
         global_r_boost,
-        globalKPenalty: this.globalKPenalty
+        globalKPenalty: this.globalKPenalty,
+        policyWater: this.policies.water
     };
 
     let newGlobalPop = 0;

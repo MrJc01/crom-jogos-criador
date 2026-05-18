@@ -13,10 +13,13 @@ export default {
         });
         
         // TAREFA 20: Custo Quadrático da Burocracia
-        // Se uma facção tem domínio sobre uma megacidade, o custo administrativo e corrupção escala quadrado
+        // Racionamento hídrico diminui consumo
+        let waterMultiplier = globalRules.policyWater ? 0.5 : 1.0;
+        
+        // Custo quadrático da burocracia (Megacidades)
         if (largestFactionSize > 0.8 && node.demographics.total > 100000) {
             const bureaucracyPenalty = Math.floor((node.demographics.total / 100000) ** 2);
-            node.resources.water = Math.max(0, node.resources.water - bureaucracyPenalty);
+            node.resources.water = Math.max(0, node.resources.water - (bureaucracyPenalty * waterMultiplier));
             engine.inventory.wood = Math.max(0, engine.inventory.wood - Math.floor(bureaucracyPenalty * 0.1));
         }
         

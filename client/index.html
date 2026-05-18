@@ -145,10 +145,49 @@
 
         <div id="factions-modal" class="stone-panel modal hidden">
             <div class="modal-header">
-                <h2>🎭 Tensões e Facções</h2>
+                <h2>👁️ Tensões e Facções</h2>
                 <button class="close-btn" onclick="document.getElementById('factions-modal').classList.add('hidden')">✖</button>
             </div>
             <div id="factions-list" class="list-container"></div>
+        </div>
+        
+        <div id="policies-modal" class="stone-panel modal hidden">
+            <div class="modal-header">
+                <h2>📜 Políticas Públicas (Governança)</h2>
+                <button class="close-btn" onclick="document.getElementById('policies-modal').classList.add('hidden')">✖</button>
+            </div>
+            <div class="list-container" style="display: flex; flex-direction: column; gap: 10px;">
+                <div class="hud-item" style="justify-content: space-between; padding: 10px; border: 1px solid #555;">
+                    <div>
+                        <strong style="color: #2ecc71;">🌲 Reflorestamento Ativo</strong>
+                        <div style="font-size: 12px; color: #888;">Gasta mão de obra para plantar lenha e resfriar o planeta. (-20% K)</div>
+                    </div>
+                    <button id="btn-policy-forest" class="item-action-btn" style="width: 80px;">Ativar</button>
+                </div>
+                <div class="hud-item" style="justify-content: space-between; padding: 10px; border: 1px solid #555;">
+                    <div>
+                        <strong style="color: #3498db;">💧 Racionamento Hídrico</strong>
+                        <div style="font-size: 12px; color: #888;">Reduz o consumo de água, mas causa tensão social. (+30% Atrito)</div>
+                    </div>
+                    <button id="btn-policy-water" class="item-action-btn" style="width: 80px;">Ativar</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Controles Inferiores (Esquerda) -->
+        <div id="controls-hud" class="stone-panel hud-box" style="bottom: 10px; left: 10px; flex-direction: row; gap: 10px;">
+            <button id="btn-play" class="control-btn" style="width: 40px;">⏸️</button>
+            <button id="btn-speed" class="control-btn" style="width: 50px;">1x</button>
+            <button id="btn-tech" class="control-btn" style="width: 140px; background: #1a4a6e; border-color: #00ddff;">🧬 Árvore (DNA)</button>
+            <button id="btn-industry" class="control-btn" style="width: 140px; background: #3d3b2c; border-color: #f1c40f;">⚙️ Indústria</button>
+            <button id="btn-factions" class="control-btn" style="width: 120px; background: #2c1e3d; border-color: #9b59b6;">👁️ Facções</button>
+            <button id="btn-policies" class="control-btn" style="width: 120px; background: #1b3d22; border-color: #2ecc71;">📜 Políticas</button>
+            
+            <div style="border-left: 1px solid #555; padding-left: 10px; display: flex; gap: 5px;">
+                <button id="btn-layer-base" class="control-btn" style="background: #444;" title="Mapa Base">🌍</button>
+                <button id="btn-layer-water" class="control-btn" title="Camada de Aquífero (Água)">💧</button>
+                <button id="btn-layer-climate" class="control-btn" title="Camada Climática (Emissões)">🌡️</button>
+            </div>
         </div>
         
         <!-- Info Local (Lupa de Inspeção) -->

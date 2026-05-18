@@ -244,11 +244,30 @@ export class MapRenderer {
             
             if (node) {
                 let baseColor = '#555';
-                if (node.biome) {
-                    if (node.biome.id === 'desert') baseColor = '#e3c16f';
-                    else if (node.biome.id === 'tundra') baseColor = '#dcf2f2';
-                    else if (node.biome.id === 'plains') baseColor = '#6ab04c';
-                    else if (node.biome.id === 'jungle') baseColor = '#2d6b35';
+                
+                if (this.activeLayer === 'water') {
+                    // TAREFA 42: Mapa Hídrico do Aquífero (D3)
+                    const w = node.resources ? node.resources.water : 0;
+                    if (w > 50000) baseColor = '#00ddff';
+                    else if (w > 10000) baseColor = '#3498db';
+                    else if (w > 1000) baseColor = '#2980b9';
+                    else baseColor = '#e74c3c';
+                } else if (this.activeLayer === 'climate') {
+                    // TAREFA 43: Mapa de Calor Climático
+                    const pop = node.demographics.total;
+                    const w = node.resources ? node.resources.wood : 0;
+                    if (pop > 100000) baseColor = '#e74c3c'; // Ilha de calor (Megacity)
+                    else if (w < 5000) baseColor = '#e67e22'; // Desmatamento (Emissor)
+                    else baseColor = '#2ecc71'; // Saudável (Sumidouro)
+                } else {
+                    // Camada Base (Biomas)
+                    if (node.biome) {
+                        if (node.biome.id === 'desert') baseColor = '#e3c16f';
+                        else if (node.biome.id === 'tundra') baseColor = '#dcf2f2';
+                        else if (node.biome.id === 'plains') baseColor = '#6ab04c';
+                        else if (node.biome.id === 'jungle') baseColor = '#2d6b35';
+                        else if (node.biome.id === 'mountain') baseColor = '#a89f91';
+                    }
                 }
 
                 // Aplica a lógica da Lente/Camada atual

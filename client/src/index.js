@@ -299,9 +299,31 @@ renderer.init().then(() => {
           showFloatText("EXTINÇÃO TOTAL. Jogo Pausado.", "#ff0000");
           // UI update manual para refletir o pause
           document.getElementById('btn-play').innerHTML = '▶️';
+          
+          // TAREFA 48: Som Dielétrico do Fim
+          const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+          const osc = audioCtx.createOscillator();
+          const gainNode = audioCtx.createGain();
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(50, audioCtx.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(10, audioCtx.currentTime + 4);
+          gainNode.gain.setValueAtTime(1, audioCtx.currentTime);
+          gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 4);
+          osc.connect(gainNode);
+          gainNode.connect(audioCtx.destination);
+          osc.start();
+          osc.stop(audioCtx.currentTime + 4);
       }
 
       uiGlobalPop.textContent = numFormat.format(engine.globalPop);
+      
+      // TAREFA 45: Painel de EROI Global
+      const eroiEl = document.getElementById('inv-eroi');
+      if (eroiEl) {
+          const eroiValue = (engine.inventory.wood > 0) ? "100%" : "10%";
+          eroiEl.textContent = eroiValue;
+          eroiEl.style.color = (engine.inventory.wood > 0) ? "#2ecc71" : "#e74c3c";
+      }
       
       const month = Math.floor(engine.day / 30) + 1;
       const dayOfMonth = (engine.day % 30) + 1;
@@ -392,6 +414,50 @@ speedBtns.forEach(btn => {
     e.target.classList.add('active');
     engine.setSpeed(parseInt(e.target.dataset.speed));
   });
+});
+
+// UI Modals
+document.getElementById('btn-tech').addEventListener('click', () => {
+    document.getElementById('tech-modal').classList.toggle('hidden');
+    renderTechList();
+});
+document.getElementById('btn-industry').addEventListener('click', () => {
+    document.getElementById('industry-modal').classList.toggle('hidden');
+    renderIndustryList();
+});
+document.getElementById('btn-factions').addEventListener('click', () => {
+    document.getElementById('factions-modal').classList.toggle('hidden');
+    renderFactionsList();
+});
+document.getElementById('btn-policies').addEventListener('click', () => {
+    document.getElementById('policies-modal').classList.toggle('hidden');
+});
+
+// Políticas Públicas
+document.getElementById('btn-policy-forest').addEventListener('click', (e) => {
+    engine.policies.forest = !engine.policies.forest;
+    e.target.textContent = engine.policies.forest ? 'Desativar' : 'Ativar';
+    e.target.style.background = engine.policies.forest ? '#e74c3c' : '#2d6b35';
+});
+document.getElementById('btn-policy-water').addEventListener('click', (e) => {
+    engine.policies.water = !engine.policies.water;
+    e.target.textContent = engine.policies.water ? 'Desativar' : 'Ativar';
+    e.target.style.background = engine.policies.water ? '#e74c3c' : '#2d6b35';
+});
+
+// Map Layers
+const layerBtns = [
+    document.getElementById('btn-layer-base'),
+    document.getElementById('btn-layer-water'),
+    document.getElementById('btn-layer-climate')
+];
+layerBtns.forEach(btn => {
+    btn.addEventListener('click', (e) => {
+        layerBtns.forEach(b => b.style.background = 'transparent');
+        e.target.style.background = '#444';
+        renderer.activeLayer = e.target.id.split('-')[2]; // 'base', 'water', 'climate'
+        renderer.update();
+    });
 });
 
 function updateSidebar(node) {
