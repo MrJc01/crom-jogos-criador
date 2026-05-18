@@ -257,9 +257,12 @@ export class GameEngine {
 
   processTick() {
     const eraInfo = this.currentEra;
-    this.deltaDays = eraInfo.timeDilation || 1;
-    this.day += this.deltaDays;
+    const targetDays = eraInfo.timeDilation || 1;
+    this.deltaDays = 1; // FIX SRE: Força matemática estrita de 1 dia para evitar Wipe por Time-Skip
     
+    for (let step = 0; step < targetDays; step++) {
+        this.day += this.deltaDays;
+        
     while (this.day > 365) {
         this.day -= 365;
         this.year++;
@@ -660,7 +663,14 @@ export class GameEngine {
             }
         }
     }
+    
+    if (this.year > 200000 && this.day % 365 === 0) {
+        if (this.onEvent) this.onEvent({ message: "🌌 THE END: 200.000 anos se passaram. A simulação atinge seu limite de calor.", type: "cosmic", color: "#aa00ff" }, "cosmic");
+        this.pause();
+    }
+    } // Fim do loop for (targetDays)
 
-    if (this.onTick) this.onTick(this);
+    // Callback para UI atualizar SÓ NO FINAL DO BATCH (Evita lag visual e atende ao requisito: mostra década em década)
+    if (this.onTick) this.onTick();
   }
 }
