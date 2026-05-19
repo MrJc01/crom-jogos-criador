@@ -10,7 +10,7 @@ export default {
     type: 'biology',
     
     applyTick(node, globalRules, engine) {
-        if (!node.infected || node.demographics.total < 100) return;
+        if (!node.infected || node.demographics.total < 1000) return;
         
         // Inicializar estado SIR no nó
         if (!node.sir) {

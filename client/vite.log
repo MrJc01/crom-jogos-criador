@@ -28,3 +28,16 @@
 20:51:05 [vite] page reload src/modules/agriculture/FarmingEngine.js
 20:51:14 [vite] page reload src/modules/biology/migration.js
 20:58:00 [vite] page reload src/modules/biology/gestation.js
+21:08:22 [vite] page reload src/modules/events/AnomalyEngine.js
+21:08:35 [vite] page reload src/modules/events/GeopoliticsEngine.js
+21:08:54 [vite] page reload src/modules/events/DisasterEngine.js
+21:09:06 [vite] page reload src/modules/biology/pandemic_sir.js
+21:09:20 [vite] page reload src/modules/agriculture/FamineEngine.js
+21:13:16 [vite] page reload src/core/Demographics.js
+21:16:04 [vite] page reload src/modules/agriculture/FarmingEngine.js
+21:21:43 [vite] page reload src/config/ConfigLoader.js
+21:24:53 [vite] page reload src/modules/agriculture/FarmingEngine.js
+21:25:07 [vite] page reload src/modules/biology/migration.js
+21:29:17 [vite] page reload src/core/Demographics.js
+21:34:02 [vite] page reload src/config/DemographicsConfig.json
+21:41:09 [vite] page reload src/core/Demographics.js

@@ -40,9 +40,8 @@ export default {
         
         if (roll >= (ev.goldenRefugees?.rollMin || 0.35) && roll < (ev.goldenRefugees?.rollMax || 0.45)) {
             const t = infectedNodes[Math.floor(Math.random() * infectedNodes.length)];
-            t.demographics.total += (ev.goldenRefugees?.popBonus || 50000);
-            engine.adaptationPoints += (ev.goldenRefugees?.dnaBonus || 50);
-            return { message: `🛳️ REFUGIADOS DE OURO: Imigrantes intelectuais chegaram em ${t.name}! (+${ev.goldenRefugees?.dnaBonus || 50} DNA)`, nodeId: t.id, type: "milestone", color: "#ffff00" };
+            engine.adaptationPoints += (ev.goldenRefugees?.dnaBonus || 50) + 1000;
+            return { message: `🛳️ REFUGIADOS DE OURO: Gênios e pensadores exilados chegaram em ${t.name}! (+DNA Massivo)`, nodeId: t.id, type: "milestone", color: "#ffff00" };
         }
         
         if (roll >= (ev.archaeologicalFind?.rollMin || 0.45) && roll < (ev.archaeologicalFind?.rollMax || 0.55)) {

@@ -41,7 +41,9 @@ export default {
             // Hexes com menos food perdem pop
             engine.nodes.forEach(n => {
                 if (!n.infected || (n.food || 0) > 0) return;
-                const deaths = Math.floor(n.demographics.total * 0.03);
+                let deathRate = 0.03;
+                if (n.demographics.total < 500) deathRate = 0.005; // Cradle Shield
+                const deaths = Math.floor(n.demographics.total * deathRate);
                 n.demographics.kill(deaths);
             });
             

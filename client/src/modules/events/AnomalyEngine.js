@@ -24,8 +24,8 @@ export default {
         if (roll < (ev.obelisk?.rollMax || 0.15)) {
             engine.adaptationPoints += (ev.obelisk?.dnaBonus || 500);
             const t = infectedNodes[Math.floor(Math.random() * infectedNodes.length)];
-            t.demographics.total += (ev.obelisk?.popBonus || 10000);
-            return { message: `🕋 O OBELISCO: Um monólito negro surgiu em ${t.name}. A mente humana se expandiu (+${ev.obelisk?.dnaBonus || 500} DNA).`, nodeId: t.id, type: "nemesis", color: "#aa00aa" };
+            engine.globalKPenalty = (engine.globalKPenalty || 1.0) * 1.5;
+            return { message: `🕋 O OBELISCO: Um monólito negro surgiu em ${t.name}. A mente humana se expandiu (+${ev.obelisk?.dnaBonus || 500} DNA, +50% Capacidade).`, nodeId: t.id, type: "nemesis", color: "#aa00aa" };
         }
         
         // 92. O Silêncio Total
@@ -61,8 +61,9 @@ export default {
             const minTechs = ev.cryogenicAwakening?.minTechs || 20;
             if (engine.globalPop < maxPop && engine.techTree && engine.techTree.unlocked.size > minTechs) {
                 const t = infectedNodes[Math.floor(Math.random() * infectedNodes.length)];
-                t.demographics.total += (ev.cryogenicAwakening?.popBonus || 20000);
-                return { message: `🧊 DESPERTAR CRIOGÊNICO: Abóbadas do antigo mundo abriram em ${t.name}. ${(ev.cryogenicAwakening?.popBonus || 20000).toLocaleString()} humanos do passado acordaram!`, nodeId: t.id, type: "milestone", color: "#00ffff" };
+                engine.inventory.chips = (engine.inventory.chips || 0) + 1000;
+                engine.globalKPenalty = (engine.globalKPenalty || 1.0) * 2.0;
+                return { message: `🧊 DESPERTAR CRIOGÊNICO: Abóbadas do antigo mundo abriram em ${t.name}. Tecnologias perdidas e chips recuperados! (+Capacidade)`, nodeId: t.id, type: "milestone", color: "#00ffff" };
             }
         }
         

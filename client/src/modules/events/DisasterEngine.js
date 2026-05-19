@@ -45,7 +45,9 @@ export default {
         if (engine.severity >= engine.config.disasterThreshold) {
             engine.nodes.forEach(n => {
                 if (!n.infected) return;
-                n.demographics.kill(Math.floor(n.demographics.total * collapseKillRate));
+                let actualKillRate = collapseKillRate;
+                if (n.demographics.total < 500) actualKillRate = Math.min(0.05, collapseKillRate); // Cradle Shield
+                n.demographics.kill(Math.floor(n.demographics.total * actualKillRate));
                 n.resources.minerals += (CFG.collapseMineralBonus || 10000);
             });
             
@@ -83,9 +85,11 @@ export default {
             const miningTargets = infectedNodes.filter(n => n.resources.minerals < 5000);
             if (miningTargets.length > 0) {
                 const t = miningTargets[Math.floor(Math.random() * miningTargets.length)];
-                const killRate = Math.min(0.8, 0.1 * engine.nemesis.geological);
-                t.demographics.kill(Math.floor(t.demographics.total * killRate));
-                return { message: `🌋 RAÍZ GEOLÓGICA (Nv ${engine.nemesis.geological}): Terremoto massivo em ${t.name}. ${Math.floor(killRate*100)}% de letalidade!`, nodeId: t.id, type: "disaster" };
+                let killRate = Math.min(0.8, 0.1 * engine.nemesis.geological);
+                if (t.demographics.total < 500) killRate = Math.min(0.05, killRate); // Cradle Shield
+                const victims = Math.floor(t.demographics.total * killRate);
+                t.demographics.kill(victims);
+                return { message: `🌋 RAÍZ GEOLÓGICA (Nv ${engine.nemesis.geological}): Terremoto massivo em ${t.name}. ${victims} vítimas (Letalidade: ${Math.floor(killRate*100)}%)!`, nodeId: t.id, type: "disaster" };
             }
         }
         
@@ -119,17 +123,20 @@ export default {
             const crowdedNodes = infectedNodes.filter(n => (n.demographics.total / n.capacity) > 0.8 && (n.resources.wood || 0) < 5000);
             if (crowdedNodes.length > 0) {
                 const target = crowdedNodes[Math.floor(Math.random() * crowdedNodes.length)];
-                const killRate = engine.unlockedTechs.has("tech_medicine") 
+                let killRate = engine.unlockedTechs.has("tech_medicine") 
                     ? (CFG.zoonoseMedicineMortality || 0.15) 
                     : (CFG.zoonoseBaseMortality || 0.60);
-                target.demographics.kill(Math.floor(target.demographics.total * killRate));
-                return { message: `🦠 ZOONOSE VIRAL (Nv ${engine.nemesis.biological}): Pandemia em ${target.name}. ${Math.floor(killRate*100)}% da população dizimada!`, nodeId: target.id, type: "disaster" };
+                if (target.demographics.total < 500) killRate = Math.min(0.05, killRate); // Cradle Shield
+                const victims = Math.floor(target.demographics.total * killRate);
+                target.demographics.kill(victims);
+                return { message: `🦠 ZOONOSE VIRAL (Nv ${engine.nemesis.biological}): Pandemia em ${target.name}. ${victims} mortos (${Math.floor(killRate*100)}%)!`, nodeId: target.id, type: "disaster" };
             }
         }
 
         // 4. Fauna Resistência (Passivo)
-        const faunaKillRate = CFG.faunaPassiveKillRate || 0.05;
+        let faunaKillRate = CFG.faunaPassiveKillRate || 0.05;
         const targetNode = infectedNodes[Math.floor(Math.random() * infectedNodes.length)];
+        if (targetNode.demographics.total < 500) faunaKillRate = 0.01; // Cradle Shield
         const victims = Math.floor(targetNode.demographics.total * faunaKillRate);
         targetNode.demographics.kill(victims);
         return { message: `🐺 RESISTÊNCIA DA FAUNA: Predadores coordenaram ataques em ${targetNode.name}. ${victims} mortos.`, nodeId: targetNode.id, type: "nemesis" };

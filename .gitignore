@@ -4,3 +4,18 @@ node_modules/
 dist/
 build/
 *.log
+
+# Relatórios automáticos
+reports/
+!reports/.gitkeep
+
+# Scripts de teste/debug descartáveis
+debug*.mjs
+test*.mjs
+test*.js
+simulate_batch.mjs
+generate_test.js
+
+# Cache e pids do Vite
+.vite/
+*.pid

@@ -164,6 +164,23 @@ async function run() {
             console.log(`🗺️ Culturas Vivas: ${factionCount} -> ${factionList || 'Nenhuma'}`);
             console.log(`🧬 Tecnologias Desbloqueadas: ${engine.unlockedTechs?.size || 0}`);
             
+            // Agregação de Comida e Pecuária
+            let totalFood = 0;
+            engine.nodes.forEach(n => totalFood += (n.food || 0));
+            console.log(`🌾 Comida Estocada Global: ${Math.floor(totalFood).toLocaleString('pt-BR')}`);
+            
+            console.log(`🏕️ Status por Região Habituada:`);
+            const names = { cattle: 'Gado', sheep: 'Ovelhas', chicken: 'Galinhas', horse: 'Cavalos', pig: 'Porcos' };
+            engine.nodes.forEach(n => {
+                if (n.demographics.total > 0) {
+                    let faunaTxt = `Caça Nativa: ${Math.floor(n.wildGame || 0)}%`;
+                    let herdTxt = n.herds && Object.keys(n.herds).length > 0 
+                        ? Object.entries(n.herds).map(([k,v]) => `${names[k] || k}: ${v}`).join(', ') 
+                        : "Apenas Coleta";
+                    console.log(`   [${n.name} | ${n.biome.name}] Pop: ${Math.floor(n.demographics.total)} | Comida: ${Math.floor(n.food || 0)} | ${faunaTxt} | ${herdTxt}`);
+                }
+            });
+            
             // Grava os dados detalhados no Relatório por Década / Intervalo
             reportData.push(`\n### 📊 Registro do Ano ${engine.year} (Década ${Math.floor(engine.year / 10)})`);
             reportData.push(`- **População Global**: ${Math.floor(engine.globalPop).toLocaleString('pt-BR')}`);
