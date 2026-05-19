@@ -30,20 +30,25 @@ export default {
         
         const deltaDays = globalRules.deltaDays || 1;
         
-        // A. Caça e Coleta (pré-agricultura)
-        if (!engine.unlockedTechs?.has('agriculture')) {
-            const hunters = Math.min(workers, 100); // Max 100 caçadores por hex
-            // Ecosystem hunting is scaled over time.
-            const hunted = Math.min(hunters * 5 * deltaDays, node.wildGame * 5 * deltaDays);
-            node.food += Math.floor(hunted);
-            // Redução proporcional à pressão de caça vs tempo
-            node.wildGame = Math.max(0, node.wildGame - (hunters / 100) * deltaDays);
-            // Regeneração natural da fauna
-            node.wildGame = Math.min(100, node.wildGame + 0.5 * deltaDays);
-        } else {
+        // A. Caça e Coleta (Sempre ativo)
+        const hasAgri = engine.unlockedTechs?.has('agriculture');
+        // Se tem agricultura, apenas 15% da força de trabalho foca em caça como rede de segurança
+        const huntingWorkers = hasAgri ? Math.max(1, Math.floor(workers * 0.15)) : workers;
+        const hunters = Math.min(huntingWorkers, 100); // Max 100 caçadores por hex
+        
+        // Ecosystem hunting is scaled over time.
+        const hunted = Math.min(hunters * 5 * deltaDays, node.wildGame * 5 * deltaDays);
+        node.food += Math.floor(hunted);
+        // Redução proporcional à pressão de caça vs tempo
+        node.wildGame = Math.max(0, node.wildGame - (hunters / 100) * deltaDays);
+        // Regeneração natural da fauna
+        node.wildGame = Math.min(100, node.wildGame + 0.5 * deltaDays);
+        
+        if (hasAgri) {
             // B. Agricultura
-            // FIX: Populações muito pequenas devem priorizar sobrevivência (todos que podem, plantam)
-            const farmWorkers = pop < 10 ? Math.max(1, workers) : Math.max(1, Math.floor(workers * 0.4));
+            // Trabalhadores restantes vão para as fazendas
+            const agriWorkers = Math.max(1, workers - huntingWorkers);
+            const farmWorkers = pop < 10 ? Math.max(1, workers) : agriWorkers;
             
             // Detecta season
             const day = engine.day || 0;
@@ -102,9 +107,10 @@ export default {
                 const waterMult = waterAvail > waterNeeded * 100 ? 1.0 : 
                                   waterAvail > 0 ? waterAvail / (waterNeeded * 100) : 0.1;
                 
-                const foodFromCrop = Math.floor(
-                    workersPerCrop * (baseYield / 365) * sMult * irrigMult * soilMult * waterMult * deltaDays
-                );
+                const exactCrop = workersPerCrop * (baseYield / 365) * sMult * irrigMult * soilMult * waterMult * deltaDays;
+                let foodFromCrop = Math.floor(exactCrop);
+                if (Math.random() < (exactCrop % 1)) foodFromCrop += 1;
+                
                 totalFoodProduced += foodFromCrop;
                 
                 // Consome água para irrigação
@@ -141,11 +147,11 @@ export default {
         // FASE 2: Consumo de Comida
         // ========================================
         const dist = node.demographics.dist?.age || { child: 0.2, young: 0.3, adult: 0.4, elder: 0.1 };
-        const dailyConsumption = Math.floor(
-            pop * (dist.child * 0.5 + dist.young * 1.0 + dist.adult * 1.0 + dist.elder * 0.7) / 365
-        );
+        const exactConsumption = pop * (dist.child * 0.5 + dist.young * 1.0 + dist.adult * 1.0 + dist.elder * 0.7) / 365 * deltaDays;
+        let dailyConsumption = Math.floor(exactConsumption);
+        if (Math.random() < (exactConsumption % 1)) dailyConsumption += 1;
         
-        node.food -= (dailyConsumption * deltaDays);
+        node.food -= dailyConsumption;
         
         // Adiciona food ao inventário global (excedente)
         if (node.food > pop * 5) {
@@ -164,8 +170,11 @@ export default {
             // Após 60 dias sem comida, começa a morrer (mais clemência)
             if (node.famineDays > 60) {
                 const deathRate = pop < 1000 ? 0.001 : 0.005; // Menor para pops pequenas
-                // Não pode matar mais que a população inteira, cap at 90% per tick
-                const deaths = Math.min(Math.floor(pop * 0.9), Math.max(1, Math.floor(pop * deathRate * deltaDays)));
+                const exactDeaths = pop * deathRate * deltaDays;
+                let deaths = Math.floor(exactDeaths);
+                if (Math.random() < (exactDeaths % 1)) deaths += 1;
+                deaths = Math.min(Math.floor(pop * 0.9), deaths);
+                
                 node.demographics.kill(deaths);
                 
                 // Primeiro aviso

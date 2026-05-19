@@ -99,7 +99,11 @@ export class Demographics {
         
         // Nascimentos baseados no DTM (Crude Birth Rate se aplica à população total)
         const dailyBirthRate = stage.birthRate / 365;
-        const exactBirths = this.total * dailyBirthRate * deltaDays * chaosFactorBirths;
+        let exactBirths = this.total * dailyBirthRate * deltaDays * chaosFactorBirths;
+        
+        // Impossível reproduzir sozinho
+        if (this.total < 2) exactBirths = 0;
+        
         const totalBirths = Math.floor(exactBirths) + (Math.random() < (exactBirths % 1) ? 1 : 0);
         
         let newborns = 0;
@@ -219,6 +223,17 @@ export class Demographics {
     
     kill(amount) {
         if (amount <= 0) return;
+        
+        // Cradle of Humanity Shield: Proteção a nível de Kernel
+        if (this.total > 0 && this.total <= 500) {
+            const exactShield = this.total * 0.05;
+            let maxLethality = Math.floor(exactShield);
+            if (Math.random() < (exactShield % 1)) maxLethality += 1;
+            amount = Math.min(amount, maxLethality);
+        }
+        
+        if (amount <= 0) return;
+        
         this.total = Math.max(0, this.total - amount);
     }
     
@@ -227,6 +242,17 @@ export class Demographics {
      */
     killByAge(ageGroup, amount) {
         if (amount <= 0 || this.total <= 0) return;
+        
+        // Cradle of Humanity Shield: Proteção a nível de Kernel
+        if (this.total > 0 && this.total <= 500) {
+            const exactShield = this.total * 0.05;
+            let maxLethality = Math.floor(exactShield);
+            if (Math.random() < (exactShield % 1)) maxLethality += 1;
+            amount = Math.min(amount, maxLethality);
+        }
+        
+        if (amount <= 0) return;
+        
         const groupPop = Math.floor(this.total * (this.dist.age[ageGroup] || 0));
         const actualKill = Math.min(amount, groupPop);
         if (actualKill <= 0) return;

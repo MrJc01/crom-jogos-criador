@@ -4,11 +4,11 @@
   "dtm": {
     "_comment": "5 estágios da Transição Demográfica (006-013)",
     "stages": [
-      { "name": "Pré-Industrial",   "minEra": 1,    "birthRate": 0.045, "deathRate": 0.040, "infantMortality": 0.30 },
-      { "name": "Transição Inicial", "minEra": 3,    "birthRate": 0.045, "deathRate": 0.025, "infantMortality": 0.20 },
-      { "name": "Transição Tardia",  "minEra": 10,   "birthRate": 0.030, "deathRate": 0.015, "infantMortality": 0.10 },
-      { "name": "Industrial",        "minEra": 50,   "birthRate": 0.015, "deathRate": 0.010, "infantMortality": 0.03 },
-      { "name": "Pós-Industrial",    "minEra": 200,  "birthRate": 0.010, "deathRate": 0.009, "infantMortality": 0.01 }
+      { "name": "Pré-Industrial",   "minEra": 1,    "birthRate": 0.050, "deathRate": 0.020, "infantMortality": 0.30 },
+      { "name": "Transição Inicial", "minEra": 3,    "birthRate": 0.045, "deathRate": 0.015, "infantMortality": 0.20 },
+      { "name": "Transição Tardia",  "minEra": 10,   "birthRate": 0.035, "deathRate": 0.010, "infantMortality": 0.10 },
+      { "name": "Industrial",        "minEra": 50,   "birthRate": 0.020, "deathRate": 0.008, "infantMortality": 0.03 },
+      { "name": "Pós-Industrial",    "minEra": 200,  "birthRate": 0.012, "deathRate": 0.009, "infantMortality": 0.01 }
     ]
   },
 

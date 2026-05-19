@@ -85,6 +85,7 @@ export default {
                         
                         // Tarefa 15: Atrito Logístico e de Transporte
                         let attritionRate = 0.05; // 5% morre a pé (doença, fome)
+                        if (migrators < 100) attritionRate = 0.0; // Nômades viajam sem atrito
                         if (choice.type === 'sea') attritionRate = 0.10; // Naufrágios/escorbuto
                         if (choice.type === 'rail') attritionRate = 0.02; // Trens
                         if (choice.type === 'air') attritionRate = 0.005; // Aviões são seguros
