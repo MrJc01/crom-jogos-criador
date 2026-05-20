@@ -123,7 +123,7 @@ export default {
             const crowdedNodes = infectedNodes.filter(n => (n.demographics.total / n.capacity) > 0.8 && (n.resources.wood || 0) < 5000);
             if (crowdedNodes.length > 0) {
                 const target = crowdedNodes[Math.floor(Math.random() * crowdedNodes.length)];
-                let killRate = engine.unlockedTechs.has("tech_medicine") 
+                let killRate = engine.unlockedTechs.has("medicine") 
                     ? (CFG.zoonoseMedicineMortality || 0.15) 
                     : (CFG.zoonoseBaseMortality || 0.60);
                 if (target.demographics.total < 500) killRate = Math.min(0.05, killRate); // Cradle Shield
@@ -133,10 +133,13 @@ export default {
             }
         }
 
-        // 4. Fauna Resistência (Passivo)
+        // 4. Fauna Resistência (Passivo) — escalonado por tamanho da população
         let faunaKillRate = CFG.faunaPassiveKillRate || 0.05;
         const targetNode = infectedNodes[Math.floor(Math.random() * infectedNodes.length)];
-        if (targetNode.demographics.total < 500) faunaKillRate = 0.01; // Cradle Shield
+        // FIX BALANCE: Ataques de fauna matam menos em proporção para populações organizadas
+        if (targetNode.demographics.total < 500) faunaKillRate = 0.01;
+        else if (targetNode.demographics.total < 2000) faunaKillRate = Math.min(faunaKillRate, 0.015);
+        else if (targetNode.demographics.total < 10000) faunaKillRate = Math.min(faunaKillRate, 0.02);
         const victims = Math.floor(targetNode.demographics.total * faunaKillRate);
         targetNode.demographics.kill(victims);
         return { message: `🐺 RESISTÊNCIA DA FAUNA: Predadores coordenaram ataques em ${targetNode.name}. ${victims} mortos.`, nodeId: targetNode.id, type: "nemesis" };

@@ -1,3 +1,5 @@
+import { Config } from '../config/ConfigLoader.js';
+
 export class TechTree {
     constructor() {
         this.technologies = new Map(); // id -> Módulo da Tecnologia
@@ -8,9 +10,38 @@ export class TechTree {
         this.technologies.set(techModule.id, techModule);
     }
     
+    syncWithConfig() {
+        const configTechs = Config.techs();
+        for (const [id, data] of Object.entries(configTechs)) {
+            if (!this.technologies.has(id)) {
+                this.technologies.set(id, {
+                    id: id,
+                    type: 'technology',
+                    root: data.root || 'physical',
+                    name: data.name || id,
+                    baseCost: data.baseCost || 100,
+                    requires: data.requires || [],
+                    modifiers: data.modifiers || {},
+                    onUnlock(engine) {
+                        if (data.modifiers) {
+                            engine.globalRules = engine.globalRules || {};
+                            for (const [modKey, modVal] of Object.entries(data.modifiers)) {
+                                if (modKey === 'global_K_boost') {
+                                    engine.global_K_boost = (engine.global_K_boost || 1.0) * modVal;
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        }
+    }
+    
     getAvailable() {
+        this.syncWithConfig();
         const available = [];
         this.technologies.forEach(tech => {
+            if (!Config.tech(tech.id)) return;
             if (this.unlocked.has(tech.id)) return;
             
             let canUnlock = true;
@@ -85,8 +116,21 @@ export class TechTree {
     checkGeniusSpawn(engine) {
         if (!this.geniusDiscount) this.geniusDiscount = 1.0;
         if (!this.geniusCooldown) this.geniusCooldown = 0;
-        if (this.geniusCooldown > 0) { this.geniusCooldown--; return; }
-        if (Math.random() < 0.0005) { // 0.05% chance ao dia (~1 gênio a cada 5 anos)
+        
+        // Cooldown decai proporcionalmente aos dias reais do tick (deltaDays)
+        const days = engine.deltaDays || 1;
+        if (this.geniusCooldown > 0) { 
+            this.geniusCooldown = Math.max(0, this.geniusCooldown - days); 
+            return; 
+        }
+        
+        // Impedir spawn se já houver um desconto de gênio ativo ou se todas as tecnologias já foram desbloqueadas
+        if (this.geniusDiscount < 1.0 || this.unlocked.size >= this.technologies.size) {
+            return;
+        }
+        
+        // Probabilidade estocástica integrada ao deltaDays
+        if (Math.random() < (1 - Math.pow(1 - 0.0005, days))) { // 0.05% chance ao dia (~1 gênio a cada 5 anos)
             this.geniusDiscount = 0.1;
             this.geniusCooldown = 365; // 1 ano de cooldown entre gênios
             if (engine.onEvent) engine.onEvent({ message: `🧠 GÊNIO DO SÉCULO: Um intelecto ímpar nasceu! A próxima tech custará quase nada (90% desconto).`, type: "milestone", color: "#ffffff" }, "milestone");

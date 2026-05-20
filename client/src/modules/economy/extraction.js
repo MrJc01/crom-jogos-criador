@@ -5,6 +5,7 @@ export default {
     type: 'economy',
     applyTick(node, globalRules, engine) {
         if (!node.infected || node.demographics.total === 0) return;
+        const deltaDays = globalRules.deltaDays || 1;
         
         // 007: Apenas trabalhadores (young+adult) extraem
         const workers = node.demographics.workingPopulation || 
@@ -35,9 +36,11 @@ export default {
         }
         node.soil = Math.max(0, Math.min(soilCfg.maxSoil || 100, node.soil));
         
-        // Atualiza capacidade com base no solo e techs
+        // Atualiza capacidade com base no solo e techs (com piso mínimo de sobrevivência de 15% da capacidade base do bioma)
         const techCapBoost = engine.unlockedTechs.has("saneamento_basico") ? 2 : 1;
-        node.capacity = Math.floor((node.biome.capacityBase || 50000) * (node.soil / 100) * techCapBoost * globalRules.global_K_boost);
+        const baseCapacity = node.biome.capacityBase || 50000;
+        const minCapacity = Math.floor(baseCapacity * 0.15);
+        node.capacity = Math.max(minCapacity, Math.floor(baseCapacity * (node.soil / 100) * techCapBoost * globalRules.global_K_boost));
 
         // 015. Lei de EROI — mineração requer energia (madeira/petróleo)
         if (node.resources.minerals > 0) {
@@ -48,8 +51,8 @@ export default {
                 eroiPenalty = 0.1; // Sem energia = quase nada extraído
             }
 
-            let extractMin = Math.floor((workers * mineralYield * eroiPenalty) / 10000);
-            if (extractMin < 1 && Math.random() < 0.1 * eroiPenalty) extractMin = 1; 
+            let extractMin = Math.floor((workers * mineralYield * eroiPenalty * deltaDays) / 10000);
+            if (extractMin < 1 && Math.random() < 0.1 * eroiPenalty * deltaDays) extractMin = 1; 
             extractMin = Math.min(extractMin, node.resources.minerals);
             node.resources.minerals -= extractMin;
             engine.inventory.minerals += extractMin;
@@ -58,14 +61,14 @@ export default {
             if (extractMin > 0) {
                 engine.inventory.wood = Math.max(0, engine.inventory.wood - Math.floor(extractMin * woodCost));
                 // 020. Aumenta profundidade de extração
-                node.extractionDepth = Math.min(dimCfg.maxDepthPenalty, node.extractionDepth * dimCfg.extractionDepthMultiplier);
+                node.extractionDepth = Math.min(dimCfg.maxDepthPenalty, node.extractionDepth * Math.pow(dimCfg.extractionDepthMultiplier, extractMin));
             }
         }
 
         // 017. Lenha como Gargalo — extração de madeira
         if (node.resources.wood > 0) {
-            let extractWood = Math.floor((workers * woodYield) / 5000);
-            if (extractWood < 1 && Math.random() < 0.2) extractWood = 1; 
+            let extractWood = Math.floor((workers * woodYield * deltaDays) / 5000);
+            if (extractWood < 1 && Math.random() < 0.2 * deltaDays) extractWood = 1; 
             extractWood = Math.min(extractWood, node.resources.wood);
             node.resources.wood -= extractWood;
             engine.inventory.wood += extractWood;
@@ -83,11 +86,15 @@ export default {
         }
 
         // 018. Estresse Hídrico — cap de extração + recharge POR BIOMA
+        // FIX SRE: Aumentamos a recarga anual de água para evitar a dessecação perpétua
+        // que causava colapso biológico imediato em baixas populações.
         const biomeRecharge = {
-            'desert': 10, 'tundra': 50, 'plains': 100, 'jungle': 200
+            'desert': 200, 'tundra': 1000, 'plains': 3000, 'jungle': 6000
         };
-        const recharge = biomeRecharge[node.biome?.id] || (waterCfg.aquiferRechargeRate || 100);
-        node.resources.water = Math.min(100000, (node.resources.water || 0) + Math.floor(recharge / 365));
+        const kBoost = globalRules.global_K_boost || 1.0;
+        const maxWater = 100000 * kBoost;
+        const recharge = (biomeRecharge[node.biome?.id] || (waterCfg.aquiferRechargeRate || 3000)) * kBoost;
+        node.resources.water = Math.min(maxWater, (node.resources.water || 0) + (recharge / 365) * deltaDays);
 
         if (node.resources.water > 0) {
             let extractWater = Math.floor(workers / 2000);

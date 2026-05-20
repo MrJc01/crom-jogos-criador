@@ -24,6 +24,17 @@ export default {
         const roll = Math.random();
         const ev = CFG.events || {};
         
+        // FIX BALANCE: Função de escalonamento realista de dano.
+        // Aldeias pequenas (<1000) sofrem menos mortes proporcionais que cidades grandes.
+        // Na realidade, um terremoto em uma vila de 100 mata 2-5, não 15-30.
+        const scaledKillRate = (baseRate, pop) => {
+            if (pop < 500) return Math.min(baseRate, 0.01); // Max 1% para fundadores
+            if (pop < 2000) return Math.min(baseRate, 0.02); // Max 2% para aldeias
+            if (pop < 10000) return Math.min(baseRate, 0.03); // Max 3% para vilas
+            if (pop < 50000) return Math.min(baseRate, 0.05); // Max 5% para cidades pequenas
+            return baseRate; // Taxa cheia para metrópoles
+        };
+        
         // 57. Incêndio Florestal Estocástico
         if (roll < (ev.forestFire?.rollMax || 0.20)) {
             engine.pressures.climatic = Math.max(0, engine.pressures.climatic - (ev.forestFire?.pressureRelief || 0.2));
@@ -53,7 +64,8 @@ export default {
         if (roll >= (ev.megaEarthquake?.rollMin || 0.35) && roll < (ev.megaEarthquake?.rollMax || 0.50)) {
             engine.pressures.tectonic = Math.max(0, engine.pressures.tectonic - (ev.megaEarthquake?.pressureRelief || 0.5));
             const t = infectedNodes[Math.floor(Math.random() * infectedNodes.length)];
-            t.demographics.kill(Math.floor(t.demographics.total * (ev.megaEarthquake?.killRate || 0.15)));
+            const rate = scaledKillRate(ev.megaEarthquake?.killRate || 0.15, t.demographics.total);
+            t.demographics.kill(Math.floor(t.demographics.total * rate));
             t.resources.minerals += (ev.megaEarthquake?.mineralBonus || 5000);
             return { message: `🌊 MEGATERREMOTO E TSUNAMI: Uma falha oculta sob ${t.name} cedeu. O mar varreu as costas, mas novos minérios afloraram!`, nodeId: t.id, type: "disaster", color: "#0000ff" };
         }
@@ -64,9 +76,9 @@ export default {
             const targets = infectedNodes.filter(n => biomes.includes(n.biome.id));
             if (targets.length > 0) {
                 const t = targets[Math.floor(Math.random() * targets.length)];
-                t.soil = 0;
+                t.soil = Math.max(30, Math.floor(t.soil * 0.5));
                 t.resources.wood = Math.floor(t.resources.wood * (1 - (ev.locustPlague?.woodLossRate || 0.8)));
-                return { message: `🦗 NUVEM DE GAFANHOTOS: Uma praga bíblica consumiu as safras das Planícies de ${t.name}. A agricultura parou (Solo = 0%).`, nodeId: t.id, type: "disaster", color: "#88aa00" };
+                return { message: `🦗 NUVEM DE GAFANHOTOS: Uma praga bíblica consumiu as safras das Planícies de ${t.name}. A agricultura parou (Solo = ${t.soil}%).`, nodeId: t.id, type: "disaster", color: "#88aa00" };
             }
         }
         
@@ -92,17 +104,18 @@ export default {
         // Tarefa 32: Impacto de Asteroide
         if (roll >= (ev.asteroidImpact?.rollMin || 0.82) && roll < (ev.asteroidImpact?.rollMax || 0.90)) {
             const t = infectedNodes[Math.floor(Math.random() * infectedNodes.length)];
-            t.demographics.kill(Math.floor(t.demographics.total * (ev.asteroidImpact?.killRate || 0.3)));
+            const rate = scaledKillRate(ev.asteroidImpact?.killRate || 0.3, t.demographics.total);
+            t.demographics.kill(Math.floor(t.demographics.total * rate));
             t.resources.minerals += (ev.asteroidImpact?.mineralBonus || 50000);
-            return { message: `☄️ IMPACTO DE METEORO: Um asteroide devastou ${t.name} (${Math.floor((ev.asteroidImpact?.killRate || 0.3)*100)}% mortos), mas deixou Metais Raros!`, nodeId: t.id, type: "disaster", color: "#ff8800" };
+            return { message: `☄️ IMPACTO DE METEORO: Um asteroide devastou ${t.name} (${Math.floor(rate*100)}% mortos), mas deixou Metais Raros!`, nodeId: t.id, type: "disaster", color: "#ff8800" };
         }
         
         // Tarefa 33: Inverno Vulcânico
         if (roll >= (ev.volcanicWinter?.rollMin || 0.90)) {
             const t = infectedNodes[Math.floor(Math.random() * infectedNodes.length)];
-            t.soil = 0;
+            t.soil = Math.max(40, Math.floor(t.soil * 0.6));
             engine.globalKPenalty = (engine.globalKPenalty || 1.0) * (ev.volcanicWinter?.kPenaltyMult || 0.7);
-            return { message: `🌋 INVERNO VULCÂNICO: Um supervulcão entrou em erupção em ${t.name}. As cinzas bloquearam o Sol globalmente (Solo 0%).`, nodeId: t.id, type: "disaster", color: "#ff4444" };
+            return { message: `🌋 INVERNO VULCÂNICO: Um supervulcão entrou em erupção em ${t.name}. As cinzas bloquearam o Sol globalmente (Solo = ${t.soil}%).`, nodeId: t.id, type: "disaster", color: "#ff4444" };
         }
         
         return null;

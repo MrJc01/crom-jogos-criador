@@ -3,41 +3,39 @@
 > vite
 
 
-  VITE v5.4.21  ready in 281 ms
+  VITE v5.4.21  ready in 342 ms
 
   ➜  Local:   http://localhost:5173/
   ➜  Network: use --host to expose
-20:11:40 [vite] page reload src/config/ConfigLoader.js
-20:12:31 [vite] page reload src/core/Engine.js
-20:12:48 [vite] page reload src/core/Demographics.js
-20:14:50 [vite] page reload index.html
-20:14:58 [vite] hmr update /style.css?direct
-20:17:12 [vite] page reload src/index.js
-20:17:58 [vite] page reload src/index.js
-20:18:30 [vite] page reload index.html
-20:20:30 [vite] page reload src/ui/UIManager.js
-20:26:30 [vite] page reload src/core/Engine.js
-20:27:57 [vite] page reload src/ui/MapRenderer.js
-20:30:12 [vite] page reload src/core/Engine.js
-20:34:16 [vite] page reload src/core/Engine.js
-20:35:52 [vite] page reload src/core/Engine.js
-20:40:02 [vite] page reload src/config/ConfigLoader.js
-20:40:35 [vite] page reload src/config/ConfigLoader.js
-20:40:53 [vite] page reload src/config/ConfigLoader.js
-20:43:37 [vite] page reload src/core/Demographics.js
-20:51:05 [vite] page reload src/modules/agriculture/FarmingEngine.js
-20:51:14 [vite] page reload src/modules/biology/migration.js
-20:58:00 [vite] page reload src/modules/biology/gestation.js
-21:08:22 [vite] page reload src/modules/events/AnomalyEngine.js
-21:08:35 [vite] page reload src/modules/events/GeopoliticsEngine.js
-21:08:54 [vite] page reload src/modules/events/DisasterEngine.js
-21:09:06 [vite] page reload src/modules/biology/pandemic_sir.js
-21:09:20 [vite] page reload src/modules/agriculture/FamineEngine.js
-21:13:16 [vite] page reload src/core/Demographics.js
-21:16:04 [vite] page reload src/modules/agriculture/FarmingEngine.js
-21:21:43 [vite] page reload src/config/ConfigLoader.js
-21:24:53 [vite] page reload src/modules/agriculture/FarmingEngine.js
-21:25:07 [vite] page reload src/modules/biology/migration.js
-21:29:17 [vite] page reload src/core/Demographics.js
-21:34:02 [vite] page reload src/config/DemographicsConfig.json
-21:41:09 [vite] page reload src/core/Demographics.js
+00:57:58 [vite] page reload index.html
+00:58:08 [vite] page reload index.html
+00:58:24 [vite] hmr update /style.css?direct
+00:58:37 [vite] page reload src/index.js
+00:58:53 [vite] page reload src/index.js
+01:01:01 [vite] hmr update /style.css?direct
+01:01:54 [vite] page reload src/ui/UIManager.js
+01:04:42 [vite] page reload src/index.js
+01:06:07 [vite] page reload src/ui/UIManager.js
+01:12:42 [vite] hmr update /style.css?direct
+01:13:13 [vite] page reload src/index.js
+01:14:17 [vite] page reload index.html
+01:14:33 [vite] hmr update /style.css?direct
+01:14:47 [vite] page reload src/index.js
+01:20:24 [vite] page reload src/index.js
+01:20:38 [vite] page reload src/index.js
+01:21:40 [vite] page reload src/core/Engine.js
+01:32:22 [vite] page reload src/ui/UIManager.js
+01:35:32 [vite] page reload src/index.js
+01:35:41 [vite] page reload src/index.js
+07:50:53 [vite] page reload src/core/Engine.js
+07:56:44 [vite] page reload src/ui/MapRenderer.js
+07:56:58 [vite] page reload src/index.js
+07:57:20 [vite] page reload src/index.js
+07:57:55 [vite] page reload src/index.js
+07:58:02 [vite] page reload src/index.js
+07:58:11 [vite] page reload src/core/TechTree.js
+08:08:38 [vite] page reload src/core/Demographics.js
+08:08:50 [vite] page reload src/core/Engine.js
+08:09:58 [vite] page reload src/modules/biology/migration.js
+08:10:26 [vite] page reload src/core/Engine.js
+08:10:45 [vite] page reload src/core/Engine.js

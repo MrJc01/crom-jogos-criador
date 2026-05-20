@@ -63,7 +63,7 @@ describe('GameEngine - Auto-load de Módulos', () => {
         }
     }];
     
-    engine.processTick();
+    engine.processTick(1);
     
     expect(nodeA.demographics.total).toBe(150);
     expect(engine.globalPop).toBe(150);

@@ -68,7 +68,7 @@ for (const faction of FACTIONS) {
     
     const TICKS = 365 * TARGET_YEARS;
     for (let i = 0; i < TICKS; i++) {
-        engine.processTick();
+        engine.processTick(1);
     }
     
     const elapsed = Date.now() - startTime;

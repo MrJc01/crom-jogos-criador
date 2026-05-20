@@ -53,12 +53,34 @@ O jogo opera de forma autônoma. Populações, facções e governos tomam decis�
 
 ---
 
-## 🛠️ Modificações no Engine Core (`Engine.js`)
+## 🛠️ Modificações e Resiliência do Engine Core (`Engine.js`)
 
-Para suportar esta arquitetura sem explodir a performance, o `Engine.js` foi adaptado para:
-1. **Injeção de Módulos Otimizada:** O `loadPlugins` agora carrega 15 diretórios através de `import.meta.glob`.
-2. **Safety Checks no Game Loop:** Plugins agora precisam expor `typeof applyTick === 'function'` para não crashear (Techs e Receitas são roteados de forma distinta).
-3. **Inicialização de Variáveis:** O `startInfection` agora preenche o hexágono com variáveis críticas (comida inicial de 500 unidades, fauna base de 100) garantindo que a civilização consiga começar sem morrer de fome no dia 1.
+Para garantir estabilidade absoluta "Zero-Player" e evitar travamentos prolongados sob simulações de longa duração (overnight), implementamos uma arquitetura de resiliência em múltiplas camadas:
+
+### 1. Blindagem SRE contra Exceções de Renderização e DOM
+- **Tratamento de Erros no `tickLoop`**: O loop principal (`tickLoop`) está inteiramente protegido por um bloco `try/catch`. Caso ocorra qualquer erro na renderização ou processamento de um frame, o erro é capturado no console e o próximo frame é garantido através do agendamento seguro em `finally`, evitando que o jogo congele definitivamente.
+- **Segurança no `onTick` callback**: Exceções geradas nos callbacks do frontend (como elementos do DOM nulos durante atualizações da sidebar) são isoladas por um bloco `try/catch`, impedindo que quebras na interface de exibição interrompam o motor lógico de simulação.
+- **DOM Nulo Defensivo**: Todas as manipulações de interface (`updateSidebar`, `showFloatText`, `addNews`) usam seletores e checagens seguras contra elementos `null`, garantindo tolerância a falhas estéticas.
+
+### 2. Controle Demográfico e Amortecimento de Sobrecarga (Caps Cósmicos)
+- **Cap de Hexágono Local**: Introduzimos o `COSMIC_CAP = 10.000.000` (10 milhões) de habitantes por hexágono. Quando a população ultrapassa 80% do teto, um freio logarítmico reduz drasticamente a taxa de nascimentos futuros, estabilizando o crescimento.
+- **Cap Global na Engine**: Definimos um limite de população global de `10.000.000.000` (10 bilhões) no motor do jogo para proteger o consumo de memória do navegador e prevenir estouro numérico.
+- **Cooldown de Gênios**: A geração estocástica de prodígios em `TechTree.js` agora respeita um limitador estocástico calibrado pelo tempo de tick (`deltaDays`), limitando a ativação paralela de múltiplos cientistas e silenciando spawns de conquistas científicas infinitas.
+
+### 3. Dispersão Nômade Calibrada (Pioneiros Fundadores)
+- **Gatilhos para Pequenas Tribos**: Tribos nômades pequenas (< 500 habitantes) possuem agora uma probabilidade diária de dispersão muito superior (0.5% vs 0.01%) para estimular a expansão nos estágios iniciais.
+- **Atrito Zero para Nômades Iniciais**: Bandos pioneiros terrestres menores que 150 indivíduos estão isentos do atrito letal severo de travessia e penalidades extremas de bioma (tundra/deserto), permitindo-lhes fundar colônias em hexágonos vizinhos vivos de forma viável.
+- **Garantia de Sobrevivência Mínima**: O cálculo de sobrevivência na migração assegura que pelo menos 1 pioneiro sempre chegue ao destino, evitando colônias fantasma e permitindo a proliferação sustentável de tribos dispersas.
+
+### 4. Reidratação Resiliente de Saves e Fallbacks Estáticos
+- **StaticPlugins.js**: Adicionamos um carregador de fallback estático completo que mapeia manualmente todas as regras e módulos ecológicos na engine caso o carregamento assíncrono via `import.meta.glob` do Vite falhe.
+- **Reidratação Geográfica de Saves**: A função `importSaveData` realiza um lookup estático robusto por ID e coordenadas normalizadas de hexágonos no mapa pré-gerado, restaurando o estado e reidratando as estruturas geográficas mesmo em saves parciais.
+
+---
 
 ### 🧪 Suite de Testes e Validação
-Todo este ecossistema passou nos 30 cenários de regressão do `regression_test.js` com sucesso (`Exit code 0`), garantindo estabilidade sistêmica mesmo com as novas pressões predatórias de fome, clima, desastres e mortalidade ativas. O jogo alterna momentos de abundância com crises devastadoras, oferecendo um desafio equilibrado.
+Todo este ecossistema de estabilidade e resiliência é validado através de uma suíte de testes unitários locais e testes de gameplay headless:
+- **Testes Unitários (`npx vitest run`)**: Cobertura completa de regras demográficas, alocação de idades e alternância holográfica da UI, garantindo 100% de asserts aprovados.
+- **Build de Produção (`npm run build`)**: Validação de empacotamento otimizado com árvore de dependências estática funcional e zero erros de transpilação.
+
+O jogo alterna momentos de abundância com crises devastadoras, oferecendo um desafio equilibrado, resiliente e eterno.

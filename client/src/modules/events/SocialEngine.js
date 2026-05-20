@@ -23,6 +23,16 @@ export default {
         const roll = Math.random();
         const ev = CFG.events || {};
         
+        // FIX BALANCE: Escalonamento realista de dano social.
+        // Aldeias pequenas não sofrem histeria/pânico na mesma escala que cidades.
+        const scaledKillRate = (baseRate, pop) => {
+            if (pop < 500) return Math.min(baseRate, 0.01);
+            if (pop < 2000) return Math.min(baseRate, 0.02);
+            if (pop < 10000) return Math.min(baseRate, 0.03);
+            if (pop < 50000) return Math.min(baseRate, 0.05);
+            return baseRate;
+        };
+        
         // 65. Revolta dos Camponeses
         if (roll < (ev.peasantRevolt?.rollMax || 0.20)) {
             const minCapRatio = ev.peasantRevolt?.minCapRatio || 0.9;
@@ -96,15 +106,17 @@ export default {
         // 69. Histeria Coletiva
         if (roll >= (ev.collectiveHysteria?.rollMin || 0.80) && roll < (ev.collectiveHysteria?.rollMax || 0.90)) {
             const t = infectedNodes[Math.floor(Math.random() * infectedNodes.length)];
-            t.demographics.kill(Math.floor(t.demographics.total * (ev.collectiveHysteria?.killRate || 0.05)));
+            const rate = scaledKillRate(ev.collectiveHysteria?.killRate || 0.05, t.demographics.total);
+            t.demographics.kill(Math.floor(t.demographics.total * rate));
             return { message: `😵 HISTERIA COLETIVA: Uma síndrome psicogênica fez parte da população de ${t.name} definhar num transe fatal.`, nodeId: t.id, type: "warning", color: "#aa00aa" };
         }
         
         // 73. Pânico em Massa
         if (roll >= (ev.massPanic?.rollMin || 0.90)) {
             const t = infectedNodes[Math.floor(Math.random() * infectedNodes.length)];
-            t.demographics.kill(Math.floor(t.demographics.total * (ev.massPanic?.killRate || 0.2)));
-            return { message: `🏃 PÂNICO GERAL: Boato de Praga fez ${Math.floor((ev.massPanic?.killRate || 0.2)*100)}% de ${t.name} fugir para a selva.`, nodeId: t.id, type: "warning", color: "#88aa88" };
+            const rate = scaledKillRate(ev.massPanic?.killRate || 0.2, t.demographics.total);
+            t.demographics.kill(Math.floor(t.demographics.total * rate));
+            return { message: `🏃 PÂNICO GERAL: Boato de Praga fez ${Math.floor(rate*100)}% de ${t.name} fugir para a selva.`, nodeId: t.id, type: "warning", color: "#88aa88" };
         }
         
         return null;

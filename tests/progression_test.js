@@ -32,7 +32,7 @@ async function loadPlugins(engine) {
     return loaded;
 }
 
-const YEARS = [100, 500, 1000, 3000, 6000, 10000];
+const YEARS = [100, 300, 500, 800, 1000];
 const FACTIONS = ['sino_tibetanos', 'indo_europeus', 'bantu'];
 
 console.log("╔═══════════════════════════════════════════════════════════════════╗");
@@ -65,8 +65,8 @@ for (const faction of FACTIONS) {
     let lastPop = 0;
     let yearData = {};
     
-    while (engine.year <= 10000) {
-        engine.processTick();
+    while (engine.year <= 1000) {
+        engine.processTick(1);
         
         if (YEARS.includes(engine.year) && !yearData[engine.year]) {
             yearData[engine.year] = true;
@@ -124,7 +124,7 @@ for (const faction of FACTIONS) {
     }
     
     // Resumo final
-    console.log(`\n  ── RESUMO FINAL (10000 anos) ──`);
+    console.log(`\n  ── RESUMO FINAL (1000 anos) ──`);
     const alive = engine.globalPop > 0;
     console.log(`  ${alive ? '✅ CIVILIZAÇÃO SOBREVIVEU' : '❌ CIVILIZAÇÃO EXTINTA'}`);
     console.log(`  Pop final: ${Math.floor(engine.globalPop).toLocaleString()}`);

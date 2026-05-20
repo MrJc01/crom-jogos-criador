@@ -11,16 +11,14 @@
  * Nenhuma probabilidade, %, ou threshold deve ser hardcoded nos scripts.
  */
 
-import { createRequire } from 'module';
-const require = createRequire(import.meta.url);
-
-const GameConfigData = require('./GameConfig.json');
-const EventsConfigData = require('./EventsConfig.json');
-const TechTreeConfigData = require('./TechTreeConfig.json');
-const FactionsConfigData = require('./FactionsConfig.json');
-const RecipesConfigData = require('./RecipesConfig.json');
-const DemographicsConfigData = require('./DemographicsConfig.json');
-const EconomyConfigData = require('./EconomyConfig.json');
+import GameConfigData from './GameConfig.json' with { type: 'json' };
+import EventsConfigData from './EventsConfig.json' with { type: 'json' };
+import TechTreeConfigData from './TechTreeConfig.json' with { type: 'json' };
+import StoneAgeTechTreeData from './StoneAgeTechTree.json' with { type: 'json' };
+import FactionsConfigData from './FactionsConfig.json' with { type: 'json' };
+import RecipesConfigData from './RecipesConfig.json' with { type: 'json' };
+import DemographicsConfigData from './DemographicsConfig.json' with { type: 'json' };
+import EconomyConfigData from './EconomyConfig.json' with { type: 'json' };
 
 let GameConfig = GameConfigData;
 let EventsConfig = EventsConfigData;
@@ -119,6 +117,14 @@ class ConfigManager {
         const cfg = this._game.demographics.geneticWinter;
         if (currentK >= 1.0) return 1.0;
         return Math.min(1.0, currentK * cfg.kPenaltyRecoveryRate);
+    }
+
+    useStoneAgeTechTree() {
+        this._techs = StoneAgeTechTreeData;
+    }
+
+    resetTechTree() {
+        this._techs = TechTreeConfigData;
     }
 }
 

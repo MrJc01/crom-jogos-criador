@@ -18,7 +18,7 @@ export default {
         if (!node.crops) node.crops = [];
         if (node.livestock === undefined) node.livestock = 0;
         if (node.famineDays === undefined) node.famineDays = 0;
-        if (node.wildGame === undefined) node.wildGame = 100; // Caça disponível
+        if (node.wildGame === undefined) node.wildGame = 5000; // Caça disponível
         
         const pop = node.demographics.total;
         const workers = Math.floor(pop * (node.demographics.dist?.age?.adult || 0.4));
@@ -42,7 +42,7 @@ export default {
         // Redução proporcional à pressão de caça vs tempo
         node.wildGame = Math.max(0, node.wildGame - (hunters / 100) * deltaDays);
         // Regeneração natural da fauna
-        node.wildGame = Math.min(100, node.wildGame + 0.5 * deltaDays);
+        node.wildGame = Math.min(5000, node.wildGame + 0.5 * deltaDays);
         
         if (hasAgri) {
             // B. Agricultura
@@ -86,7 +86,11 @@ export default {
             
             for (const crop of node.crops) {
                 const baseYield = cropYields[crop] || 30;
-                const waterNeeded = (cropWater[crop] || 2) * workersPerCrop / 1000;
+                // Com saneamento básico e técnicas de irrigação (Qanat, canais), a perda de água na agricultura reduz em até 70%
+                let conservation = node.waterConservation || 1.0;
+                if (engine.unlockedTechs.has("saneamento_basico")) conservation *= 0.5;
+                if (engine.unlockedTechs.has("qanat_irrigation")) conservation *= 0.6;
+                const waterNeeded = ((cropWater[crop] || 2) * workersPerCrop / 1000) * conservation;
                 const sMult = seasonBonus[crop]?.[seasonKey] || 1.0;
                 
                 // Restrição de Bioma
@@ -95,15 +99,21 @@ export default {
                 }
                 
                 // Irrigação boost
-                let irrigMult = 1.0;
-                if (engine.unlockedTechs?.has('saneamento_basico')) irrigMult = 1.5;
-                if (engine.unlockedTechs?.has('arquitetura_vertical')) irrigMult = 2.0;
+                let irrigMult = node.irrigationBoost || 1.0;
+                if (engine.unlockedTechs?.has('saneamento_basico')) irrigMult = Math.max(irrigMult, 1.5);
+                if (engine.unlockedTechs?.has('arquitetura_vertical')) irrigMult = Math.max(irrigMult, 2.0);
                 
                 // Solo afeta yield
                 const soilMult = Math.max(0.1, (node.soil || 50) / 100);
                 
-                // Água disponível?
-                const waterAvail = node.resources?.water || 0;
+                // Água disponível (com importação imperial em caso de escassez)
+                let waterAvail = node.resources?.water || 0;
+                if (waterAvail < waterNeeded * 100 && engine.inventory.water > 0) {
+                    const toImport = Math.min(Math.ceil(waterNeeded * 100 - waterAvail), engine.inventory.water);
+                    node.resources.water = (node.resources.water || 0) + toImport;
+                    engine.inventory.water -= toImport;
+                    waterAvail += toImport;
+                }
                 const waterMult = waterAvail > waterNeeded * 100 ? 1.0 : 
                                   waterAvail > 0 ? waterAvail / (waterNeeded * 100) : 0.1;
                 
@@ -152,6 +162,13 @@ export default {
         if (Math.random() < (exactConsumption % 1)) dailyConsumption += 1;
         
         node.food -= dailyConsumption;
+
+        // Importação imperial de comida para evitar fome local
+        if (node.food < 0 && engine.inventory.food > 0) {
+            const toImport = Math.min(Math.abs(node.food), engine.inventory.food);
+            node.food += toImport;
+            engine.inventory.food -= toImport;
+        }
         
         // Adiciona food ao inventário global (excedente)
         if (node.food > pop * 5) {
@@ -203,7 +220,10 @@ export default {
         }
         
         // Food decay (apodrece cumulativamente por deltaDays)
-        node.food = Math.max(0, Math.floor(node.food * Math.pow(0.998, deltaDays))); // 0.2% decay/dia
+        // Com saneamento básico e silos de grãos, a taxa diária de apodrecimento cai para 0.05% (0.9995)
+        const dailyDecay = engine.unlockedTechs.has("saneamento_basico") ? 0.9995 : 0.998;
+        const totalDecay = Math.max(0.2, Math.pow(dailyDecay, deltaDays)); // Preserva pelo menos 20% das reservas de grãos em silos a longo prazo
+        node.food = Math.max(0, Math.floor(node.food * totalDecay));
         
         // ========================================
         // FASE 4: Morale Impact (food variety)

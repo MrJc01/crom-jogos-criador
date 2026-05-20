@@ -29,7 +29,7 @@ export class UIManager {
             <div class="hud-item" style="width: 45%;"><span class="icon" title="População Mundial">👥</span> <span id="global-pop">0</span></div>
             <div class="hud-item" style="width: 45%;"><span class="icon" title="Severidade Planetária">⚠️</span> <span id="global-severity" style="color:#ff4444;">0%</span></div>
             <div class="hud-item" style="width: 45%;"><span class="icon" title="Pontos de DNA">🧬</span> <span id="global-dna" style="color:#f1c40f;">0</span></div>
-            <div class="hud-item" style="width: 100%; text-align: center; border-top: 1px solid #333; margin-top: 5px; padding-top: 5px;">
+            <div class="hud-item" style="width: 100%; text-align: center; border-top: 1px solid rgba(255,255,255,0.1); margin-top: 5px; padding-top: 5px;">
                 <span class="icon" title="Era Tecnológica">⏳</span> <span id="game-era" style="color:#00ddff; font-weight:bold;">Idade da Pedra</span> | 
                 <span class="icon" title="Facção Dominante">👑</span> <span id="dominant-faction">-</span>
             </div>
@@ -41,142 +41,242 @@ export class UIManager {
             <div class="hud-item" style="color: #e3c16f;"><span class="icon" title="Minérios">🪨</span> <span id="inv-minerals">0</span></div>
             <div class="hud-item" style="color: #aaa;"><span class="icon" title="Aço">⛓️</span> <span id="inv-steel">0</span></div>
             <div class="hud-item" style="color: #00ddff;"><span class="icon" title="Chips">💻</span> <span id="inv-chips">0</span></div>
-            <div class="hud-item" style="color: #ffaa00; font-weight: bold; border-left: 1px solid #333; padding-left: 10px;"><span class="icon" title="Retorno Energético (EROI)">⚙️ EROI:</span> <span id="inv-eroi">100%</span></div>
+            <div class="hud-item" style="color: #ffaa00; font-weight: bold; border-left: 1px solid rgba(255,255,255,0.1); padding-left: 10px;"><span class="icon" title="Retorno Energético (EROI)">⚙️ EROI:</span> <span id="inv-eroi">100%</span></div>
         </div>
 
-        <!-- Log de Eventos / Feed de Notícias -->
-        <div id="news-feed-panel" class="stone-panel hud-box" style="right: 20px; top: 380px; width: 300px; max-height: 200px; overflow-y: hidden; pointer-events: none; opacity: 0.85; background: rgba(5, 10, 20, 0.9);">
-            <div style="font-size: 14px; color: #00ddff; text-align: center; margin-bottom: 5px; border-bottom: 1px solid #333; padding-bottom: 2px;">NOTÍCIAS GLOBAIS</div>
-            <div id="news-feed-list" style="font-size: 14px; display: flex; flex-direction: column; gap: 5px; line-height: 1.2;"></div>
+        <!-- Log de Eventos Rápido / Notícias (Flutuante Discreto) -->
+        <div id="news-feed-panel" class="stone-panel hud-box" style="right: 20px; top: 120px; width: 300px; max-height: 180px; overflow-y: hidden; pointer-events: none; opacity: 0.8; background: rgba(5, 10, 20, 0.9); border-color: rgba(0, 221, 255, 0.1);">
+            <div style="font-size: 13px; color: #00ddff; text-align: center; margin-bottom: 5px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 2px; font-family: 'Orbitron';">NOTÍCIAS GLOBAIS</div>
+            <div id="news-feed-list" style="font-size: 12px; display: flex; flex-direction: column; gap: 5px; line-height: 1.2;"></div>
         </div>
 
-        <!-- Modal de Ecologia / Mundo -->
-        <div id="world-modal" class="stone-panel modal hidden" style="left: auto; right: 20px; top: auto; bottom: 100px; transform: none; width: 300px;">
-            <div class="modal-header">
-                <h2>🌍 Ecologia e Lentes</h2>
-                <button class="close-btn" onclick="document.getElementById('world-modal').classList.add('hidden')">✖</button>
+        <!-- Creator's Control Deck (Painel de Controle Central de Abas) -->
+        <div id="control-deck" class="control-deck hidden">
+            <div class="deck-header">
+                <h2>🎛️ CONSOLE DO CRIADOR DA MATRIZ</h2>
+                <button class="deck-close-btn" id="btn-close-deck" title="Fechar Painel">✖</button>
             </div>
-            <div class="list-container">
-                <button id="btn-layer-base" class="layer-btn active" style="width: 100%; text-align: left; background: #444; color: #fff; border: 1px solid #333; padding: 5px; cursor: pointer; margin-bottom: 5px;">🌍 Biomas Base</button>
-                <button id="btn-layer-water" class="layer-btn" style="width: 100%; text-align: left; background: #111; color: #fff; border: 1px solid #333; padding: 5px; cursor: pointer; margin-bottom: 5px;">💧 Aquífero (Água)</button>
-                <button id="btn-layer-climate" class="layer-btn" style="width: 100%; text-align: left; background: #111; color: #fff; border: 1px solid #333; padding: 5px; cursor: pointer; margin-bottom: 5px;">🌡️ Clima (Emissões)</button>
+            
+            <div class="deck-tabs-header">
+                <button class="deck-tab-btn active" data-tab="tab-monitor">📊 Monitor</button>
+                <button class="deck-tab-btn" data-tab="tab-tech">🧬 Sabedoria</button>
+                <button class="deck-tab-btn" data-tab="tab-industry">⚙️ Indústria</button>
+                <button class="deck-tab-btn" data-tab="tab-factions">🎭 Facções</button>
+                <button class="deck-tab-btn" data-tab="tab-policies">📜 Políticas</button>
+                <button class="deck-tab-btn" data-tab="tab-god">⚡ DNA Powers</button>
+                <button class="deck-tab-btn" data-tab="tab-disasters">🔥 Anomalias</button>
             </div>
-        </div>
-
-        <!-- Modais de Interface -->
-        <div id="disasters-modal" class="stone-panel modal hidden" style="left: auto; right: 20px; top: auto; bottom: 100px; transform: none; width: 300px;">
-            <div class="modal-header">
-                <h2>🔥 Menu da Destruição</h2>
-                <button class="close-btn" onclick="document.getElementById('disasters-modal').classList.add('hidden')">✖</button>
-            </div>
-            <div class="list-container" style="text-align: center; color: #aaa; padding: 15px;">
-                <p>Nenhuma anomalia manual desbloqueada ainda. (A Fúria do Planeta age autonomamente).</p>
-                <button class="item-action-btn" style="width: 100%; border-color: #801a15; background: #c4302b;" onclick="alert('Destruição manual em breve!')">☄️ Lançar Meteoro Aleatório</button>
-            </div>
-        </div>
-
-        <div id="tech-modal" class="stone-panel modal hidden">
-            <div class="modal-header">
-                <h2>🧬 Árvore da Sabedoria</h2>
-                <button class="close-btn" onclick="document.getElementById('tech-modal').classList.add('hidden')">✖</button>
-            </div>
-            <div id="tech-list" class="grid-list"></div>
-        </div>
-
-        <div id="industry-modal" class="stone-panel modal hidden">
-            <div class="modal-header">
-                <h2>⚙️ Complexo Industrial</h2>
-                <button class="close-btn" onclick="document.getElementById('industry-modal').classList.add('hidden')">✖</button>
-            </div>
-            <div id="recipe-list" class="grid-list"></div>
-        </div>
-
-        <div id="factions-modal" class="stone-panel modal hidden">
-            <div class="modal-header">
-                <h2>👁️ Tensões e Facções</h2>
-                <button class="close-btn" onclick="document.getElementById('factions-modal').classList.add('hidden')">✖</button>
-            </div>
-            <div id="factions-list" class="list-container"></div>
-        </div>
-        
-        <div id="policies-modal" class="stone-panel modal hidden">
-            <div class="modal-header">
-                <h2>📜 Políticas Públicas (Governança)</h2>
-                <button class="close-btn" onclick="document.getElementById('policies-modal').classList.add('hidden')">✖</button>
-            </div>
-            <div class="list-container" style="display: flex; flex-direction: column; gap: 10px;">
-                <div class="hud-item" style="justify-content: space-between; padding: 10px; border: 1px solid #555;">
-                    <div>
-                        <strong style="color: #2ecc71;">🌲 Reflorestamento Ativo</strong>
-                        <div style="font-size: 12px; color: #888;">Gasta mão de obra para plantar lenha e resfriar o planeta. (-20% K)</div>
+            
+            <div class="deck-content">
+                <!-- Aba 1: Monitor Global -->
+                <div id="tab-monitor" class="deck-tab-content active">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                        <!-- Seção Clima -->
+                        <div class="stone-panel" style="padding: 10px; background: rgba(0,0,0,0.25);">
+                            <div class="tab-section-title">🌍 Clima Global</div>
+                            <div id="climate-bar-container"></div>
+                            <div id="climate-stats" style="margin-top: 5px; font-size: 11px;">Fase: -</div>
+                        </div>
+                        
+                        <!-- Seção EROI (Energia) -->
+                        <div class="stone-panel" style="padding: 10px; background: rgba(0,0,0,0.25);">
+                            <div class="tab-section-title">⚡ Energia (EROI)</div>
+                            <div id="eroi-bar-container"></div>
+                            <div id="eroi-stats" style="margin-top: 5px; font-size: 11px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">-</div>
+                        </div>
                     </div>
-                    <button id="btn-policy-forest" class="item-action-btn" style="width: 80px;">Ativar</button>
-                </div>
-                <div class="hud-item" style="justify-content: space-between; padding: 10px; border: 1px solid #555;">
-                    <div>
-                        <strong style="color: #3498db;">💧 Racionamento Hídrico</strong>
-                        <div style="font-size: 12px; color: #888;">Reduz o consumo de água, mas causa tensão social. (+30% Atrito)</div>
+                    
+                    <!-- Lentes de Ecologia -->
+                    <div class="stone-panel" style="padding: 10px; background: rgba(0,0,0,0.25);">
+                        <div class="tab-section-title">🌍 Lentes de Ecologia e Visualização</div>
+                        <div style="display: flex; gap: 8px;">
+                            <button id="btn-layer-base" class="item-action-btn" style="flex: 1; margin: 0; background: rgba(68,68,68,0.3); border-color: #555;">🌍 Biomas Base</button>
+                            <button id="btn-layer-water" class="item-action-btn" style="flex: 1; margin: 0; background: rgba(17,17,17,0.3); border-color: #333;">💧 Aquífero (Água)</button>
+                            <button id="btn-layer-climate" class="item-action-btn" style="flex: 1; margin: 0; background: rgba(17,17,17,0.3); border-color: #333;">🌡️ Clima (Emissões)</button>
+                        </div>
                     </div>
-                    <button id="btn-policy-water" class="item-action-btn" style="width: 80px;">Ativar</button>
+                    
+                    <!-- Gráfico de População -->
+                    <div class="stone-panel" style="padding: 10px; background: rgba(0,0,0,0.25);">
+                        <div class="tab-section-title">📈 Curva Populacional Global</div>
+                        <canvas id="pop-graph" width="540" height="100" style="width: 100%; height: 100px; display: block;"></canvas>
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 12px; height: 160px; overflow: hidden;">
+                        <!-- Crônica de Eventos -->
+                        <div class="stone-panel" style="padding: 10px; display: flex; flex-direction: column; background: rgba(0,0,0,0.25);">
+                            <div class="tab-section-title">📜 Crônica do Universo</div>
+                            <div id="chronicle-list" style="flex: 1; overflow-y: auto; font-size: 11px; line-height: 1.4; padding-right: 5px;"></div>
+                        </div>
+                        
+                        <!-- Cemitério de Civilizações -->
+                        <div class="stone-panel" style="padding: 10px; display: flex; flex-direction: column; background: rgba(0,0,0,0.25);">
+                            <div class="tab-section-title">🪦 Cemitério</div>
+                            <div id="cemetery-list" style="flex: 1; overflow-y: auto; font-size: 11px; padding-right: 5px;">
+                                <div style="color: #666; font-style: italic; text-align: center; margin-top: 20px;">Nenhum registro ainda</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Aba 2: Sabedoria (Árvore de Tecnologia) -->
+                <div id="tab-tech" class="deck-tab-content">
+                    <div style="font-size: 13px; color: #8899a6; text-align: center; margin-bottom: 5px;">Desbloqueie teorias evolutivas e ascensão cósmica gastando Pontos de DNA.</div>
+                    <div id="tech-list" style="display: flex; flex-direction: column; gap: 10px; overflow-y: auto; padding-right: 5px; flex: 1;"></div>
+                </div>
+                
+                <!-- Aba 3: Indústria (Fabricação) -->
+                <div id="tab-industry" class="deck-tab-content">
+                    <div style="font-size: 13px; color: #8899a6; text-align: center; margin-bottom: 5px;">Forje insumos refinados a partir dos recursos globais coletados pelas facções.</div>
+                    <div id="recipe-list" class="grid-list" style="padding: 5px 0; max-height: none; overflow-y: auto; flex: 1;"></div>
+                </div>
+                
+                <!-- Aba 4: Facções e Demografia -->
+                <div id="tab-factions" class="deck-tab-content">
+                    <div style="display: flex; gap: 12px; flex: 1; overflow: hidden; align-items: flex-start; height: 100%;">
+                        <!-- Gráfico de Pizza -->
+                        <div class="stone-panel" style="padding: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 180px; height: 100%; box-sizing: border-box; background: rgba(0,0,0,0.25);">
+                            <div class="tab-section-title" style="text-align: center; width: 100%;">👥 Fatias de Poder</div>
+                            <canvas id="demo-pie" width="140" height="140" style="max-width: 140px; max-height: 140px; margin: 10px 0; display: block;"></canvas>
+                        </div>
+                        
+                        <!-- Lista de Facções -->
+                        <div class="stone-panel" style="flex: 1; padding: 10px; display: flex; flex-direction: column; height: 100%; box-sizing: border-box; background: rgba(0,0,0,0.25);">
+                            <div class="tab-section-title">🎭 Distribuição e Tensões</div>
+                            <div id="demo-stats" style="flex: 1; overflow-y: auto; font-size: 11px; padding-right: 5px; display: flex; flex-direction: column; gap: 6px;"></div>
+                            <div id="factions-list" style="margin-top: 10px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 10px; overflow-y: auto; max-height: 140px; display: flex; flex-direction: column; gap: 5px;"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Aba 5: Políticas (Governança) -->
+                <div id="tab-policies" class="deck-tab-content">
+                    <div style="font-size: 13px; color: #8899a6; text-align: center; margin-bottom: 10px;">Ative decretos planetários para governar o atrito social e o desgaste ecológico.</div>
+                    <div style="display: flex; flex-direction: column; gap: 12px; overflow-y: auto; padding-right: 5px; flex: 1;">
+                        <div class="stone-panel" style="justify-content: space-between; padding: 12px; border: 1px solid rgba(255,255,255,0.05); display: flex; align-items: center; background: rgba(0,0,0,0.2);">
+                            <div>
+                                <strong style="color: #2ecc71; font-size: 14px; font-family: 'Orbitron';">🌲 Reflorestamento Ativo</strong>
+                                <div style="font-size: 12px; color: #8899a6; margin-top: 4px;">Gasta mão de obra regional para plantar lenha e resfriar o planeta. (-20% K)</div>
+                            </div>
+                            <button id="btn-policy-forest" class="item-action-btn" style="width: 100px; margin: 0;">Ativar</button>
+                        </div>
+                        <div class="stone-panel" style="justify-content: space-between; padding: 12px; border: 1px solid rgba(255,255,255,0.05); display: flex; align-items: center; background: rgba(0,0,0,0.2);">
+                            <div>
+                                <strong style="color: #3498db; font-size: 14px; font-family: 'Orbitron';">💧 Racionamento Hídrico</strong>
+                                <div style="font-size: 12px; color: #8899a6; margin-top: 4px;">Reduz o consumo de água local, mas causa tensões sociais. (+30% Atrito)</div>
+                            </div>
+                            <button id="btn-policy-water" class="item-action-btn" style="width: 100px; margin: 0;">Ativar</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Aba 6: Poderes Divinos (God Mode) -->
+                <div id="tab-god" class="deck-tab-content">
+                    <div style="font-size: 13px; color: #8899a6; text-align: center; margin-bottom: 5px;">Gaste Pontos de DNA (🧬) para intervir na sobrevivência dos seres da região selecionada no mapa.</div>
+                    
+                    <div class="stone-panel" style="padding: 10px; background: rgba(0, 221, 255, 0.03); border: 1px solid rgba(0, 221, 255, 0.1); margin-bottom: 10px;">
+                        <strong style="color: #00ddff; display: block; font-family: 'Orbitron'; font-size: 12px; margin-bottom: 4px;">🎯 REGIÃO SELECIONADA:</strong>
+                        <div id="god-selected-region-name" style="font-size: 15px; font-weight: bold; color: #fff;">Nenhuma Região Selecionada (Clique no mapa)</div>
+                    </div>
+                    
+                    <div style="display: flex; flex-direction: column; gap: 10px; overflow-y: auto; padding-right: 5px; flex: 1;">
+                        <div class="stone-panel" style="justify-content: space-between; padding: 10px; border: 1px solid rgba(255,255,255,0.05); display: flex; align-items: center; background: rgba(0,0,0,0.2);">
+                            <div>
+                                <strong style="color: #2ecc71; display: block; font-size: 13px; font-family: 'Orbitron';">🍞 Rações Divinas</strong>
+                                <span style="font-size: 11px; color: #8899a6;">+10.000 Comida na Região Selecionada</span>
+                            </div>
+                            <button id="btn-god-food" class="item-action-btn" style="width: 100px; font-size: 11px; height: 32px; padding: 0; margin: 0;">🧬 15 DNA</button>
+                        </div>
+                        <div class="stone-panel" style="justify-content: space-between; padding: 10px; border: 1px solid rgba(255,255,255,0.05); display: flex; align-items: center; background: rgba(0,0,0,0.2);">
+                            <div>
+                                <strong style="color: #00ddff; display: block; font-size: 13px; font-family: 'Orbitron';">💧 Aquífero Sagrado</strong>
+                                <span style="font-size: 11px; color: #8899a6;">+20.000 Água na Região Selecionada</span>
+                            </div>
+                            <button id="btn-god-water" class="item-action-btn" style="width: 100px; font-size: 11px; height: 32px; padding: 0; margin: 0;">🧬 15 DNA</button>
+                        </div>
+                        <div class="stone-panel" style="justify-content: space-between; padding: 10px; border: 1px solid rgba(255,255,255,0.05); display: flex; align-items: center; background: rgba(0,0,0,0.2);">
+                            <div>
+                                <strong style="color: #f1c40f; display: block; font-size: 13px; font-family: 'Orbitron';">🌱 Bênção de Natalidade</strong>
+                                <span style="font-size: 11px; color: #8899a6;">+50 Seres Vivos na Região Selecionada</span>
+                            </div>
+                            <button id="btn-god-pop" class="item-action-btn" style="width: 100px; font-size: 11px; height: 32px; padding: 0; margin: 0;">🧬 30 DNA</button>
+                        </div>
+                        <div class="stone-panel" style="justify-content: space-between; padding: 10px; border: 1px solid rgba(255,255,255,0.05); display: flex; align-items: center; background: rgba(0,0,0,0.2);">
+                            <div>
+                                <strong style="color: #9b59b6; display: block; font-size: 13px; font-family: 'Orbitron';">🦠 Expurgar Epidemia</strong>
+                                <span style="font-size: 11px; color: #8899a6;">Limpar Fomes e Pestes locais</span>
+                            </div>
+                            <button id="btn-god-cure" class="item-action-btn" style="width: 100px; font-size: 11px; height: 32px; padding: 0; margin: 0;">🧬 40 DNA</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Aba 7: Anomalias / Destruição (Fúria do Planeta) -->
+                <div id="tab-disasters" class="deck-tab-content">
+                    <div style="font-size: 13px; color: #8899a6; text-align: center; margin-bottom: 10px;">Invoque a Fúria Quântica sobre a Matriz para testar a resistência das civilizações terrestres.</div>
+                    <div class="stone-panel" style="text-align: center; color: #8899a6; padding: 20px; background: rgba(0,0,0,0.25); display: flex; flex-direction: column; gap: 10px; flex: 1; justify-content: center; align-items: center;">
+                        <p style="margin: 0; font-size: 13px;">O Grande Filtro age de forma autônoma para expurgar a ineficiência quântica planetária.</p>
+                        <button class="item-action-btn" style="width: 100%; max-width: 300px; border-color: #ff3838; background: rgba(255,56,56,0.1); color: #ff3838;" onclick="alert('Destruição manual em breve!')">☄️ Lançar Meteoro de Fúria (Anomalia)</button>
+                    </div>
                 </div>
             </div>
         </div>
-        
-        <!-- Info Local (Lupa de Inspeção) -->
-        <div id="country-info" class="stone-panel modal hidden" style="width: 380px;">
+
+        <!-- Info Local (Lupa de Inspeção - Gaveta Retrátil Lateral Esquerda) -->
+        <div id="country-info" class="stone-panel hidden">
             <div class="modal-header">
-                <h2 id="info-name" style="font-size: 26px;">Local</h2>
+                <h2 id="info-name" style="font-size: 18px; text-transform: uppercase;">Local</h2>
                 <button class="close-btn" onclick="document.getElementById('country-info').classList.add('hidden')">✖</button>
             </div>
             
-            <div style="padding: 10px; border-bottom: 2px solid #222;">
-                <h2 id="info-name" style="color:#00ddff; font-size:24px; margin-bottom:10px;">Região</h2>
-                <div style="font-size: 14px; line-height: 1.6;">
-                    <div><strong>Bioma:</strong> <span id="info-biome">-</span></div>
-                    <span id="info-status">Vazio</span>
+            <div style="padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.15);">
+                <div style="font-size: 13px; line-height: 1.6;">
+                    <div><strong>🌍 Bioma:</strong> <span id="info-biome" style="color: var(--neon-blue);">-</span></div>
+                    <div><strong>🏷️ Status:</strong> <span id="info-status" style="font-weight:bold;">Vazio</span></div>
                 </div>
                 
-                <div style="display: flex; justify-content: space-between; font-size: 18px; color: #aaa;">
-                    <span>Capacidade:</span>
-                    <span>👥 <span id="info-pop">0</span> / <span id="info-cap">0</span></span>
+                <div style="display: flex; justify-content: space-between; font-size: 14px; color: #fff; margin-top: 8px; font-family: 'Orbitron';">
+                    <span>👥 População:</span>
+                    <span><span id="info-pop">0</span> / <span id="info-cap">0</span></span>
                 </div>
                 <!-- Barra de Superlotação -->
-                <div style="width: 100%; height: 6px; background: #222; margin-top: 5px; border-radius:3px;">
-                    <div id="info-pop-bar" style="height: 100%; width: 0%; background: #00ff88; transition: width 0.3s; border-radius:3px;"></div>
+                <div style="width: 100%; height: 6px; background: rgba(255,255,255,0.05); margin-top: 5px; border-radius:3px;">
+                    <div id="info-pop-bar" style="height: 100%; width: 0%; background: var(--neon-green); transition: width 0.3s; border-radius:3px;"></div>
                 </div>
             </div>
             
-            <div style="padding: 10px;">
-                <h3 style="font-size: 16px; color: #888; margin-bottom: 5px;">Recursos Naturais</h3>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 18px;">
-                    <div><span id="label-wood">🌲 Madeira</span>: <span id="info-wood" style="color:#00ff88;">0</span></div>
-                    <div><span id="label-water">💧 Água</span>: <span id="info-water" style="color:#00ddff;">0</span></div>
-                    <div><span id="label-minerals">🪨 Minérios</span>: <span id="info-minerals" style="color:#ffaa00;">0</span></div>
-                    <div><span id="label-soil">🌱 Solo</span>: <span id="info-soil" style="color:#2ecc71;">100%</span></div>
-                </div>
-            </div>
-            <div style="padding: 10px; background: #1a1a1a;">
-                <h3 style="font-size: 16px; color: #ffaa00; margin-bottom: 5px;">Fatores de Risco Sistêmicos (Globais)</h3>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 5px; font-size: 14px;">
-                    <div>🌋 Tectônico: <span id="risk-tectonic" style="color:#ff4444;">0%</span></div>
-                    <div>🌡️ Climático: <span id="risk-climatic" style="color:#ff4444;">0%</span></div>
-                    <div>🦠 Biológico: <span id="risk-biological" style="color:#ff4444;">0%</span></div>
-                    <div>🔥 Social: <span id="risk-social" style="color:#ff4444;">0%</span></div>
+            <div style="padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.1);">
+                <h3 class="tab-section-title">🌲 Recursos Regionais</h3>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 14px;">
+                    <div><span id="label-wood">🌲 Madeira</span>: <span id="info-wood" style="color:#00ff88; font-weight:bold;">0</span></div>
+                    <div><span id="label-water">💧 Água</span>: <span id="info-water" style="color:#00ddff; font-weight:bold;">0</span></div>
+                    <div><span id="label-minerals">🪨 Minérios</span>: <span id="info-minerals" style="color:#ffaa00; font-weight:bold;">0</span></div>
+                    <div>🌱 Solo: <span id="info-soil" style="color:#2ecc71; font-weight:bold;">100%</span></div>
                 </div>
             </div>
             
-            <div style="padding: 5px 10px; background: #222;">
-                <span style="font-size: 16px; color: #888;">TENSÕES LOCAIS (FACÇÕES)</span>
-            </div>
-            <div id="info-factions-list" class="list-container" style="max-height: 200px; overflow-y: auto;">
-                <!-- Preenchido via JS -->
+            <div style="padding: 12px; background: rgba(255,56,56,0.02); flex: 1; display: flex; flex-direction: column; min-height: 140px;">
+                <h3 class="tab-section-title" style="color: #ff3838;">🌋 Fatores de Risco</h3>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px; font-size: 12px; color: #aaa;">
+                    <div>🌋 Tectônico: <span id="risk-tectonic" style="color:#ff4444; font-weight:bold;">0%</span></div>
+                    <div>🌡️ Climático: <span id="risk-climatic" style="color:#ff4444; font-weight:bold;">0%</span></div>
+                    <div>🦠 Biológico: <span id="risk-biological" style="color:#ff4444; font-weight:bold;">0%</span></div>
+                    <div>🔥 Social: <span id="risk-social" style="color:#ff4444; font-weight:bold;">0%</span></div>
+                </div>
+                
+                <div style="margin-top: 10px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 8px; flex: 1; overflow-y: auto;">
+                    <div style="font-size: 11px; color: #8899a6; font-family:'Orbitron'; letter-spacing: 0.5px; margin-bottom: 4px;">TENSÕES LOCAIS (FACÇÕES)</div>
+                    <div id="info-factions-list" style="display: flex; flex-direction: column; gap: 4px; font-size: 11px;">
+                        <!-- Preenchido via JS -->
+                    </div>
+                </div>
             </div>
         </div>
 
         <!-- Instruções Iniciais -->
-        <div id="instructions" class="stone-panel" style="position: absolute; top: 20px; left: 50%; transform: translateX(-50%); width: 450px; text-align: center; padding: 10px; z-index: 100; pointer-events: none;">
-            <h2 style="color: #e0d0a0; margin: 0;">CROM: A Semente</h2>
-            <p style="margin: 5px 0; font-size: 20px;">Clique em qualquer região continental no mapa para depositar a Tribo Primordial.</p>
+        <div id="instructions" class="stone-panel" style="position: absolute; top: 80px; left: 50%; transform: translateX(-50%); width: 450px; text-align: center; padding: 12px; z-index: 100; pointer-events: none; border-color: var(--neon-blue); box-shadow: 0 5px 20px rgba(0, 221, 255, 0.2); font-family: 'Orbitron';">
+            <h2 style="color: var(--neon-blue); margin: 0; font-size: 18px; letter-spacing: 1px;">CROM: A Tribo Fundadora</h2>
+            <p style="margin: 6px 0 0 0; font-size: 13px; color: #aaa; font-family: 'Inter';">Clique em qualquer região continental no mapa para estabelecer a Tribo inicial ou aguarde 5 segundos para a dispersão cósmica automática.</p>
         </div>
 
         <!-- Toasts -->
@@ -184,23 +284,30 @@ export class UIManager {
 
         <!-- Caixa de Ferramentas Base (Bottom Toolbar) -->
         <div id="bottom-toolbar" class="stone-panel">
-            <button class="tool-btn" id="btn-play-pause" title="Play/Pause" style="background: #6b2e2e;">⏸️</button>
+            <button class="tool-btn" id="btn-play-pause" title="Play/Pause" style="background: #6b2e2e; border-color: #ff3838;">⏸️</button>
             <div style="display: flex; flex-direction: column; justify-content: center; gap: 2px; padding: 0 5px;">
                 <button class="speed-btn active" data-speed="1">1x</button>
                 <button class="speed-btn" data-speed="3">3x</button>
                 <button class="speed-btn" data-speed="5">5x</button>
             </div>
-            <div style="width: 2px; background: #222; margin: 0 5px;"></div>
-            <button class="tool-btn" id="btn-world" title="Mundo">🌍</button>
-            <button class="tool-btn" id="btn-factions" title="Facções">🎭</button>
-            <button class="tool-btn" id="btn-wisdom" title="Sabedoria">🧬</button>
-            <button class="tool-btn" id="btn-industry" title="Indústria">⚙️</button>
-            <button class="tool-btn" id="btn-disasters" title="Destruição">🔥</button>
-            <button class="tool-btn" id="btn-policies" title="Políticas">📜</button>
+            <div style="width: 1px; background: rgba(255,255,255,0.1); height: 36px; margin: 0 6px;"></div>
+            
+            <!-- Botões que agora controlam as abas do Control Deck -->
+            <button class="tool-btn" id="btn-world" title="Lentes e Clima (Aba Monitor)">📊</button>
+            <button class="tool-btn" id="btn-wisdom" title="Sabedoria Evolutiva (Aba Sabedoria)">🧬</button>
+            <button class="tool-btn" id="btn-industry" title="Complexo Industrial (Aba Indústria)">⚙️</button>
+            <button class="tool-btn" id="btn-factions" title="Tensões Sociais (Aba Facções)">🎭</button>
+            <button class="tool-btn" id="btn-policies" title="Decretos de Estado (Aba Políticas)">📜</button>
+            <button class="tool-btn" id="btn-godmode" title="Poderes de DNA (Aba DNA Powers)" style="background: rgba(92, 59, 140, 0.4); border-color: #9b59b6;">⚡</button>
+            <button class="tool-btn" id="btn-disasters" title="Fúria Planetária (Aba Anomalias)">🔥</button>
+            
+            <div style="width: 1px; background: rgba(255,255,255,0.1); height: 36px; margin: 0 6px;"></div>
+            <!-- Botão Integrado de Exportar Save Rápido no HUD -->
+            <button class="tool-btn" id="btn-export-save" title="Exportar Save JSON" style="background: rgba(0, 255, 136, 0.15); border-color: var(--neon-green);">📥</button>
         </div>
         
         <!-- Tooltip -->
-        <div id="tooltip" class="stone-panel hidden" style="position: absolute; pointer-events: none; z-index: 999; padding: 5px; font-size: 16px;"></div>
+        <div id="tooltip" class="stone-panel hidden" style="position: absolute; pointer-events: none; z-index: 999; padding: 5px; font-size: 14px; border-color: var(--neon-blue);"></div>
         `;
         
         const gameContainer = document.getElementById('game-container');
@@ -221,41 +328,18 @@ export class UIManager {
     }
     
     initPanels() {
-        // Cria container de painéis se não existir
-        if (typeof document === 'undefined') return;
-        
-        let container = document.getElementById('ui-panels');
-        if (!container) {
-            container = document.createElement('div');
-            container.id = 'ui-panels';
-            container.style.cssText = 'position:fixed;top:0;right:0;width:320px;height:100vh;overflow-y:auto;pointer-events:none;z-index:100;';
-            document.body.appendChild(container);
-        }
-        
-        // 069. Chronicle Panel
-        this.createChroniclePanel(container);
-        // 073. Demographics Panel
-        this.createDemographicsPanel(container);
-        // 078. Hockey Stick Graph
-        this.createPopGraphPanel(container);
-        // 079. EROI Panel
-        this.createEROIPanel(container);
-        // NOVO: Climate Panel
-        this.createClimatePanel(container);
-        // 083. Cemetery Panel
-        this.createCemeteryPanel(container);
+        // Os painéis agora pertencem estaticamente ao Control Deck. 
+        // Não é necessária a criação dinâmica de janelas flutuantes soltas.
     }
     
-    // =============================================
-    // 069. Chronicle Panel — Últimos 50 eventos
-    // =============================================
-    createChroniclePanel(container) {
-        const panel = document.createElement('div');
-        panel.id = 'chronicle-panel';
-        panel.style.cssText = 'pointer-events:auto;background:rgba(0,0,0,0.85);color:#ddd;padding:10px;margin:5px;border-radius:8px;font-size:11px;max-height:200px;overflow-y:auto;border:1px solid #333;';
-        panel.innerHTML = '<div style="color:#ffaa00;font-weight:bold;margin-bottom:5px;">📜 CRÔNICA</div><div id="chronicle-list"></div>';
-        container.appendChild(panel);
-    }
+    // Métodos createXXXPanel simplificados, pois os elementos com os IDs corretos
+    // já são fornecidos na marcação única e de alta fidelidade do Control Deck.
+    createChroniclePanel(container) {}
+    createDemographicsPanel(container) {}
+    createPopGraphPanel(container) {}
+    createEROIPanel(container) {}
+    createClimatePanel(container) {}
+    createCemeteryPanel(container) {}
     
     updateChronicle() {
         const list = document.getElementById('chronicle-list');
@@ -285,14 +369,6 @@ export class UIManager {
     // =============================================
     // 073. Demographics Panel — Pizza de facções
     // =============================================
-    createDemographicsPanel(container) {
-        const panel = document.createElement('div');
-        panel.id = 'demographics-panel';
-        panel.style.cssText = 'pointer-events:auto;background:rgba(0,0,0,0.85);color:#ddd;padding:10px;margin:5px;border-radius:8px;font-size:11px;border:1px solid #333;display:none;';
-        panel.innerHTML = '<div style="color:#3498db;font-weight:bold;margin-bottom:5px;">👥 DEMOGRAFIA</div><canvas id="demo-pie" width="150" height="150"></canvas><div id="demo-stats"></div>';
-        container.appendChild(panel);
-    }
-    
     updateDemographics() {
         const panel = document.getElementById('demographics-panel');
         const canvas = document.getElementById('demo-pie');

@@ -79,7 +79,7 @@
     "desertChance": 0.20
   },
 
-  "capacityDivisor": 20,
+  "capacityDivisor": 5,
 
   "seasons": {
     "winterStart": 271,
@@ -161,9 +161,20 @@
   },
 
   "dnaGeneration": {
-    "_comment": "REBALANCEADO: Acelerado no início. 1 DNA por 2k pop/tick.",
-    "popPerPoint": 2000,
+    "_comment": "REBALANCEADO: Acelerado no início. 1 DNA por 200 pop/tick.",
+    "popPerPoint": 200,
     "computerBonusBase": 1
+  },
+
+  "tainterComplexity": {
+    "_comment": "Mecânica de complexidade de Tainter. Custos quadráticos e decaimento intelectual.",
+    "baseIntervalDays": 30,
+    "techCountThreshold": 3,
+    "complexityCoefficient": 0.01,
+    "forgetChance": 0.10,
+    "forgetTechCountThreshold": 5,
+    "populationAttenuationThreshold": 2000,
+    "attenuationMultiplier": 0.1
   },
 
   "disasterEngine": {
@@ -179,6 +190,17 @@
     "zoonoseBaseMortality": 0.60,
     "zoonoseMedicineMortality": 0.15,
     "faunaPassiveKillRate": 0.05
+  },
+
+  "civilizationDynamics": {
+    "_comment": "Parâmetros para dispersão, cismas geográficos, nomadismo, aclimatação e osmose civilizacional",
+    "rebelMigrationRate": 0.80,
+    "overpopulationNomadChance": 0.05,
+    "overpopulationThreshold": 0.80,
+    "acclimatizationSpeedPerYear": 0.02,
+    "technologyOsmoseChance": 0.015,
+    "mutualFoodAssistanceThreshold": 5000,
+    "mutualFoodAssistanceAmount": 1000
   },
 
   "warConfig": {

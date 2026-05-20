@@ -4,10 +4,10 @@
   "nature": {
     "id": "events_nature_exogenous",
     "cooldownKey": "nature_trauma",
-    "cooldownDays": 120,
-    "baseProbability": 0.05,
-    "pressureMultiplier": 0.15,
-    "maxProbability": 0.20,
+    "cooldownDays": 1825,
+    "baseProbability": 0.0005,
+    "pressureMultiplier": 0.01,
+    "maxProbability": 0.015,
     "events": {
       "forestFire":       { "rollMin": 0.00, "rollMax": 0.20, "woodLossRate": 0.50, "pressureRelief": 0.20, "minWood": 10000, "biomes": ["jungle", "plains"] },
       "solarStorm":       { "rollMin": 0.20, "rollMax": 0.35, "trustLoss": 30 },

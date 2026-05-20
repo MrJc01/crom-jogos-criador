@@ -420,7 +420,7 @@ export class GameEngine {
         // 006/009/011: Processar DTM (nascimentos, mortalidade infantil, mortes naturais)
         if (node.demographics.processDTM) {
             const hasSanitation = this.unlockedTechs.has('saneamento_basico');
-            node.demographics.processDTM(eraInfo.mult, hasSanitation, node.biome?.id || 'plains', this.deltaDays || 1);
+            node.demographics.processDTM(eraInfo.mult, hasSanitation, node.biome?.id || 'plains', this.deltaDays || 1, this.globalPop);
         }
         
         // TAREFA 34 e 35: Limites Urbanos (Verticalização e Ilha de Calor)
@@ -497,13 +497,29 @@ export class GameEngine {
     }
     
     // 030. Custo de Manutenção de Techs (Lei de Tainter)
+    // 030. Custo de Manutenção de Techs (Lei de Tainter)
     // Cada tech desbloqueada custa DNA/dia para manter. Complexidade escala quadraticamente.
-    if (this.day % 30 === 0 && this.techTree.unlocked.size > 3) { // Mensal, após 3 techs
+    const tainter = Config.get('tainterComplexity') || {
+        baseIntervalDays: 30,
+        techCountThreshold: 3,
+        complexityCoefficient: 0.01,
+        forgetChance: 0.10,
+        forgetTechCountThreshold: 5,
+        populationAttenuationThreshold: 2000,
+        attenuationMultiplier: 0.1
+    };
+    if (this.day % tainter.baseIntervalDays === 0 && this.techTree.unlocked.size > tainter.techCountThreshold) {
         const techCount = this.techTree.unlocked.size;
-        const maintenanceCost = Math.floor(techCount * techCount * 0.01); // Custo quadrático
+        let maintenanceCost = Math.floor(techCount * techCount * tainter.complexityCoefficient);
+        
+        // Aplica atenuação drástica (90%) para populações fundadoras iniciais
+        if (this.globalPop < tainter.populationAttenuationThreshold) {
+            maintenanceCost = Math.max(0, Math.floor(maintenanceCost * tainter.attenuationMultiplier));
+        }
+        
         if (this.adaptationPoints >= maintenanceCost) {
             this.adaptationPoints -= maintenanceCost;
-        } else if (Math.random() < 0.1 && techCount > 5) {
+        } else if (Math.random() < tainter.forgetChance && techCount > tainter.forgetTechCountThreshold) {
             // Sem DNA para manter → esquece uma tech aleatória
             const arr = Array.from(this.techTree.unlocked);
             const lost = arr[Math.floor(Math.random() * arr.length)];
@@ -630,9 +646,12 @@ export class GameEngine {
         ptsGenerated += 1;
     }
     
-    // FIX P0: "Renda Básica" de Sobrevivência na Idade da Pedra para evitar Soft-Lock.
-    if (this.currentEra.mult === 1 && ptsGenerated === 0 && Math.random() < 0.1) {
-        ptsGenerated = 1; // 10% de chance de ganhar 1 ponto a cada Tick mesmo com 10 habitantes
+    // FIX P0: "Renda Básica" de Sobrevivência na Idade da Pedra/Cobre/Bronze para evitar Soft-Lock.
+    if (this.unlockedTechs.size < 13 && this.globalPop < 500 && ptsGenerated === 0) {
+        const chance = this.globalPop < 200 ? 0.25 : 0.15;
+        if (Math.random() < chance) {
+            ptsGenerated = 1;
+        }
     }
     
     this.adaptationPoints += (ptsGenerated * computerBonus);
@@ -695,7 +714,9 @@ export class GameEngine {
     }
     
     // CAOS: Cisne Negro de Desastre Natural (Act of God) - Independente do clima ou era
-    if (this.globalPop > 0 && Math.random() < 0.0005) { // ~ 1 a cada 5 anos
+    // FIX SRE: A escala temporal é diária. Um desastre a cada 5 anos (globais) significa
+    // que a probabilidade diária deve ser proporcionalmente dividida por 365.
+    if (this.globalPop > 0 && Math.random() < (0.005 / 365)) { // ~ 1 a cada 5 anos globais em média
         const nodesArray = Array.from(this.nodes.values()).filter(n => n.infected);
         if (nodesArray.length > 0) {
             const unluckyNode = nodesArray[Math.floor(Math.random() * nodesArray.length)];

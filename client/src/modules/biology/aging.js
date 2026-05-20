@@ -1,3 +1,5 @@
+import { Config } from '../../config/ConfigLoader.js';
+
 export default {
     id: 'aging',
     type: 'biology',
@@ -5,66 +7,74 @@ export default {
         if (node.demographics.total === 0) return;
         
         const demo = node.demographics;
+        const deltaDays = globalRules.deltaDays || 1;
         
-        // 1. TRANSIÇÃO DE COORTES (Envelhecimento contínuo por % diária)
-        // Se 1 ano = 365 ticks. Transição de Child (0-15) -> Young (15-25) leva 15 anos.
-        // Taxa de fluxo diário = 1 / (15 * 365) = 0.00018
-        
-        const childToYoung = demo.dist.age.child * 0.00018;
-        const youngToAdult = demo.dist.age.young * 0.00027; // 10 anos (25-35)
-        const adultToElder = demo.dist.age.adult * 0.00007; // 40 anos (35-75)
+        // 1. TRANSIÇÃO DE COORTES (Envelhecimento contínuo por % diária escalada por deltaDays)
+        const childToYoung = Math.min(demo.dist.age.child, demo.dist.age.child * 0.00018 * deltaDays);
+        const youngToAdult = Math.min(demo.dist.age.young, demo.dist.age.young * 0.00027 * deltaDays); 
+        const adultToElder = Math.min(demo.dist.age.adult, demo.dist.age.adult * 0.00007 * deltaDays); 
         
         demo.shiftDistribution('age', 'young', 'child', childToYoung);
         demo.shiftDistribution('age', 'adult', 'young', youngToAdult);
         demo.shiftDistribution('age', 'elder', 'adult', adultToElder);
         
-        // 2. MORTALIDADE NATURAL DIÁRIA (Tarefas 01, 03, 04)
+        // 2. MORTALIDADE EXTRAORDINÁRIA E DE PRESSÃO BIOLÓGICA
+        // GUARD: Pop < 500 só envelhece — não empilha mortes extras
+        if (demo.total < 500) return;
         
-        // Fator de Mortalidade Infantil atrelado à água (Task 01)
-        let childDeathRate = 0.001; // Alta mortalidade pré-medicina
+        // Importação imperial de água potável se o hexágono secar
+        if (node.resources && node.resources.water <= 0 && engine.inventory.water > 0) {
+            const drinkWaterNeeded = Math.max(1, Math.floor(demo.total * 0.01 * deltaDays));
+            const imported = Math.min(drinkWaterNeeded, engine.inventory.water);
+            node.resources.water = (node.resources.water || 0) + imported;
+            engine.inventory.water -= imported;
+        }
+        
+        // Fator de Mortalidade Infantil atrelado à falta de água (mortalidade integrada)
+        let childExtraDeaths = 0;
         if (node.resources && node.resources.water <= 0) {
-            childDeathRate = 0.005; // 5x mais letal sem água potável
+            const dailyLethality = 0.005;
+            const survivalProb = Math.pow(1 - dailyLethality, deltaDays);
+            childExtraDeaths = Math.floor(demo.total * demo.dist.age.child * (1 - survivalProb)); 
         }
         
-        // Impacto Logarítmico do Saneamento Básico (Task 04)
-        let sanitationPenalty = 1.0;
-        if (demo.total > 50000 && !engine.unlockedTechs.has('tech_sanitation')) {
-            // Em metrópoles precárias, a densidade mata (cólera, febre tifoide)
-            sanitationPenalty = Math.max(1, Math.log10(demo.total) / 3); 
-        } else if (engine.unlockedTechs.has('tech_sanitation')) {
-            childDeathRate *= 0.2; // Esgoto reduz a mortalidade infantil em 80%
+        // Impacto do Saneamento Básico em Megacidades (mortalidade integrada)
+        let sanitationDeaths = 0;
+        if (demo.total > 50000 && !engine.unlockedTechs.has('saneamento_basico')) {
+            const dailyLethality = 0.002;
+            const survivalProb = Math.pow(1 - dailyLethality, deltaDays);
+            sanitationDeaths = Math.floor(demo.total * (1 - survivalProb)); 
         }
         
-        // Expectativa de Vida Baseada em Bioma (Task 03)
-        let biomeElderPenalty = 1.0;
+        // Expectativa de Vida e Penalidades Situacionais de Bioma (mortalidade integrada)
+        let biomeDeaths = 0;
         if (node.biome) {
-            if (node.biome.id === 'tundra' && (!engine.inventory.wood || engine.inventory.wood <= 0)) {
-                biomeElderPenalty = 3.0; // Sem lenha no frio, idosos morrem de hipotermia
+            if (node.biome.id === 'tundra' && (!node.resources?.wood || node.resources.wood <= 0)) {
+                // Modificador de sobrevivência ao frio gerado pelo GeneticsEngine
+                const coldSurvivalModifier = node.coldSurvivalModifier !== undefined ? node.coldSurvivalModifier : 1.0;
+                const dailyLethality = 0.01 * coldSurvivalModifier;
+                const survivalProb = Math.pow(1 - Math.min(0.9, dailyLethality), deltaDays);
+                biomeDeaths = Math.floor(demo.total * demo.dist.age.elder * (1 - survivalProb)); 
             }
-            if (node.biome.id === 'jungle' && !engine.unlockedTechs.has('tech_medicine')) {
-                biomeElderPenalty = 2.0; // Selvas matam via doenças tropicais (malária)
+            if (node.biome.id === 'jungle' && !engine.unlockedTechs.has('medicine')) {
+                const dailyLethality = 0.005;
+                const survivalProb = Math.pow(1 - dailyLethality, deltaDays);
+                biomeDeaths = Math.floor(demo.total * demo.dist.age.elder * (1 - survivalProb)); 
             }
         }
         
-        const elderDeathRate = 0.0005 * sanitationPenalty * biomeElderPenalty;
-        const adultDeathRate = 0.00001 * sanitationPenalty;
+        const totalExtraDeaths = childExtraDeaths + sanitationDeaths + biomeDeaths;
         
-        const childDeaths = demo.total * demo.dist.age.child * childDeathRate;
-        const elderDeaths = demo.total * demo.dist.age.elder * elderDeathRate;
-        const adultDeaths = demo.total * demo.dist.age.adult * adultDeathRate;
-        
-        const totalDeaths = Math.floor(childDeaths + elderDeaths + adultDeaths);
-        
-        if (totalDeaths > 0) {
-            demo.kill(totalDeaths);
-            // Reajusta a distribuição para não distorcer muito a longo prazo se só crianças morrerem (abstração)
+        if (totalExtraDeaths > 0) {
+            demo.kill(Math.min(demo.total - 1, totalExtraDeaths));
         }
         
-        // 3. MORTE POR CAPACIDADE (Inanição / Overpopulation)
+        // 3. MORTE POR CAPACIDADE (Inanição / Overpopulation - multiplicada por deltaDays)
         const K = Math.floor(node.capacity * globalRules.global_K_boost * globalRules.globalKPenalty);
         if (demo.total > K) {
-            const overpopDeaths = Math.floor((demo.total - K) * 0.01); // Morre 1% do excesso por dia
-            demo.kill(Math.max(1, overpopDeaths));
+            // Morte de excesso malthusiano integrada ao deltaDays usando probabilidade integrada
+            const overpopDeaths = Math.floor((demo.total - K) * (1 - Math.pow(0.99, deltaDays)));
+            demo.kill(Math.min(demo.total - 1, Math.max(1, overpopDeaths)));
         }
     }
 };

@@ -5,6 +5,7 @@ import { KnowledgeBase } from './KnowledgeBase.js';
 import { SpeciesGenerator } from '../modules/generation/SpeciesGenerator.js';
 import { FactionsData } from './FactionsData.js';
 import { Config } from '../config/ConfigLoader.js';
+import { StaticPlugins } from './StaticPlugins.js';
 
 // Biomas carregados do GameConfig.json (Etapa 0.5: R02)
 export const Biomes = Config.get('biomes');
@@ -75,7 +76,8 @@ export class GameEngine {
 
   loadPlugins() {
       if (typeof import.meta === 'undefined' || !import.meta.glob) {
-          console.warn("[Engine] import.meta.glob indisponível. Plugins devem ser injetados manualmente.");
+          console.warn("[Engine] import.meta.glob indisponível. Ativando Modo de Compatibilidade Estática (fallback)...");
+          StaticPlugins.forEach(plugin => this.registerPlugin(plugin));
           return;
       }
       
@@ -182,13 +184,13 @@ export class GameEngine {
           minerals: Math.floor(Math.random() * (biomeRes.mineralsMax - biomeRes.mineralsMin)) + biomeRes.mineralsMin
       };
       
-      this.nodes.set(id, new RegionNode(id, `Região ${id}`, capacity, biome, resources, hex.neighbors));
+      this.nodes.set(id, new RegionNode(id, `Região ${id}`, capacity, biome, resources, hex.neighbors || []));
     });
 
     // Criar rotas multimodais aleatórias entre hexágonos costeiros (menos de 6 vizinhos)
-    const coastals = hexNodes.filter(h => h.neighbors.length > 0 && h.neighbors.length < 6);
+    const coastals = hexNodes.filter(h => h.neighbors && h.neighbors.length > 0 && h.neighbors.length < 6);
     this.tradeRoutes = [];
-    if (coastals.length > 10) {
+    if (coastals && coastals.length > 10) {
         for (let i = 0; i < 15; i++) {
             const h1 = coastals[Math.floor(Math.random() * coastals.length)];
             const h2 = coastals[Math.floor(Math.random() * coastals.length)];
@@ -270,23 +272,27 @@ export class GameEngine {
 
   tickLoop(time) {
       if (!this.isRunning) return;
-      const deltaTime = time - (this.lastFrameTime || time);
-      this.lastFrameTime = time;
-      
-      this.accumulator = (this.accumulator || 0) + (deltaTime * this.speedMultiplier);
-      
-      const eraInfo = this.currentEra;
-      const targetDaysPerTick = eraInfo.timeDilation || 1;
-      const daysPerMs = targetDaysPerTick / this.tickRate;
-      
-      const daysToProcess = Math.floor(this.accumulator * daysPerMs);
-      
-      if (daysToProcess > 0) {
-          // Limite de segurança para evitar travamento se a aba ficar em background
-          const safeDays = Math.min(daysToProcess, targetDaysPerTick * 2);
-          this.accumulator -= (safeDays / daysPerMs);
+      try {
+          const deltaTime = time - (this.lastFrameTime || time);
+          this.lastFrameTime = time;
           
-          this.processTick(safeDays);
+          this.accumulator = (this.accumulator || 0) + (deltaTime * this.speedMultiplier);
+          
+          const eraInfo = this.currentEra;
+          const targetDaysPerTick = eraInfo.timeDilation || 1;
+          const daysPerMs = targetDaysPerTick / this.tickRate;
+          
+          const daysToProcess = Math.floor(this.accumulator * daysPerMs);
+          
+          if (daysToProcess > 0) {
+              // Limite de segurança para evitar travamento se a aba ficar em background
+              const safeDays = Math.min(daysToProcess, targetDaysPerTick * 2);
+              this.accumulator -= (safeDays / daysPerMs);
+              
+              this.processTick(safeDays);
+          }
+      } catch (err) {
+          console.error('[Engine] ERRO CRÍTICO no tickLoop (loop NÃO foi interrompido):', err);
       }
       
       this.scheduleNextTick();
@@ -301,7 +307,7 @@ export class GameEngine {
     // Fallback SRE para simulações Headless/CLI que não usam GameLoop por frame
     if (daysToProcess === undefined) daysToProcess = eraInfo.timeDilation || 1;
     
-    this.deltaDays = 1; // FIX SRE: Força matemática estrita de 1 dia
+    this.deltaDays = this.timeScale || 1; // Suporte a LOD Temporal adaptativo
     
     for (let step = 0; step < daysToProcess; step++) {
         this.day += this.deltaDays;
@@ -351,8 +357,10 @@ export class GameEngine {
         }
     });
 
-    // FIX BALANCE: Cap global de K_boost para evitar capacidades absurdas
-    global_K_boost = Math.min(500, global_K_boost);
+    // FIX BALANCE: Cap flexível de K_boost — escala com a era para permitir crescimento realista
+    const eraMaxK = { 1: 500, 3: 2000, 10: 10000, 50: 100000, 200: 1000000, 1000: 50000000, 5000: 500000000 };
+    const maxKBoost = eraMaxK[eraInfo.mult] || 500;
+    global_K_boost = Math.min(maxKBoost, global_K_boost);
 
     // Tarefa 28: Ciclo de Estações Reais (Config: seasons)
     const seasons = Config.get('seasons');
@@ -408,9 +416,13 @@ export class GameEngine {
 
     let newGlobalPop = 0;
     
-    // Roda os plugins de lógica em cada nó
+    // Otimização SRE: filtra apenas nós infectados para evitar iterar 48.000 nós inativos
+    const activeNodes = [];
     this.nodes.forEach(node => {
-        if (!node.infected) return;
+        if (node.infected) activeNodes.push(node);
+    });
+
+    activeNodes.forEach(node => {
         this.plugins.forEach(plugin => {
             if (plugin.type !== 'event' && typeof plugin.applyTick === 'function') {
                 plugin.applyTick(node, globalRules, this);
@@ -420,7 +432,7 @@ export class GameEngine {
         // 006/009/011: Processar DTM (nascimentos, mortalidade infantil, mortes naturais)
         if (node.demographics.processDTM) {
             const hasSanitation = this.unlockedTechs.has('saneamento_basico');
-            node.demographics.processDTM(eraInfo.mult, hasSanitation, node.biome?.id || 'plains', this.deltaDays || 1);
+            node.demographics.processDTM(eraInfo.mult, hasSanitation, node.biome?.id || 'plains', this.deltaDays || 1, this.globalPop);
         }
         
         // TAREFA 34 e 35: Limites Urbanos (Verticalização e Ilha de Calor)
@@ -475,11 +487,17 @@ export class GameEngine {
     });
     this.globalPop = newGlobalPop;
     
-    // Tarefa 12 e 14: Decaimento de Estoque (Config: stockDecay)
+    // CAP GLOBAL DEFENSIVO: Teto absoluto de 10 bilhões (realista para planeta Terra)
+    // Se mesmo assim overflow, trunca para proteger a UI e a matemática do motor
+    if (this.globalPop > 10_000_000_000) {
+        this.globalPop = 10_000_000_000;
+    }
+    
     const decay = Config.get('stockDecay');
-    this.inventory.wood = Math.max(0, this.inventory.wood * decay.wood);
-    this.inventory.water = Math.max(0, this.inventory.water * decay.water);
-    this.inventory.minerals = Math.max(0, this.inventory.minerals * decay.minerals);
+    const dDays = this.deltaDays || 1;
+    this.inventory.wood = Math.max(0, this.inventory.wood * Math.pow(decay.wood, dDays));
+    this.inventory.water = Math.max(0, this.inventory.water * Math.pow(decay.water, dDays));
+    this.inventory.minerals = Math.max(0, this.inventory.minerals * Math.pow(decay.minerals, dDays));
     
     // TAREFA 23: Idade das Trevas (Perda de Techs se a civilização rui)
     if (!this.peakGlobalPop) this.peakGlobalPop = 0;
@@ -498,12 +516,27 @@ export class GameEngine {
     
     // 030. Custo de Manutenção de Techs (Lei de Tainter)
     // Cada tech desbloqueada custa DNA/dia para manter. Complexidade escala quadraticamente.
-    if (this.day % 30 === 0 && this.techTree.unlocked.size > 3) { // Mensal, após 3 techs
+    const tainter = Config.get('tainterComplexity') || {
+        baseIntervalDays: 30,
+        techCountThreshold: 3,
+        complexityCoefficient: 0.01,
+        forgetChance: 0.10,
+        forgetTechCountThreshold: 5,
+        populationAttenuationThreshold: 2000,
+        attenuationMultiplier: 0.1
+    };
+    if (this.day % tainter.baseIntervalDays === 0 && this.techTree.unlocked.size > tainter.techCountThreshold) {
         const techCount = this.techTree.unlocked.size;
-        const maintenanceCost = Math.floor(techCount * techCount * 0.01); // Custo quadrático
+        let maintenanceCost = Math.floor(techCount * techCount * tainter.complexityCoefficient);
+        
+        // Populações fundadoras não têm burocracia suficiente para sofrer overhead de Tainter
+        if (this.globalPop < 50000) {
+            maintenanceCost = 0;
+        }
+        
         if (this.adaptationPoints >= maintenanceCost) {
             this.adaptationPoints -= maintenanceCost;
-        } else if (Math.random() < 0.1 && techCount > 5) {
+        } else if (Math.random() < tainter.forgetChance && techCount > tainter.forgetTechCountThreshold) {
             // Sem DNA para manter → esquece uma tech aleatória
             const arr = Array.from(this.techTree.unlocked);
             const lost = arr[Math.floor(Math.random() * arr.length)];
@@ -533,13 +566,15 @@ export class GameEngine {
     // TAREFA 39: Inverno Genético — FIX: Penalidade aliviada na Idade da Pedra
     const genWinter = Config.get('demographics.geneticWinter');
     if (this.globalPop < genWinter.popThreshold && this.globalPop > 0 && this.year > genWinter.yearThreshold) {
-        // Reduz a chance brutalmente se a humanidade mal começou
-        const eraDiscount = this.currentEra.mult === 1 ? 0.1 : 1.0; 
-        if (Math.random() < (genWinter.dailyChance * eraDiscount)) {
-            // A penalidade é muito menor na Era 1 (0.85 ao invés de 0.5)
-            const actualMultiplier = this.currentEra.mult === 1 ? 0.95 : genWinter.kPenaltyMultiplier;
-            this.globalKPenalty = Math.max(genWinter.kPenaltyMinimum, this.globalKPenalty * actualMultiplier);
-            if (this.onEvent) this.onEvent({ message: `🧬 INVERNO GENÉTICO: A endogamia causou falhas genéticas. Resiliência caiu!`, type: "nemesis", color: "#8800ff" }, "nemesis");
+        // Inverno Genético desabilitado nas eras iniciais — populações fundadoras não sofrem punição
+        if (this.currentEra.mult <= 10) {
+            // Bypass: Idade da Pedra, Cobre e Bronze não sofrem Inverno Genético
+        } else {
+            const eraDiscount = this.currentEra.mult <= 50 ? 0.3 : 1.0;
+            if (Math.random() < (genWinter.dailyChance * eraDiscount)) {
+                this.globalKPenalty = Math.max(genWinter.kPenaltyMinimum, this.globalKPenalty * genWinter.kPenaltyMultiplier);
+                if (this.onEvent) this.onEvent({ message: `🧬 INVERNO GENÉTICO: A endogamia causou falhas genéticas. Resiliência caiu!`, type: "nemesis", color: "#8800ff" }, "nemesis");
+            }
         }
     }
     
@@ -630,9 +665,12 @@ export class GameEngine {
         ptsGenerated += 1;
     }
     
-    // FIX P0: "Renda Básica" de Sobrevivência na Idade da Pedra para evitar Soft-Lock.
-    if (this.currentEra.mult === 1 && ptsGenerated === 0 && Math.random() < 0.1) {
-        ptsGenerated = 1; // 10% de chance de ganhar 1 ponto a cada Tick mesmo com 10 habitantes
+    // FIX P0: "Renda Básica" de Sobrevivência na Idade da Pedra/Cobre/Bronze para evitar Soft-Lock.
+    if (this.unlockedTechs.size < 13 && this.globalPop < 500 && ptsGenerated === 0) {
+        const chance = this.globalPop < 200 ? 0.25 : 0.15;
+        if (Math.random() < chance) {
+            ptsGenerated = 1;
+        }
     }
     
     this.adaptationPoints += (ptsGenerated * computerBonus);
@@ -695,7 +733,9 @@ export class GameEngine {
     }
     
     // CAOS: Cisne Negro de Desastre Natural (Act of God) - Independente do clima ou era
-    if (this.globalPop > 0 && Math.random() < 0.0005) { // ~ 1 a cada 5 anos
+    // FIX SRE: A escala temporal é diária. Um desastre a cada 5 anos (globais) significa
+    // que a probabilidade diária deve ser proporcionalmente dividida por 365.
+    if (this.globalPop > 0 && Math.random() < (0.005 / 365)) { // ~ 1 a cada 5 anos globais em média
         const nodesArray = Array.from(this.nodes.values()).filter(n => n.infected);
         if (nodesArray.length > 0) {
             const unluckyNode = nodesArray[Math.floor(Math.random() * nodesArray.length)];
@@ -714,6 +754,12 @@ export class GameEngine {
     } // Fim do loop for (targetDays)
 
     // Callback para UI atualizar SÓ NO FINAL DO BATCH (Evita lag visual e atende ao requisito: mostra década em década)
-    if (this.onTick) this.onTick();
+    if (this.onTick) {
+        try {
+            this.onTick();
+        } catch (err) {
+            console.error('[Engine] Erro no callback onTick (UI) — motor continua rodando:', err);
+        }
+    }
   }
 }

@@ -84,9 +84,15 @@ export default {
         node.sir.infected = Math.max(0, I + newInfected - newRecovered);
         node.sir.recovered = Math.min(1.0, R + newRecovered);
         
-        // Mortes = fração dos infectados (1% dos infectados morrem/dia)
-        let deathRate = 0.01;
-        if (!engine.unlockedTechs.has('medicine')) deathRate = 0.03;
+        // Mortes = fração dos infectados
+        let deathRate = 0.01; // 1% dos infectados morrem/dia com medicina
+        if (!engine.unlockedTechs.has('medicine')) deathRate = 0.03; // 3% sem medicina
+        
+        // FIX BALANCE: Populações menores têm menor densidade → menor letalidade
+        // Na realidade, pragas em aldeias de 100 são menos letais que em cidades de 100K
+        if (node.demographics.total < 500) deathRate *= 0.1; // Quase inexistente em aldeias
+        else if (node.demographics.total < 2000) deathRate *= 0.3; // Reduzida em vilas
+        else if (node.demographics.total < 10000) deathRate *= 0.5; // Moderada em cidades pequenas
         
         const deaths = Math.floor(node.demographics.total * node.sir.infected * deathRate);
         if (deaths > 0) {

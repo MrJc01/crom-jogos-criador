@@ -35,6 +35,7 @@ export class MapRenderer {
             const res = await fetch('/hex_map.json');
             if (!res.ok) throw new Error("Mapa não encontrado");
             this.hexNodes = await res.json();
+            this.originalHexNodes = JSON.parse(JSON.stringify(this.hexNodes)); // Backup imutável de coordenadas
             console.log(`Carregado mapa pré-gerado com ${this.hexNodes.length} hexágonos!`);
             
             // Oculta a tela de loading
@@ -104,18 +105,7 @@ export class MapRenderer {
         this.canvas.height = this.height * dpr;
         this.ctx.scale(dpr, dpr);
         this.currentTransform = d3.zoomIdentity;
-        this.currentLayer = 'populacional'; // Camada padrão
-
-        // Listener para os botões de camadas no UI
-        const layerBtns = document.querySelectorAll('.layer-btn');
-        layerBtns.forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                layerBtns.forEach(b => b.classList.remove('active'));
-                e.target.classList.add('active');
-                this.currentLayer = e.target.getAttribute('data-layer');
-                this.update();
-            });
-        });
+        this.activeLayer = 'populacional'; // Camada padrão
 
         // Setup interações O(N) super rápidas no container
         d3.select('#worldCanvas')
@@ -259,57 +249,32 @@ export class MapRenderer {
             if (node) {
                 let baseColor = '#555';
                 
+                if (node.biome) {
+                    if (node.biome.id === 'desert') baseColor = '#e3c16f';
+                    else if (node.biome.id === 'tundra') baseColor = '#dcf2f2';
+                    else if (node.biome.id === 'plains') baseColor = '#6ab04c';
+                    else if (node.biome.id === 'jungle') baseColor = '#2d6b35';
+                    else if (node.biome.id === 'mountain') baseColor = '#a89f91';
+                }
+
                 if (this.activeLayer === 'water') {
                     // TAREFA 42: Mapa Hídrico do Aquífero (D3)
                     const w = node.resources ? node.resources.water : 0;
-                    if (w > 50000) baseColor = '#00ddff';
-                    else if (w > 10000) baseColor = '#3498db';
-                    else if (w > 1000) baseColor = '#2980b9';
-                    else baseColor = '#e74c3c';
+                    if (w > 50000) color = '#00ddff';
+                    else if (w > 10000) color = '#3498db';
+                    else if (w > 1000) color = '#2980b9';
+                    else color = '#e74c3c';
                 } else if (this.activeLayer === 'climate') {
                     // TAREFA 43: Mapa de Calor Climático
                     const pop = node.demographics.total;
                     const w = node.resources ? node.resources.wood : 0;
-                    if (pop > 100000) baseColor = '#e74c3c'; // Ilha de calor (Megacity)
-                    else if (w < 5000) baseColor = '#e67e22'; // Desmatamento (Emissor)
-                    else baseColor = '#2ecc71'; // Saudável (Sumidouro)
-                } else {
-                    // Camada Base (Biomas)
-                    if (node.biome) {
-                        if (node.biome.id === 'desert') baseColor = '#e3c16f';
-                        else if (node.biome.id === 'tundra') baseColor = '#dcf2f2';
-                        else if (node.biome.id === 'plains') baseColor = '#6ab04c';
-                        else if (node.biome.id === 'jungle') baseColor = '#2d6b35';
-                        else if (node.biome.id === 'mountain') baseColor = '#a89f91';
-                    }
-                }
-
-                // Aplica a lógica da Lente/Camada atual
-                if (this.currentLayer === 'normal') {
+                    if (pop > 100000) color = '#e74c3c'; // Ilha de calor (Megacity)
+                    else if (w < 5000) color = '#e67e22'; // Desmatamento (Emissor)
+                    else color = '#2ecc71'; // Saudável (Sumidouro)
+                } else if (this.activeLayer === 'base') {
                     // Apenas Biomas Físicos
                     color = baseColor;
-                } 
-                else if (this.currentLayer === 'recursos') {
-                    // Mapa de Riqueza Naturais (Madeira, Minério, Terra Fértil)
-                    if (node.biome.id === 'plains') color = '#27ae60'; // Mais madeira/comida
-                    else if (node.biome.id === 'desert' || node.biome.id === 'tundra') color = '#7f8c8d'; // Minérios
-                    else if (node.biome.id === 'jungle') color = '#1abc9c'; // Biodiversidade
-                    else color = baseColor;
-                    
-                    // Escurece os explorados
-                    if (node.demographics.total > node.capacity * 0.8) {
-                        color = d3.color(color).darker(1).toString();
-                    }
-                }
-                else if (this.currentLayer === 'desastres') {
-                    // Mapa de Severidade Planetária e Perigos
-                    let severity = (node.demographics.total / node.capacity); // Simulando severidade
-                    if (severity < 0.2) color = '#111'; // Ok
-                    else if (severity < 0.6) color = '#d35400'; // Aviso
-                    else color = '#c0392b'; // Perigo Crítico (Desastres Iminentes)
-                    if (node.biome.id === 'desert' && severity > 0.5) color = '#f39c12'; // Seca extrema
-                }
-                else {
+                } else {
                     // Camada 'populacional' (Demografia) Padrão
                     if (node.infected && node.demographics.total > 0) {
                         let domFac = 'Tribal';

@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CROM - Simulador God Game</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Orbitron:wght@500;700;900&family=VT323&display=swap" rel="stylesheet">
     <style>
-        body { margin: 0; overflow: hidden; background-color: #0b1d2e; font-family: 'Courier New', Courier, monospace; color: white; user-select: none; transition: filter 2s ease-in-out; }
+        body { margin: 0; overflow: hidden; background-color: #060d19; font-family: 'Inter', sans-serif; color: #f0f5fa; user-select: none; transition: filter 2s ease-in-out; }
         
         .dark-age-filter {
             filter: sepia(0.8) hue-rotate(-20deg) brightness(0.6) contrast(1.2);
@@ -18,17 +18,19 @@
         /* Loading Screen */
         #loading-screen {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            background-color: #0b1d2e; z-index: 9999;
+            background: radial-gradient(circle at center, #0e1e38 0%, #030812 100%); z-index: 9999;
             display: flex; flex-direction: column; justify-content: center; align-items: center;
+            font-family: 'Orbitron', sans-serif;
         }
         .spinner {
-            width: 50px; height: 50px; border: 5px solid #1a4a6e;
-            border-top: 5px solid #00ddff; border-radius: 50%;
-            animation: spin 1s linear infinite; margin-bottom: 20px;
+            width: 60px; height: 60px; border: 4px solid rgba(0, 221, 255, 0.1);
+            border-top: 4px solid #00ddff; border-radius: 50%;
+            animation: spin 1s linear infinite; margin-bottom: 25px;
+            box-shadow: 0 0 15px rgba(0, 221, 255, 0.2);
         }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        .hud-panel { position: absolute; background: rgba(10, 20, 35, 0.85); border: 2px solid #222; border-radius: 4px; padding: 15px; }
+        .hud-panel { position: absolute; background: rgba(5, 12, 22, 0.85); border: 1px solid rgba(0, 221, 255, 0.15); border-radius: 6px; padding: 15px; backdrop-filter: blur(10px); }
     </style>
 </head>
 <body>
@@ -39,32 +41,103 @@
         <p style="color: #aaa; margin-top: 10px;">Gerando centenas de milhares de hexágonos celulares...</p>
     </div>
 
-    <!-- Painel Deus (Menu Inicial) -->
-    <div id="god-panel" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: rgba(11, 29, 46, 0.95); z-index: 9998; display: none; flex-direction: column; justify-content: center; align-items: center;">
-        <div class="stone-panel" style="width: 500px; padding: 30px; text-align: center; box-shadow: 0 0 30px #00ddff;">
-            <h1 style="color: #00ddff; margin-bottom: 5px;">PAINEL DA CRIAÇÃO</h1>
-            <p style="color: #aaa; margin-bottom: 25px; font-size: 18px;">Defina as leis da física deste novo Universo.</p>
-            
-            <div style="text-align: left; margin-bottom: 20px;">
-                <label style="color: #e0d0a0; font-size: 18px;">🔥 Probabilidade de Guerra (<span id="val-war">5%</span>/mês)</label>
-                <input type="range" id="config-war" min="1" max="20" value="5" style="width: 100%;">
-                <small style="color: #666;">Taxa de agressividade base das facções.</small>
-            </div>
-
-            <div style="text-align: left; margin-bottom: 20px;">
-                <label style="color: #e0d0a0; font-size: 18px;">☄️ Limite do "Great Filter" (<span id="val-disaster">95%</span> poluição)</label>
-                <input type="range" id="config-disaster" min="50" max="200" value="95" style="width: 100%;">
-                <small style="color: #666;">Quanto o planeta aguenta antes do Colapso Global.</small>
-            </div>
-
-            <div style="text-align: left; margin-bottom: 20px;">
-                <label style="color: #e0d0a0; font-size: 18px;">💡 Custo de Evolução (<span id="val-tech">1x</span>)</label>
-                <input type="range" id="config-tech" min="0.5" max="3.0" step="0.1" value="1.0" style="width: 100%;">
-                <small style="color: #666;">Multiplicador do custo de DNA das Tecnologias.</small>
-            </div>
-
-            <button id="btn-start-universe" style="background: #2d6b35; color: white; border: none; padding: 15px 30px; font-size: 24px; font-family: 'VT323'; cursor: pointer; border-radius: 5px; width: 100%; margin-top: 10px;">GERAR UNIVERSO</button>
+    <!-- Painel Deus (Menu Inicial de Tela Cheia Premium) -->
+    <div id="god-panel" class="fullscreen-menu" style="display: flex;">
+        <div class="menu-header">
+            <h1 class="main-title">CROM: O CRIADOR DE MUNDOS</h1>
+            <p class="subtitle">Ajuste as Leis da Matriz Cósmica ou restaure uma linha temporal existente.</p>
         </div>
+
+        <!-- Barra de Navegação Interna Premium (Estilo Jogo de Deus) -->
+        <div class="god-panel-tabs">
+            <button class="god-tab-btn active" data-god-tab="god-tab-physics">🎛️ FÍSICA</button>
+            <button class="god-tab-btn" data-god-tab="god-tab-saves">💾 TEMPO</button>
+            <button class="god-tab-btn" data-god-tab="god-tab-presets">🪐 PRESETS</button>
+        </div>
+        
+        <div class="menu-grid">
+            <!-- Coluna 1: Leis da Matriz -->
+            <div id="god-tab-physics" class="stone-panel menu-column god-tab-content active">
+                <h2 class="column-title">🎛️ LEIS DA FÍSICA</h2>
+                <div class="column-content">
+                    <div class="config-group">
+                        <label>🔥 Probabilidade de Guerra (<span id="val-war">5%</span>/mês)</label>
+                        <input type="range" id="config-war" min="1" max="20" value="5">
+                        <small>Agressividade base das facções militares.</small>
+                    </div>
+
+                    <div class="config-group">
+                        <label>☄️ Limite do "Great Filter" (<span id="val-disaster">95%</span>)</label>
+                        <input type="range" id="config-disaster" min="50" max="200" value="95">
+                        <small>Resistência global do planeta antes do colapso.</small>
+                    </div>
+
+                    <div class="config-group">
+                        <label>💡 Custo de Evolução (<span id="val-tech">1.0x</span>)</label>
+                        <input type="range" id="config-tech" min="0.5" max="3.0" step="0.1" value="1.0">
+                        <small>Multiplicador do custo de DNA para tecnologias.</small>
+                    </div>
+
+                    <div class="config-group">
+                        <label>🌱 Taxa de Natalidade (<span id="val-growth">8%</span>/ano)</label>
+                        <input type="range" id="config-growth" min="2" max="20" value="8">
+                        <small>Crescimento demográfico vegetativo base.</small>
+                    </div>
+
+                    <div class="config-group">
+                        <label>🧬 Coleta de DNA (<span id="val-dna">200</span> pop/ponto)</label>
+                        <input type="range" id="config-dna" min="50" max="500" step="10" value="200">
+                        <small>População necessária para gerar 1 ponto de DNA.</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Coluna 2: Central de Saves -->
+            <div id="god-tab-saves" class="stone-panel menu-column god-tab-content">
+                <h2 class="column-title">💾 PONTOS DE RESTAURAÇÃO</h2>
+                <div class="column-content">
+                    <!-- Drop Zone Save Local -->
+                    <div id="save-drop-zone" class="save-drop-area">
+                        <span class="drop-icon">📥</span>
+                        <p>Arrastar arquivo save <strong>.json</strong> ou clique abaixo</p>
+                        <button id="btn-trigger-upload" class="item-action-btn" style="width: auto; padding: 5px 15px;">SELECIONAR ARQUIVO</button>
+                        <input type="file" id="import-save-file" accept=".json" style="display: none;">
+                    </div>
+
+                    <!-- Saves do Servidor Predefinidos -->
+                    <div class="preset-saves-list">
+                        <div style="font-size: 14px; color: #8899a6; text-align: center; margin: 10px 0 5px 0; font-family: 'Orbitron'; letter-spacing: 1px;">LINHAS TEMPORAIS DISPONÍVEIS</div>
+                        <div class="saves-grid">
+                            <button class="save-preset-btn" onclick="loadPresetSave('year_zero_start.json')">🧬 Gênesis (Ano 1)</button>
+                            <button class="save-preset-btn" onclick="loadPresetSave('checkpoint_year_499.json')">🏛️ Clássica (Ano 500)</button>
+                            <button class="save-preset-btn" onclick="loadPresetSave('checkpoint_year_999.json')">🏰 Medieval (Ano 1000)</button>
+                            <button class="save-preset-btn" onclick="loadPresetSave('checkpoint_year_1499.json')">⚓ Renascença (Ano 1500)</button>
+                            <button class="save-preset-btn" onclick="loadPresetSave('checkpoint_year_1999.json')">🚂 Industrial (Ano 2000)</button>
+                            <button class="save-preset-btn" onclick="loadPresetSave('checkpoint_year_2026.json')">💻 Digital (Ano 2026)</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Coluna 3: Presets & Leis Físicas -->
+            <div id="god-tab-presets" class="stone-panel menu-column god-tab-content">
+                <h2 class="column-title">🪐 LEIS & PRESETS</h2>
+                <div class="column-content" style="display: flex; flex-direction: column; justify-content: space-between; height: 100%;">
+                    <div class="presets-section">
+                        <button class="preset-select-btn active" id="preset-default" onclick="applyPreset('default')">🌌 PADRÃO CALIBRADO</button>
+                        <button class="preset-select-btn" id="preset-chaos" onclick="applyPreset('chaos')">☄️ SOBREVIVÊNCIA EXTREMA</button>
+                        <button class="preset-select-btn" id="preset-abundant" onclick="applyPreset('abundant')">🌿 ABUNDÂNCIA DIVINA</button>
+                    </div>
+
+                    <div class="notes-panel" style="background: rgba(0, 221, 255, 0.05); border: 1px solid rgba(0, 221, 255, 0.1); padding: 12px; border-radius: 8px; font-size: 13px; line-height: 1.5; color: #8899a6; margin-top: 15px;">
+                        <strong style="color:#00ddff; display: block; margin-bottom: 5px; font-family: 'Orbitron';">NOTA DO MONITOR:</strong>
+                        O CROM é um ecossistema complexo autorregulado. Modificações nos parâmetros físicos alteram as constantes de atrito, limites do Grande Filtro ecológico e custos de ascensão quântica das facções inteligentes. Calibre com inteligência e sabedoria.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <button id="btn-start-universe" class="huge-start-btn">GERAR UNIVERSO E INICIAR MATRIZ</button>
     </div>
 
     <div id="game-container">

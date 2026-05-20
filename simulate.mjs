@@ -77,18 +77,32 @@ async function run() {
     }
     engine.initWorld(mockHexes);
 
-    // Infecta um nó aleatório (Roleta Geográfica)
+    // Inicialização Multicultural SRE: Infecta todos os 5 nós mockados com facções distintas
+    // para habilitar imediatamente rotas de comércio, migrações, guerras e osmose tecnológica.
     const nodesArray = Array.from(engine.nodes.values());
-    const startNode = nodesArray[Math.floor(Math.random() * nodesArray.length)];
-    startNode.infect(0);
+    const defaultFactions = ['sino_tibetanos', 'uralicos', 'semitas', 'bantu', 'indo_europeus'];
     
-    // Semente Fundadora Aleatória (Founder Effect) - Pode ser de 10 sobreviventes a 500 nômades
-    const initialPop = Math.floor(Math.random() * 490) + 10;
+    // Se o usuário selecionou uma facção específica, garante que ela fique no hex_0
+    const factionsToUse = [...defaultFactions];
+    const selIndex = factionsToUse.indexOf(selectedFaction);
+    if (selIndex !== -1) {
+        factionsToUse.splice(selIndex, 1);
+        factionsToUse.unshift(selectedFaction);
+    } else {
+        factionsToUse[0] = selectedFaction;
+    }
     
-    // Configura a facção inicial com os fundadores
-    startNode.demographics.dist.factions = { [selectedFaction]: 1.0 };
-    startNode.demographics.addBirths(initialPop); 
-    engine.globalPop = initialPop;
+    let totalInitialPop = 0;
+    nodesArray.forEach((node, i) => {
+        const facId = factionsToUse[i % factionsToUse.length];
+        const initialPop = Math.floor(Math.random() * 200) + 100; // Entre 100 e 300 fundadores por nó
+        node.infect(0);
+        node.demographics.dist.factions = { [facId]: 1.0 };
+        node.demographics.addBirths(initialPop);
+        totalInitialPop += initialPop;
+    });
+    
+    engine.globalPop = totalInitialPop;
 
     // Configura listeners para Crônicas (Avisos de Genocídio, Cisma, Estado, etc)
     const recentEvents = [];
@@ -149,8 +163,13 @@ async function run() {
             // Descobre quem tá vivo
             const factions = engine.globalDemographics?.factions || {};
             const activeFactions = Object.entries(factions).filter(([k,v]) => v > 1);
-            const factionList = activeFactions.map(([k,v]) => `${k} (${Math.floor(v)})`).join(', ');
-            const factionCount = activeFactions.length;
+            const activeFactionsSorted = [...activeFactions].sort((a, b) => b[1] - a[1]);
+            const factionList = activeFactionsSorted.map(([k,v]) => {
+                const isDissident = k.includes('_dissidentes');
+                const cleanName = k.replace('_dissidentes', ' (Dissidentes)');
+                return `${cleanName}: ${Math.floor(v).toLocaleString('pt-BR')}`;
+            }).join(' | ');
+            const factionCount = activeFactionsSorted.length;
 
             // Tenta pegar a temperatura (Pode não existir logo no ano 1)
             const temp = engine.globalTemperature || 0;
@@ -161,7 +180,6 @@ async function run() {
             console.log(`\n── Ano ${engine.year} (${elapsed}s) ──`);
             console.log(`👥 População Global: ${Math.floor(engine.globalPop).toLocaleString('pt-BR')}`);
             console.log(`🌍 Clima: ${clima}`);
-            console.log(`🗺️ Culturas Vivas: ${factionCount} -> ${factionList || 'Nenhuma'}`);
             console.log(`🧬 Tecnologias Desbloqueadas: ${engine.unlockedTechs?.size || 0}`);
             
             // Agregação de Comida e Pecuária
@@ -169,15 +187,50 @@ async function run() {
             engine.nodes.forEach(n => totalFood += (n.food || 0));
             console.log(`🌾 Comida Estocada Global: ${Math.floor(totalFood).toLocaleString('pt-BR')}`);
             
+            // 📊 PAINEL DE EXPANSÃO CIVILIZACIONAL PREMIUM
+            const inhabitedNodes = Array.from(engine.nodes.values()).filter(n => n.demographics.total > 0);
+            const numInhabited = inhabitedNodes.length;
+            const totalNodes = engine.nodes.size;
+            const avgDensity = (engine.globalPop / inhabitedNodes.reduce((acc, n) => acc + (n.capacity || 1000), 0) * 100).toFixed(1);
+
+            console.log(`📊 TELEMETRIA DE EXPANSÃO & GEOPOLÍTICA:`);
+            console.log(`   Assentamentos Ativos: ${numInhabited} de ${totalNodes} regiões conhecidas`);
+            console.log(`   Densidade de Ocupação Média: ${avgDensity}%`);
+            console.log(`   Culturas e Estados Ativos: ${factionCount} linhagens detectadas`);
+            if (factionList) {
+                console.log(`   Distribuição Global: ${factionList}`);
+            }
+            
             console.log(`🏕️ Status por Região Habituada:`);
-            const names = { cattle: 'Gado', sheep: 'Ovelhas', chicken: 'Galinhas', horse: 'Cavalos', pig: 'Porcos' };
             engine.nodes.forEach(n => {
                 if (n.demographics.total > 0) {
-                    let faunaTxt = `Caça Nativa: ${Math.floor(n.wildGame || 0)}%`;
-                    let herdTxt = n.herds && Object.keys(n.herds).length > 0 
-                        ? Object.entries(n.herds).map(([k,v]) => `${names[k] || k}: ${v}`).join(', ') 
-                        : "Apenas Coleta";
-                    console.log(`   [${n.name} | ${n.biome.name}] Pop: ${Math.floor(n.demographics.total)} | Comida: ${Math.floor(n.food || 0)} | ${faunaTxt} | ${herdTxt}`);
+                    let faunaTxt = `Caça Nativa: ${Math.floor(n.wildGame || 0)}`;
+                    
+                    // Mapeamento de Cultivos
+                    const cropNames = { wheat: 'Trigo', rice: 'Arroz', potato: 'Batata', corn: 'Milho', dates: 'Tâmaras', berries: 'Bagas' };
+                    let cropTxt = n.crops && n.crops.length > 0 
+                        ? n.crops.map(c => cropNames[c] || c).join(', ') 
+                        : null;
+                        
+                    let herdTxt = n.livestock && n.livestock > 0 
+                        ? `Pecuária (${n.livestock} Animais)` 
+                        : null;
+                        
+                    let activityTxt = "";
+                    if (cropTxt && herdTxt) {
+                        activityTxt = `Prod: ${cropTxt} e ${herdTxt}`;
+                    } else if (cropTxt) {
+                        activityTxt = `Prod: Cultivo de ${cropTxt}`;
+                    } else if (herdTxt) {
+                        activityTxt = `Prod: ${herdTxt}`;
+                    } else {
+                        activityTxt = `Prod: Apenas Coleta/Caça`;
+                    }
+                    
+                    // Checa se é capital
+                    let capTxt = n.isCapital ? " 🏛️ [ESTADO CAPITAL]" : "";
+                    
+                    console.log(`   [${n.name} | ${n.biome.name}${capTxt}] Pop: ${Math.floor(n.demographics.total).toLocaleString('pt-BR')} | Comida: ${Math.floor(n.food || 0).toLocaleString('pt-BR')} | ${faunaTxt} | ${activityTxt}`);
                 }
             });
             
@@ -186,11 +239,12 @@ async function run() {
             reportData.push(`- **População Global**: ${Math.floor(engine.globalPop).toLocaleString('pt-BR')}`);
             reportData.push(`- **Facções Vivas**: ${factionCount} detalhadas: *${factionList || 'Nenhuma'}*`);
             reportData.push(`- **Clima Atual**: ${clima}`);
+            reportData.push(`- **Regiões Ocupadas**: ${numInhabited} de ${totalNodes}`);
             reportData.push(`- **Tecnologias**: ${engine.unlockedTechs?.size || 0}\n`);
 
             if (recentEvents.length > 0) {
                 console.log(`📜 Últimos Eventos:`);
-                recentEvents.slice(-3).forEach(msg => console.log(`   > ${msg}`));
+                recentEvents.slice(-5).forEach(msg => console.log(`   > ${msg}`));
                 recentEvents.length = 0; // Limpa eventos lidos
             }
             

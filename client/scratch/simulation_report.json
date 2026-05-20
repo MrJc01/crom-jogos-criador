@@ -1,0 +1,1806 @@
+{
+  "finalYear": 200,
+  "extinct": false,
+  "history": [
+    {
+      "year": 1,
+      "pop": 103,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 103
+      }
+    },
+    {
+      "year": 2,
+      "pop": 111,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 111
+      }
+    },
+    {
+      "year": 3,
+      "pop": 118,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 118
+      }
+    },
+    {
+      "year": 4,
+      "pop": 129,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 129
+      }
+    },
+    {
+      "year": 5,
+      "pop": 137,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 137
+      }
+    },
+    {
+      "year": 6,
+      "pop": 148,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 148
+      }
+    },
+    {
+      "year": 7,
+      "pop": 145,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 145
+      }
+    },
+    {
+      "year": 8,
+      "pop": 149,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 149
+      }
+    },
+    {
+      "year": 9,
+      "pop": 162,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 162
+      }
+    },
+    {
+      "year": 10,
+      "pop": 176,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 176
+      }
+    },
+    {
+      "year": 11,
+      "pop": 183,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 183
+      }
+    },
+    {
+      "year": 12,
+      "pop": 194,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 194
+      }
+    },
+    {
+      "year": 13,
+      "pop": 209,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 209
+      }
+    },
+    {
+      "year": 14,
+      "pop": 226,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 226
+      }
+    },
+    {
+      "year": 15,
+      "pop": 238,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 238
+      }
+    },
+    {
+      "year": 16,
+      "pop": 235,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 235
+      }
+    },
+    {
+      "year": 17,
+      "pop": 248,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 248
+      }
+    },
+    {
+      "year": 18,
+      "pop": 267,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 267
+      }
+    },
+    {
+      "year": 19,
+      "pop": 281,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 281
+      }
+    },
+    {
+      "year": 20,
+      "pop": 299,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 299
+      }
+    },
+    {
+      "year": 21,
+      "pop": 318,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 318
+      }
+    },
+    {
+      "year": 22,
+      "pop": 343,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 343
+      }
+    },
+    {
+      "year": 23,
+      "pop": 364,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 364
+      }
+    },
+    {
+      "year": 24,
+      "pop": 387,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 387
+      }
+    },
+    {
+      "year": 25,
+      "pop": 411,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 411
+      }
+    },
+    {
+      "year": 26,
+      "pop": 442,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 442
+      }
+    },
+    {
+      "year": 27,
+      "pop": 459,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 459
+      }
+    },
+    {
+      "year": 28,
+      "pop": 493,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 493
+      }
+    },
+    {
+      "year": 29,
+      "pop": 526,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 526
+      }
+    },
+    {
+      "year": 30,
+      "pop": 112,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 112
+      }
+    },
+    {
+      "year": 31,
+      "pop": 121,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 121
+      }
+    },
+    {
+      "year": 32,
+      "pop": 131,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 131
+      }
+    },
+    {
+      "year": 33,
+      "pop": 135,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 135
+      }
+    },
+    {
+      "year": 34,
+      "pop": 143,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 143
+      }
+    },
+    {
+      "year": 35,
+      "pop": 149,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 149
+      }
+    },
+    {
+      "year": 36,
+      "pop": 156,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 156
+      }
+    },
+    {
+      "year": 37,
+      "pop": 159,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 159
+      }
+    },
+    {
+      "year": 38,
+      "pop": 165,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 165
+      }
+    },
+    {
+      "year": 39,
+      "pop": 177,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 177
+      }
+    },
+    {
+      "year": 40,
+      "pop": 191,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 191
+      }
+    },
+    {
+      "year": 41,
+      "pop": 196,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 196
+      }
+    },
+    {
+      "year": 42,
+      "pop": 201,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 201
+      }
+    },
+    {
+      "year": 43,
+      "pop": 213,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 213
+      }
+    },
+    {
+      "year": 44,
+      "pop": 223,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 223
+      }
+    },
+    {
+      "year": 45,
+      "pop": 243,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 243
+      }
+    },
+    {
+      "year": 46,
+      "pop": 261,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 261
+      }
+    },
+    {
+      "year": 47,
+      "pop": 279,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 279
+      }
+    },
+    {
+      "year": 48,
+      "pop": 297,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 297
+      }
+    },
+    {
+      "year": 49,
+      "pop": 307,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 307
+      }
+    },
+    {
+      "year": 50,
+      "pop": 318,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 318
+      }
+    },
+    {
+      "year": 51,
+      "pop": 339,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 339
+      }
+    },
+    {
+      "year": 52,
+      "pop": 359,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 359
+      }
+    },
+    {
+      "year": 53,
+      "pop": 388,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 388
+      }
+    },
+    {
+      "year": 54,
+      "pop": 421,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 421
+      }
+    },
+    {
+      "year": 55,
+      "pop": 448,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 448
+      }
+    },
+    {
+      "year": 56,
+      "pop": 456,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 456
+      }
+    },
+    {
+      "year": 57,
+      "pop": 497,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 497
+      }
+    },
+    {
+      "year": 58,
+      "pop": 544,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 544
+      }
+    },
+    {
+      "year": 59,
+      "pop": 581,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 581
+      }
+    },
+    {
+      "year": 60,
+      "pop": 616,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 616
+      }
+    },
+    {
+      "year": 61,
+      "pop": 134,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 134
+      }
+    },
+    {
+      "year": 62,
+      "pop": 170,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 170
+      }
+    },
+    {
+      "year": 63,
+      "pop": 175,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 175
+      }
+    },
+    {
+      "year": 64,
+      "pop": 183,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 183
+      }
+    },
+    {
+      "year": 65,
+      "pop": 196,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 196
+      }
+    },
+    {
+      "year": 66,
+      "pop": 217,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 217
+      }
+    },
+    {
+      "year": 67,
+      "pop": 227,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 227
+      }
+    },
+    {
+      "year": 68,
+      "pop": 203,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 203
+      }
+    },
+    {
+      "year": 69,
+      "pop": 218,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 218
+      }
+    },
+    {
+      "year": 70,
+      "pop": 229,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 229
+      }
+    },
+    {
+      "year": 71,
+      "pop": 244,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 244
+      }
+    },
+    {
+      "year": 72,
+      "pop": 268,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 268
+      }
+    },
+    {
+      "year": 73,
+      "pop": 289,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 289
+      }
+    },
+    {
+      "year": 74,
+      "pop": 304,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 304
+      }
+    },
+    {
+      "year": 75,
+      "pop": 322,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 322
+      }
+    },
+    {
+      "year": 76,
+      "pop": 338,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 338
+      }
+    },
+    {
+      "year": 77,
+      "pop": 363,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 363
+      }
+    },
+    {
+      "year": 78,
+      "pop": 389,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 389
+      }
+    },
+    {
+      "year": 79,
+      "pop": 415,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 415
+      }
+    },
+    {
+      "year": 80,
+      "pop": 452,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 452
+      }
+    },
+    {
+      "year": 81,
+      "pop": 433,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 433
+      }
+    },
+    {
+      "year": 82,
+      "pop": 463,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 463
+      }
+    },
+    {
+      "year": 83,
+      "pop": 480,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 480
+      }
+    },
+    {
+      "year": 84,
+      "pop": 488,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 488
+      }
+    },
+    {
+      "year": 85,
+      "pop": 532,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 532
+      }
+    },
+    {
+      "year": 86,
+      "pop": 202,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 202
+      }
+    },
+    {
+      "year": 87,
+      "pop": 211,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 211
+      }
+    },
+    {
+      "year": 88,
+      "pop": 229,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 229
+      }
+    },
+    {
+      "year": 89,
+      "pop": 254,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 254
+      }
+    },
+    {
+      "year": 90,
+      "pop": 262,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 262
+      }
+    },
+    {
+      "year": 91,
+      "pop": 282,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 282
+      }
+    },
+    {
+      "year": 92,
+      "pop": 284,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 284
+      }
+    },
+    {
+      "year": 93,
+      "pop": 309,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 309
+      }
+    },
+    {
+      "year": 94,
+      "pop": 334,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 334
+      }
+    },
+    {
+      "year": 95,
+      "pop": 356,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 356
+      }
+    },
+    {
+      "year": 96,
+      "pop": 361,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 361
+      }
+    },
+    {
+      "year": 97,
+      "pop": 383,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 383
+      }
+    },
+    {
+      "year": 98,
+      "pop": 385,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 385
+      }
+    },
+    {
+      "year": 99,
+      "pop": 418,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 418
+      }
+    },
+    {
+      "year": 100,
+      "pop": 446,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 446
+      }
+    },
+    {
+      "year": 101,
+      "pop": 473,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 473
+      }
+    },
+    {
+      "year": 102,
+      "pop": 502,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 502
+      }
+    },
+    {
+      "year": 103,
+      "pop": 534,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 534
+      }
+    },
+    {
+      "year": 104,
+      "pop": 583,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 583
+      }
+    },
+    {
+      "year": 105,
+      "pop": 617,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 617
+      }
+    },
+    {
+      "year": 106,
+      "pop": 661,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 661
+      }
+    },
+    {
+      "year": 107,
+      "pop": 709,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 709
+      }
+    },
+    {
+      "year": 108,
+      "pop": 761,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 761
+      }
+    },
+    {
+      "year": 109,
+      "pop": 818,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 818
+      }
+    },
+    {
+      "year": 110,
+      "pop": 884,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 884
+      }
+    },
+    {
+      "year": 111,
+      "pop": 411,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 411
+      }
+    },
+    {
+      "year": 112,
+      "pop": 459,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 459
+      }
+    },
+    {
+      "year": 113,
+      "pop": 492,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 492
+      }
+    },
+    {
+      "year": 114,
+      "pop": 507,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 507
+      }
+    },
+    {
+      "year": 115,
+      "pop": 536,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 536
+      }
+    },
+    {
+      "year": 116,
+      "pop": 562,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 562
+      }
+    },
+    {
+      "year": 117,
+      "pop": 606,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 606
+      }
+    },
+    {
+      "year": 118,
+      "pop": 649,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 649
+      }
+    },
+    {
+      "year": 119,
+      "pop": 679,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 679
+      }
+    },
+    {
+      "year": 120,
+      "pop": 288,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 288
+      }
+    },
+    {
+      "year": 121,
+      "pop": 317,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 317
+      }
+    },
+    {
+      "year": 122,
+      "pop": 333,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 333
+      }
+    },
+    {
+      "year": 123,
+      "pop": 356,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 356
+      }
+    },
+    {
+      "year": 124,
+      "pop": 383,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 383
+      }
+    },
+    {
+      "year": 125,
+      "pop": 415,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 415
+      }
+    },
+    {
+      "year": 126,
+      "pop": 433,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 433
+      }
+    },
+    {
+      "year": 127,
+      "pop": 455,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 455
+      }
+    },
+    {
+      "year": 128,
+      "pop": 484,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 484
+      }
+    },
+    {
+      "year": 129,
+      "pop": 532,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 532
+      }
+    },
+    {
+      "year": 130,
+      "pop": 578,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 578
+      }
+    },
+    {
+      "year": 131,
+      "pop": 622,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 622
+      }
+    },
+    {
+      "year": 132,
+      "pop": 659,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 659
+      }
+    },
+    {
+      "year": 133,
+      "pop": 361,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 361
+      }
+    },
+    {
+      "year": 134,
+      "pop": 362,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 362
+      }
+    },
+    {
+      "year": 135,
+      "pop": 367,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 367
+      }
+    },
+    {
+      "year": 136,
+      "pop": 392,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 392
+      }
+    },
+    {
+      "year": 137,
+      "pop": 416,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 416
+      }
+    },
+    {
+      "year": 138,
+      "pop": 452,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 452
+      }
+    },
+    {
+      "year": 139,
+      "pop": 485,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 485
+      }
+    },
+    {
+      "year": 140,
+      "pop": 496,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 496
+      }
+    },
+    {
+      "year": 141,
+      "pop": 530,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 530
+      }
+    },
+    {
+      "year": 142,
+      "pop": 101,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 101
+      }
+    },
+    {
+      "year": 143,
+      "pop": 107,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 107
+      }
+    },
+    {
+      "year": 144,
+      "pop": 117,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 117
+      }
+    },
+    {
+      "year": 145,
+      "pop": 126,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 126
+      }
+    },
+    {
+      "year": 146,
+      "pop": 136,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 136
+      }
+    },
+    {
+      "year": 147,
+      "pop": 141,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 141
+      }
+    },
+    {
+      "year": 148,
+      "pop": 154,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 154
+      }
+    },
+    {
+      "year": 149,
+      "pop": 153,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 153
+      }
+    },
+    {
+      "year": 150,
+      "pop": 165,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 165
+      }
+    },
+    {
+      "year": 151,
+      "pop": 178,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 178
+      }
+    },
+    {
+      "year": 152,
+      "pop": 186,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 186
+      }
+    },
+    {
+      "year": 153,
+      "pop": 193,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 193
+      }
+    },
+    {
+      "year": 154,
+      "pop": 209,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 209
+      }
+    },
+    {
+      "year": 155,
+      "pop": 227,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 227
+      }
+    },
+    {
+      "year": 156,
+      "pop": 243,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 243
+      }
+    },
+    {
+      "year": 157,
+      "pop": 263,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 263
+      }
+    },
+    {
+      "year": 158,
+      "pop": 290,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 290
+      }
+    },
+    {
+      "year": 159,
+      "pop": 308,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 308
+      }
+    },
+    {
+      "year": 160,
+      "pop": 328,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 328
+      }
+    },
+    {
+      "year": 161,
+      "pop": 350,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 350
+      }
+    },
+    {
+      "year": 162,
+      "pop": 376,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 376
+      }
+    },
+    {
+      "year": 163,
+      "pop": 388,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 388
+      }
+    },
+    {
+      "year": 164,
+      "pop": 423,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 423
+      }
+    },
+    {
+      "year": 165,
+      "pop": 440,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 440
+      }
+    },
+    {
+      "year": 166,
+      "pop": 439,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 439
+      }
+    },
+    {
+      "year": 167,
+      "pop": 448,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 448
+      }
+    },
+    {
+      "year": 168,
+      "pop": 483,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 483
+      }
+    },
+    {
+      "year": 169,
+      "pop": 487,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 487
+      }
+    },
+    {
+      "year": 170,
+      "pop": 517,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 517
+      }
+    },
+    {
+      "year": 171,
+      "pop": 548,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 548
+      }
+    },
+    {
+      "year": 172,
+      "pop": 589,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 589
+      }
+    },
+    {
+      "year": 173,
+      "pop": 634,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 634
+      }
+    },
+    {
+      "year": 174,
+      "pop": 675,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 675
+      }
+    },
+    {
+      "year": 175,
+      "pop": 180,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 180
+      }
+    },
+    {
+      "year": 176,
+      "pop": 193,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 193
+      }
+    },
+    {
+      "year": 177,
+      "pop": 192,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 192
+      }
+    },
+    {
+      "year": 178,
+      "pop": 209,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 209
+      }
+    },
+    {
+      "year": 179,
+      "pop": 210,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 210
+      }
+    },
+    {
+      "year": 180,
+      "pop": 226,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 226
+      }
+    },
+    {
+      "year": 181,
+      "pop": 242,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 242
+      }
+    },
+    {
+      "year": 182,
+      "pop": 252,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 252
+      }
+    },
+    {
+      "year": 183,
+      "pop": 269,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 269
+      }
+    },
+    {
+      "year": 184,
+      "pop": 287,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 287
+      }
+    },
+    {
+      "year": 185,
+      "pop": 303,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 303
+      }
+    },
+    {
+      "year": 186,
+      "pop": 322,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 322
+      }
+    },
+    {
+      "year": 187,
+      "pop": 323,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 323
+      }
+    },
+    {
+      "year": 188,
+      "pop": 328,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 328
+      }
+    },
+    {
+      "year": 189,
+      "pop": 355,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 355
+      }
+    },
+    {
+      "year": 190,
+      "pop": 375,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 375
+      }
+    },
+    {
+      "year": 191,
+      "pop": 409,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 409
+      }
+    },
+    {
+      "year": 192,
+      "pop": 427,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 427
+      }
+    },
+    {
+      "year": 193,
+      "pop": 452,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 452
+      }
+    },
+    {
+      "year": 194,
+      "pop": 456,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 456
+      }
+    },
+    {
+      "year": 195,
+      "pop": 488,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 488
+      }
+    },
+    {
+      "year": 196,
+      "pop": 519,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 519
+      }
+    },
+    {
+      "year": 197,
+      "pop": 561,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 561
+      }
+    },
+    {
+      "year": 198,
+      "pop": 595,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 595
+      }
+    },
+    {
+      "year": 199,
+      "pop": 636,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 636
+      }
+    },
+    {
+      "year": 200,
+      "pop": 674,
+      "era": "Idade da Pedra",
+      "techs": 0,
+      "factions": {
+        "tribal": 674
+      }
+    }
+  ]
+}

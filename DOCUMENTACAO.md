@@ -1,103 +1,88 @@
-# CROM: Documentação do Motor de Simulação Histórica
+# 🌌 CROM: Manual do Arquiteto Cósmico
 
-Bem-vindo à documentação do **CROM**, um simulador de "Zero-Player" focado em Cliodinâmica, Sociologia e Evolução Malthusiana. Este documento destina-se a desenvolvedores, designers de sistemas e roteiristas que desejam rodar testes, acompanhar simulações interativas pelo terminal e customizar a matriz do jogo.
+Bem-vindo ao centro administrativo e criativo do **CROM**, um simulador de "Zero-Player" fundamentado em Cliodinâmica, Sociologia, Ecologia Malthusiana e Evolução Civilizatória. 
+
+Se você é um cientista, desenvolvedor, designer de jogos ou apenas um curioso fascinado em assistir ao desdobrar da espécie humana, este documento é a sua porta de entrada.
 
 ---
 
-## 1. O Script Interativo (`simulate.js`)
+## 🌅 O Portal do Criador (Guias Narrativos para Curiosos)
 
-Criamos um script interativo de CLI para que você possa comandar o "fluxo do tempo" e assistir à evolução humana diretamente pelo terminal, sem precisar carregar a interface gráfica.
+Para quem quer entender como o jogo funciona, como os sistemas se entrelaçam e como a humanidade reage sob o capô, criamos uma série de guias didáticos e conceituais fascinantes. Clique nas seções abaixo para iniciar sua jornada intelectual:
 
-### Como Executar
+### 📖 Módulos Narrativos de Exploração
+*   [🌅 O Ano Zero: O Despertar Primordial](file:///home/j/Documentos/GitHub/crom-jogos/crom-jogos-criador/documentacao_curiosos/01_o_ano_zero.md) — Entenda como a humanidade sai estocasticamente da Idade da Pedra, foge da armadilha biológica e inicia o seu crescimento demográfico.
+*   [👥 Etnogênese & Cismas: Divisão Social](file:///home/j/Documentos/GitHub/crom-jogos/crom-jogos-criador/documentacao_curiosos/02_etnogenese_e_cismas.md) — Descubra como a fome, o distanciamento geográfico e as crises ecológicas quebram dinastias imperiais e criam novas identidades procedurais de facções rebeldes.
+*   [🎛️ As Leis da Matriz: Constantes Físicas](file:///home/j/Documentos/GitHub/crom-jogos/crom-jogos-criador/documentacao_curiosos/03_as_leis_da_matriz.md) — Um guia imersivo detalhando as Leis Físicas que você controla no menu de início (Guerra, Grande Filtro, Multiplicadores de Evolução) e seus impactos ecológicos.
+*   [🧠 Traumas & Eureka: Evolução pela Dor](file:///home/j/Documentos/GitHub/crom-jogos/crom-jogos-criador/documentacao_curiosos/04_traumas_e_eureka.md) — Aprenda sobre a inteligência adaptativa das facções e como a dor e os desastres naturais aceleram a Árvore Científica sob o motor de Eureka.
 
-Na raiz do projeto (`crom-jogos-criador`), rode o comando via Node.js:
+---
 
+## 🛠️ Guia Técnico do Desenvolvedor
+
+Se você deseja debugar a simulação, rodar testes de caixa preta no terminal, exportar ou injetar dados de saves forenses, utilize as diretrizes técnicas a seguir.
+
+### 1. O Script de Simulação de Terminal (`simulate.js`)
+
+Se preferir rodar o tempo e assistir à evolução humana diretamente pelo console (sem carregar os gráficos tridimensionais), criamos um motor leve de CLI.
+
+#### Como Executar
+
+Na raiz do projeto (`crom-jogos-criador`), rode:
 ```bash
 node simulate.js
 ```
 
-### Argumentos de Customização
+#### Parâmetros de Customização
 
-Você pode passar argumentos para customizar o que quer ver:
-
-* `--years=N`: Determina quantos anos a simulação deve rodar (padrão: 1000).
-* `--interval=N`: Define a frequência (em anos) com que o motor exibe o relatório no terminal (padrão: 100).
-* `--faction=ID`: Escolhe a tribo matriz que começará no ponto de infecção zero.
-* `--help`: Exibe o menu de ajuda.
+Você pode passar argumentos para calibrar a injeção estocástica:
+*   `--years=N`: Determina quantos anos a simulação deve rodar (padrão: 1000).
+*   `--interval=N`: Define a frequência (em anos) com que o motor imprime o censo ecológico no terminal (padrão: 100).
+*   `--faction=ID`: Escolhe qual tribo matriz começará no ponto de infecção zero.
+*   `--help`: Exibe o menu com todas as opções.
 
 **Exemplo Prático (Simulação de 20 Mil Anos, reportando a cada 1000 anos, começando com os Sino-Tibetanos):**
 ```bash
 node simulate.js --years=20000 --interval=1000 --faction=sino_tibetanos
 ```
 
-### O Que Você Verá no Terminal
-O terminal imprimirá a contagem de população global, as culturas/facções que ainda estão vivas (com suas quantidades demográficas em tempo real), a temperatura global (Avisando de *Grandes Secas* ou *Eras do Gelo*), e as **Crônicas** contendo Traumas Culturais e separações rebeldes.
-
 ---
 
-## 2. Como Customizar os Nomes e a Etnogênese
+### 2. Customizando a Etnogênese Procedural
 
-No CROM, as facções não são estáticas. Elas ganham Traumas e sofrem Cismas (Rachas culturais por causa de fome e guerra). Para não ficarmos com nomes sem graça, introduzimos a geração procedural de nomenclaturas.
+No CROM, novas facções que nascem de rebeliões não têm nomes fixos; elas ganham designações linguísticas dinâmicas com base em prefixos e sufixos.
 
-### Arquivo: `client/src/config/NamesConfig.json`
-Este é o arquivo-mestre onde a linguagem do mundo é criada. 
-Ele contém **prefixos** e **sufixos**. Quando uma minoria se rebela, o motor (`EthnogenesisEngine.js`) puxa um pedaço daqui e monta o nome. 
-
-Exemplo de estrutura atual:
+#### Arquivo: `client/src/config/NamesConfig.json`
+Este é o arquivo-mestre de designação fonética. Para expandir ou traduzir as alcunhas das novas tribos e exércitos rebeldes, adicione palavras ao JSON:
 ```json
 {
     "rebels": {
-        "prefixes": ["Frente", "Exército", "A Irmandade"],
-        "suffixes": ["Livre", "da Fome", "Verdadeiro"]
+        "prefixes": ["Frente", "Exército", "A Irmandade", "Clã", "Ordem"],
+        "suffixes": ["Livre", "da Fome", "Verdadeiro", "da Estrela", "Caçador"]
     }
 }
 ```
-**Para customizar:** Basta adicionar palavras ao Array no JSON. Se você quiser criar uma facção espacial rebelde, coloque prefixos como "Império" ou "Rebelião".
 
-### Adicionando Novas Facções Base (`FactionsData.js`)
+#### Adicionando Novas Facções Base (`FactionsData.js`)
 Se quiser adicionar um bloco histórico real que inicia o jogo:
 1. Abra `client/src/core/FactionsData.js`.
 2. Adicione na constante `FactionTaxonomy`:
 ```javascript
 vikings: { name: "Nórdicos", baseColor: "#ecf0f1", traits: ["expansionist", "survivalist"] }
 ```
-3. Agora você pode rodar `node simulate.js --faction=vikings`!
+3. Agora você pode iniciar as constantes diretamente com `--faction=vikings`!
 
 ---
 
-## 3. O Sistema de Traumas e A I.A. (Eureka)
+### 3. Aumentando Limites Geopolíticos do Estado
 
-O coração sociológico do CROM é o fato de que a I.A. das facções aprende sofrendo.
-- **Como funciona:** Se um povo perder 30% da sua base demográfica porque o Clima ficou Abaixo de Zero, o `CulturalTraumaEngine.js` gruda neles a "Cicatriz" de `ice_survivors`.
-- **Como customizar o Eureka:** Você pode ditar o que esse trauma faz na Árvore Tecnológica! Vá em qualquer tecnologia na pasta `client/src/modules/technologies/...` e adicione a tag `traumaTrigger`.
-  
-*Exemplo em `ice_fishing.js` (Pesca no Gelo):*
-```javascript
-export default {
-    id: 'tech_ice_fishing',
-    name: 'Pesca no Gelo',
-    baseCost: 25,
-    traumaTrigger: 'ice_survivors', // I.A. vai pesquisar isso desesperadamente se estiver traumatizada!
-    ...
-```
-
----
-
-## 4. O Surgimento de Megacidades e Estados
-
-O jogo agora ultrapassa o escopo de tribos. Quando um Hexágono cruza a marca de 15.000 pessoas (via muita agricultura), ele se transforma num Estado (`StateEngine.js`).
-
-**Mecânica do Estado:**
-- A Capacidade Limite (K) aumenta massivamente (500%).
-- Surge o custo "Burocracia" que esvazia a reserva de comida, simulando a elite.
-- Surge um "Exército Permanente" proporcional à população do Hex.
-
-**Como mudar os Limites do Estado:**
-No arquivo `client/src/modules/sociology/StateEngine.js`, procure por:
+Se desejar acelerar o surgimento de estados organizados e a ascensão de Megacidades:
+1. Abra o arquivo `client/src/modules/sociology/StateEngine.js`.
+2. Altere o limite padrão de população:
 ```javascript
 if (majorityPct > 0.6 && node.demographics.total > 15000)
 ```
-Mude `15000` para o limite que desejar. Se abaixar para `1000`, seu jogo vai simular um mundo entupido de Micropaíses muito rapidamente!
+Se você abaixar a verificação de `15000` para `2000` habitantes, o simulador explodirá em micropaíses burocráticos e megacidades industriais muito mais cedo!
 
 ---
-> Este documento pode ser estendido no futuro para abranger Religião, Redes Comerciais de IA e Batalhas Militares Avançadas.
+> *CROM é um ecossistema digital de código aberto. Modifique as Leis, teste os limites da resiliência humana e ajude o Homo sapiens a transcender o Grande Filtro.*

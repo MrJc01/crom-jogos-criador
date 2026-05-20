@@ -14,7 +14,7 @@ export default {
     
     applyTick(node, globalRules, engine) {
         // Checagens apenas anuais
-        if (engine.day !== 0 || !node.infected) return;
+        if (engine.day !== 365 || !node.infected) return;
         
         // 1. Condições para o Nascimento do Estado
         // Precisa ter Agricultura (ou mais de 10 mil pessoas) e não ser Estado ainda

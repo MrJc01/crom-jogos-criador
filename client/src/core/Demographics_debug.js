@@ -57,17 +57,24 @@ export class Demographics {
     }
     
     /**
-     * 011. Determina o estágio DTM com base na era atual.
+     * 011. Determina o estágio DTM com base na era atual e na população global.
      */
-    getDTMStage(eraMult) {
+    getDTMStage(eraMult, globalPop = 0) {
         const demoCfg = Config.demographics() || {};
         const stages = demoCfg.dtm?.stages || [
             // FIX: Boost massivo de nascimentos e redução de mortalidade para Idade da Pedra
             { name: "Pré-Industrial", minEra: 1, birthRate: 0.150, deathRate: 0.015, infantMortality: 0.10 }
         ];
+        const threshold = demoCfg.dtmPopThreshold || 5000;
+        
         let current = stages[0];
         for (const stage of stages) {
-            if (eraMult >= stage.minEra) current = stage;
+            if (eraMult >= stage.minEra) {
+                // Só permite avançar além da Transição Inicial (minEra >= 3) se a população global exceder o limite DTM
+                if (stage.minEra <= 2 || globalPop >= threshold) {
+                    current = stage;
+                }
+            }
         }
         return current;
     }
@@ -76,8 +83,8 @@ export class Demographics {
      * 006+011. Processa nascimentos e mortes baseado no DTM.
      * Chamado por tick no Engine.
      */
-    processDTM(eraMult, hasSanitation, biomeId, deltaDays = 1) {
-        const stage = this.getDTMStage(eraMult);
+    processDTM(eraMult, hasSanitation, biomeId, deltaDays = 1, globalPop = 0) {
+        const stage = this.getDTMStage(eraMult, globalPop);
         const demoCfg = Config.demographics() || {};
         
         // ESTOCÁSTICA (CAOS)
@@ -160,21 +167,12 @@ export class Demographics {
     
     /**
      * Envelhece a pirâmide etária (chamado 1x por ano).
-     * child → young → adult → elder
+     * O envelhecimento contínuo suave por coortes já é processado diariamente em aging.js.
+     * Manter a transição anual aqui gera um envelhecimento redundante severo
+     * que acelera artificialmente o óbito de adultos ativos e inflaciona idosos.
      */
     ageOneYear() {
-        const agingRate = 0.05; // 5% de cada grupo envelhece por ano
-        
-        const childToYoung = this.dist.age.child * agingRate;
-        const youngToAdult = this.dist.age.young * agingRate;
-        const adultToElder = this.dist.age.adult * agingRate;
-        
-        this.dist.age.child = Math.max(0, this.dist.age.child - childToYoung);
-        this.dist.age.young = Math.max(0, this.dist.age.young - youngToAdult + childToYoung);
-        this.dist.age.adult = Math.max(0, this.dist.age.adult - adultToElder + youngToAdult);
-        this.dist.age.elder = Math.min(1.0, this.dist.age.elder + adultToElder);
-        
-        // Normalize para somar 1.0
+        // Apenas normaliza para somar 1.0 para manter integridade numérica
         const sum = this.dist.age.child + this.dist.age.young + this.dist.age.adult + this.dist.age.elder;
         if (sum > 0 && Math.abs(sum - 1.0) > 0.001) {
             this.dist.age.child /= sum;
@@ -216,9 +214,66 @@ export class Demographics {
         
         this.total = newTotal;
     }
+
+    /**
+     * Adiciona migrantes ponderando matematicamente a mistura multicultural e religiosa,
+     * além de diluir as faixas etárias de forma proporcional (migrantes são em geral jovens e adultos).
+     */
+    addMigrants(amount, sourceFactions, sourceReligions) {
+        if (amount <= 0) return;
+        
+        const oldTotal = this.total;
+        const newTotal = this.total + amount;
+        
+        if (newTotal === 0) return;
+        
+        // Diluição etária: assumimos que migrantes são 50% jovens e 50% adultos (população ativa)
+        const oldChildCount = oldTotal * this.dist.age.child;
+        const oldYoungCount = oldTotal * this.dist.age.young;
+        const oldAdultCount = oldTotal * this.dist.age.adult;
+        const oldElderCount = oldTotal * this.dist.age.elder;
+        
+        this.dist.age.child = oldChildCount / newTotal;
+        this.dist.age.young = (oldYoungCount + amount * 0.5) / newTotal;
+        this.dist.age.adult = (oldAdultCount + amount * 0.5) / newTotal;
+        this.dist.age.elder = oldElderCount / newTotal;
+        
+        // Mistura as facções ponderadamente com base no tamanho das populações
+        const newFactions = {};
+        for (const [factionId, ratio] of Object.entries(this.dist.factions)) {
+            newFactions[factionId] = (ratio * oldTotal) / newTotal;
+        }
+        for (const [factionId, ratio] of Object.entries(sourceFactions || {})) {
+            newFactions[factionId] = (newFactions[factionId] || 0) + (ratio * amount) / newTotal;
+        }
+        this.dist.factions = newFactions;
+        
+        // Mistura as religiões ponderadamente com base no tamanho das populações
+        const newReligions = {};
+        for (const [relId, ratio] of Object.entries(this.dist.religion)) {
+            newReligions[relId] = (ratio * oldTotal) / newTotal;
+        }
+        for (const [relId, ratio] of Object.entries(sourceReligions || {})) {
+            newReligions[relId] = (newReligions[relId] || 0) + (ratio * amount) / newTotal;
+        }
+        this.dist.religion = newReligions;
+        
+        this.total = newTotal;
+    }
     
     kill(amount) {
         if (amount <= 0) return;
+        
+        // Cradle of Humanity Shield: Proteção a nível de Kernel
+        if (this.total > 0 && this.total <= 500) {
+            const exactShield = this.total * 0.05;
+            let maxLethality = Math.floor(exactShield);
+            if (Math.random() < (exactShield % 1)) maxLethality += 1;
+            amount = Math.min(amount, maxLethality);
+        }
+        
+        if (amount <= 0) return;
+        
         this.total = Math.max(0, this.total - amount);
     }
     
@@ -227,6 +282,17 @@ export class Demographics {
      */
     killByAge(ageGroup, amount) {
         if (amount <= 0 || this.total <= 0) return;
+        
+        // Cradle of Humanity Shield: Proteção a nível de Kernel
+        if (this.total > 0 && this.total <= 500) {
+            const exactShield = this.total * 0.05;
+            let maxLethality = Math.floor(exactShield);
+            if (Math.random() < (exactShield % 1)) maxLethality += 1;
+            amount = Math.min(amount, maxLethality);
+        }
+        
+        if (amount <= 0) return;
+        
         const groupPop = Math.floor(this.total * (this.dist.age[ageGroup] || 0));
         const actualKill = Math.min(amount, groupPop);
         if (actualKill <= 0) return;
